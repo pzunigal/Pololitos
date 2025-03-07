@@ -19,7 +19,7 @@ public class ServicioServicios {
     private RepositorioServicios repositorioServicios;
 
     // para obtener todos los servicios de manera general:
-    public List<Servicio> obtenerTodos() {
+    public List<Servicio> obtenerTodosLosServicios() {
         return (List<Servicio>) repositorioServicios.findAll();
     }
 
@@ -56,4 +56,26 @@ public class ServicioServicios {
         return repositorioServicios.findByCategoria(categoria);
     }
 
+    /* 
+    // Obtener todos los servicios
+    public List<Servicio> obtenerTodosLosServicios() {
+        return (List<Servicio>) repositorioServicios.findAll();
+    }
+
+    // Obtener un servicio por id
+    public Servicio obtenerServicioPorId(Long id) {
+        return repositorioServicios.findById(id).orElse(null);
+    }
+
+    // Solicitar un servicio (requiere inicio de sesión)
+    public void solicitarServicio(Long servicioId, Usuario usuario) {
+        Optional<Servicio> servicio = repositorioServicios.findById(servicioId);
+
+        if (servicio.isPresent()) {
+            Servicio servicioEncontrado = servicio.get();
+            servicioEncontrado.setUsuario(usuario);
+            repositorioServicios.save(servicioEncontrado);
+        }
+    }
+        */
 }

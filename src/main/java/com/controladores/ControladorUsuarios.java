@@ -19,12 +19,7 @@ public class ControladorUsuarios {
 
     @Autowired
 	private ServicioUsuarios servicioUsuarios;
-	
-	@GetMapping("/")
-	public String index(@ModelAttribute("nuevoUsuario") Usuario nuevoUsuario) {
-		return "index.jsp";
-	}
-	
+
 	@PostMapping("/registro")
 	public String registro(@Valid @ModelAttribute("nuevoUsuario") Usuario nuevoUsuario,
 						   BindingResult result,
@@ -36,11 +31,12 @@ public class ControladorUsuarios {
 		} else {
 			//Guardo al nuevo usuario en sesión
 			session.setAttribute("usuarioEnSesion", nuevoUsuario);
-			return "redirect:/dashboard";
+			return "redirect:/";
 		}
+		
 	}
-
-    @GetMapping("/login")
+	
+	@GetMapping("/login")
 	public String login(@ModelAttribute("loginUsuario") LoginUsuario loginUsuario) {
 		return "login.jsp";
 	}
@@ -55,7 +51,7 @@ public class ControladorUsuarios {
 			return "login.jsp";
 		} else {
 			session.setAttribute("usuarioEnSesion", usuario);
-			return "redirect:/dashboard";
+			return "redirect:/";
 		}
 		
 	}
