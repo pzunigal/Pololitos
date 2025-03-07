@@ -1,5 +1,8 @@
 package com.servicios;
 
+import java.util.List;
+import java.util.Optional;
+
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,6 +18,8 @@ public class ServicioUsuarios {
     @Autowired
     private RepositorioUsuarios repositorioUsuarios;
 
+
+    //Registrar un usuario
     public Usuario registrarUsuario(Usuario nuevoUsuario, BindingResult result) {
         
         String password = nuevoUsuario.getPassword();
@@ -40,6 +45,7 @@ public class ServicioUsuarios {
 		}
     }
 
+    //Iniciar sesión
     public Usuario login(LoginUsuario datosInicioDeSesion, BindingResult result) {
 		
 		String email = datosInicioDeSesion.getEmailLogin();
@@ -59,4 +65,34 @@ public class ServicioUsuarios {
 			return existeUsuario;
 		}
 	}
+    
+    //Buscar usuario por ID
+    public Usuario buscarUsuarioPorId(Long id) {
+        Optional<Usuario> usuario = repositorioUsuarios.findById(id);
+        if(usuario.isPresent()) {
+            return usuario.get();
+        } else {
+            return null;
+        }
+    }
+
+    //Buscar usuario por email
+    public Usuario buscarUsuarioPorEmail(String email) {
+        return repositorioUsuarios.findByEmail(email);
+    }
+
+    //Buscar todos los usuarios
+    public List<Usuario> buscarTodosLosUsuarios() {
+        return (List<Usuario>) repositorioUsuarios.findAll();
+    }
+
+    //Actualizar usuario
+    public Usuario actualizarUsuario(Usuario usuario) {
+        return repositorioUsuarios.save(usuario);
+    }
+
+    //Eliminar usuario
+    public void eliminarUsuario(Long id) {
+        repositorioUsuarios.deleteById(id);
+    }
 }
