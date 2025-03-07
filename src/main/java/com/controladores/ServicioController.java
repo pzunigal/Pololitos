@@ -19,7 +19,7 @@ public class ServicioController {
     // obtener todos los servicios y mostrarlos en index.jsp
     @GetMapping("/")
     public String mostrarIndex(Model model) {
-        List<Servicio> servicios = servicioService.obtenerTodos();
+        List<Servicio> servicios = servicioService.obtenerTodosLosServicios();
         model.addAttribute("servicios", servicios); // pasamos la lista al modelo para renderizar en el archivo index.jsp
         return "index"; // Retorna index.jsp
     }
