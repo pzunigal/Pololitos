@@ -1,9 +1,9 @@
-package com.pablo.repositorios;
+package com.repositorios;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.pablo.modelos.Categoria;
+import com.modelos.Categoria;
 
 @Repository
 public interface RepositorioCategorias extends CrudRepository<Categoria, Long> {

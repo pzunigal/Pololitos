@@ -1,14 +1,20 @@
-package com.pablo.modelos;
+package com.modelos;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.Transient;
 import jakarta.validation.constraints.Email;
@@ -45,13 +51,26 @@ public class Usuario {
 	private String confirmacion;
 	
 	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", 
-	         message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
+			 message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
 	private String fotoPerfil;
 	
 	@Pattern(regexp = "\\d{10,15}", message="El número de teléfono debe contener entre 10 y 15 dígitos")
 	private String telefono;
 
 	private String direccion; // campo opcional
+
+	/* Relación con servicios ofrecidos
+    @OneToMany(mappedBy = "usuarioCreador", fetch = FetchType.LAZY)
+    private List<Servicio> serviciosOfrecidos;
+
+    // Relación con servicios solicitados
+    @ManyToMany
+    @JoinTable(
+        name = "usuarios_servicios",
+        joinColumns = @JoinColumn(name = "usuario_id"),
+        inverseJoinColumns = @JoinColumn(name = "servicio_id")
+    )
+    private List<Servicio> serviciosSolicitados; */
 	
 	@Column(updatable=false)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
@@ -149,4 +168,23 @@ public class Usuario {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	/*
+	public List<Servicio> getServiciosOfrecidos() {
+		return serviciosOfrecidos;
+	}
+
+	public void setServiciosOfrecidos(List<Servicio> serviciosOfrecidos) {
+		this.serviciosOfrecidos = serviciosOfrecidos;
+	}
+
+	public List<Servicio> getServiciosSolicitados() {
+		return serviciosSolicitados;
+	}
+
+	public void setServiciosSolicitados(List<Servicio> serviciosSolicitados) {
+		this.serviciosSolicitados = serviciosSolicitados;
+	}
+	*/
+
 }

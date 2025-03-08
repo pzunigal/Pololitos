@@ -1,9 +1,9 @@
-package com.pablo.repositorios;
+package com.repositorios;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.pablo.modelos.Resena;
+import com.modelos.Resena;
 
 @Repository
 public interface RepositorioResenas extends CrudRepository<Resena, Long> {
