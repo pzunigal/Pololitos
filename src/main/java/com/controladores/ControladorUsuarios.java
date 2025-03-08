@@ -61,4 +61,45 @@ public class ControladorUsuarios {
 		session.invalidate();
 		return "redirect:/";
 	}
+
+	@GetMapping("/editarPerfil")
+	public String editarPerfil(HttpSession session, @ModelAttribute("usuario") Usuario usuario) {
+		Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+
+		if (usuarioEnSesion == null) {
+			return "redirect:/login";
+		}
+
+		usuario.setNombre(usuarioEnSesion.getNombre());
+		usuario.setEmail(usuarioEnSesion.getEmail());
+		usuario.setTelefono(usuarioEnSesion.getTelefono());
+
+		return "editarPerfil.jsp";
+	}
+
+	@PostMapping("/actualizarPerfil")
+	public String actualizarPerfil(@Valid @ModelAttribute("usuario") Usuario usuario,
+								   BindingResult result,
+								   HttpSession session) {
+	if (result.hasErrors()) {
+		return "editarPerfil.jsp";
+	}
+
+	Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+    if (usuarioEnSesion == null) {
+        return "redirect:/login";
+    }
+	
+	usuarioEnSesion.setNombre(usuario.getNombre());
+	usuarioEnSesion.setEmail(usuario.getEmail());
+	usuarioEnSesion.setTelefono(usuario.getTelefono());
+
+	servicioUsuarios.actualizarUsuario(usuarioEnSesion);
+
+	session.setAttribute("usuarioEnSession", usuarioEnSesion);
+
+	return "redirect:/perfil";
+	
+	}
+
 }
