@@ -90,6 +90,7 @@ public class ControladorUsuarios {
         return "redirect:/login";
     }
 	
+	//comentario de prueba
 	usuarioEnSesion.setNombre(usuario.getNombre());
 	usuarioEnSesion.setEmail(usuario.getEmail());
 	usuarioEnSesion.setTelefono(usuario.getTelefono());
