@@ -7,5 +7,6 @@
 </head>
 <body>
     <!-- Soy un comentario -->
+     <!-- otro comentario -->
 </body>
 </html>
