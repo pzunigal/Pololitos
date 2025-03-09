@@ -16,11 +16,14 @@ public class ServicioController {
     @Autowired
     private ServicioServicios servicioService;
 
-    // obtener todos los servicios y mostrarlos en index.jsp
+
+    //COMENTANDO EN CASO DE SER INNECESARIO ESTA FUNCIONALIDAD PORQUE ESTA PRESENTE EN CONTROLADOR DASHBOARD
+
+   /*  // obtener todos los servicios y mostrarlos en index.jsp
     @GetMapping("/")
     public String mostrarIndex(Model model) {
         List<Servicio> servicios = servicioService.obtenerTodosLosServicios();
         model.addAttribute("servicios", servicios); // pasamos la lista al modelo para renderizar en el archivo index.jsp
         return "index"; // Retorna index.jsp
-    }
+    } */
 }
