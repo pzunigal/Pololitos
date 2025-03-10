@@ -8,4 +8,8 @@ import com.modelos.Categoria;
 @Repository
 public interface RepositorioCategorias extends CrudRepository<Categoria, Long> {
     Categoria findByNombre(String nombre);
+
+
+    //metodo para obtener todas las categorias:
+    
 }
