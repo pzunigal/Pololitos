@@ -14,7 +14,10 @@ public interface RepositorioUsuarios extends CrudRepository<Usuario, Long> {
 	
 	Usuario findByEmail(String email);
 
-	List<Servicio> findServiciosOfrecidosPorUsuario(@Param("usuarioId") Long usuarioId);
+	// no es necesaro aqui porque la logica de servicios se maneja en el repositorio de servicios
 
-	List<Servicio> findServiciosSolicitadosPorUsuario(@Param("usuarioId") Long usuarioId);
+	
+	/* List<Servicio> findByUsuarioId(@Param("usuarioId") Long usuarioId);
+
+	List<Servicio> findByServiciosSolicitados_Id(@Param("usuarioId") Long usuarioId); */
 }
