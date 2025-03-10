@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 import com.modelos.Categoria;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
+import com.servicios.ServicioCategorias;
 import com.servicios.ServicioServicios;
 
 import jakarta.validation.Valid;
@@ -23,11 +24,13 @@ public class ServicioController {
 
     @Autowired
     private ServicioServicios servicioServicios;
+    @Autowired
+    private ServicioCategorias servicioCategorias;
 
     // endpoint para renderizar el formulario visual
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(Model model) {
-        List<Categoria> categorias = categoriaServicio.obtenerTodas();
+        List<Categoria> categorias = servicioCategorias.obtenerTodas();
         model.addAttribute("categorias", categorias);
         model.addAttribute("servicio", new Servicio());
         return "testingFormAddService.jsp";
@@ -40,7 +43,7 @@ public class ServicioController {
             @SessionAttribute("usuario") Usuario usuario,
             Model model) {
         if (result.hasErrors()) {
-            List<Categoria> categorias = categoriaServicio.obtenerTodas();
+            List<Categoria> categorias = servicioCategorias.obtenerTodas();
             model.addAttribute("categorias", categorias);
             model.addAttribute("usuario", usuario); // para mantener el usuario en sesion incluso si tenemos errores
             return "testingFormAddService.jsp";
