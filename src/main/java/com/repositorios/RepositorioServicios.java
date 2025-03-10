@@ -24,7 +24,7 @@ public interface RepositorioServicios extends CrudRepository<Servicio, Long>{
 
     //servira para buscar o filtrar servicios que tengan un precio menor o igual al filtro aplicado
     //a futuro se puede personalizar de distintas maneras con logica
-    List<Servicio> findByPrecioLessThanEquals(Double precio);
+    List<Servicio> findByPrecioLessThanEqual(Double precio);
 
 
 
