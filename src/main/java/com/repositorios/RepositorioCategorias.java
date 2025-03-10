@@ -1,5 +1,7 @@
 package com.repositorios;
 
+import java.util.List;
+
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -11,5 +13,5 @@ public interface RepositorioCategorias extends CrudRepository<Categoria, Long> {
 
 
     //metodo para obtener todas las categorias:
-    
+    List<Categoria> findAll();
 }
