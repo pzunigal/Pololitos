@@ -15,7 +15,7 @@
     <div class="divider"></div>
     <div class="login-container">
         <h2>Crear Cuenta</h2>
-        <form:form action="" method="POST" modelAttribute="">
+        <form:form action="" method="POST" modelAttribute="nuevoUsuario">
             <div class="input-group">
                 <form:label path="email" >E-mail:</form:label>
 				<form:input path="email" class="form-control" />
@@ -34,7 +34,7 @@
             <p class="miniTexto">Al crear una cuenta muestras tu conformidad con nuestros Términos de uso y nuestra Política de privacidad, confirmando además que tienes 18 años o más.</p>
             <button type="submit">Crear Cuenta</button>
         </form:form>
-        <p>¿Ya tienes una cuenta? <a href="">Acceder</a></p>
+        <p>¿Ya tienes una cuenta? <a href="/login">Acceder</a></p>
     </div>
     <footer>
         <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
