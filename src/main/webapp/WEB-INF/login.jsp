@@ -14,21 +14,21 @@
     <img src="img/pololitos.png" alt="Logo pololitos" class="img-logo">
     <div class="divider"></div>
     <div class="login-container">
-        <h2>Iniciar SesiÃ³n</h2>
-        <form action="/iniciarSesion" method="POST" modelAttribute="">
+        <h2>Iniciar Sesión</h2>
+        <form:form action="/iniciarSesion" method="POST" modelAttribute="loginUsuario">
             <div class="input-group">
-                <form:label path="username">Dirección de email</form:label>
-                <form:input path="username"/>
-                <form:errors path="username"/>
+                <form:label path="emailLogin">Dirección de email</form:label>
+                <form:input path="emailLogin"/>
+                <form:errors path="emailLogin"/>
             </div>
             <div class="input-group">
-                <form:label path="password">Contraseña</form:label>
-                <form:input path="password"/>
-                <form:errors path="password"/>
+                <form:label path="passwordLogin">Contraseña</form:label>
+                <form:input path="passwordLogin"/>
+                <form:errors path="passwordLogin"/>
             </div>
             <button type="submit">Ingresar</button>
-        </form>
-        <p>Â¿No tienes una cuenta? <a href="">Registrate</a></p>
+        </form:form>
+        <p>¿No tienes una cuenta? <a href="/registro">Registrate</a></p>
     </div>
     <footer>
         <p>Pololitos &copy; 2025, Todos los derechos reservados</p>

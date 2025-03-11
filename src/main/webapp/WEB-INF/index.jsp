@@ -16,6 +16,21 @@
     <div class="login-container">
         <h2>Crear Cuenta</h2>
         <form:form action="" method="POST" modelAttribute="nuevoUsuario">
+        	<div class="input-group">
+                <form:label path="nombre">Nombre:</form:label>
+                <form:input path="nombre"/>
+                <form:errors path="nombre"/>
+            </div>
+            <div class="input-group">
+                <form:label path="apellido">Apellido:</form:label>
+                <form:input path="apellido"/>
+                <form:errors path="apellido"/>
+            </div>
+            <div class="input-group">
+                <form:label path="nombre">URL perfil:</form:label>
+                <form:input path="nombre"/>
+                <form:errors path="nombre"/>
+            </div>
             <div class="input-group">
                 <form:label path="email" >E-mail:</form:label>
 				<form:input path="email" class="form-control" />
@@ -30,6 +45,16 @@
                 <form:label path="confirmacion">Confirmacion:</form:label>
 				<form:password path="confirmacion" class="form-control" />
 				<form:errors path="confirmacion" class="text-danger" />
+            </div>
+            <div class="input-group">
+                <form:label path="nombre">Ciudad:</form:label>
+                <form:input path="nombre"/>
+                <form:errors path="nombre"/>
+            </div>
+            <div class="input-group">
+                <form:label path="nombre">Telefono:</form:label>
+                <form:input path="nombre"/>
+                <form:errors path="nombre"/>
             </div>
             <p class="miniTexto">Al crear una cuenta muestras tu conformidad con nuestros Términos de uso y nuestra Política de privacidad, confirmando además que tienes 18 años o más.</p>
             <button type="submit">Crear Cuenta</button>
