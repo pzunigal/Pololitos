@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -40,6 +42,14 @@ public class Servicio {
     private String ubicacion;
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date fechaPublicacion = new Date();
+
+	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", 
+			 message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
+	private String fotoServicio;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="usuario_id") 
+	private Usuario creador;
 
     // Relación con Usuario (Un usuario puede publicar muchos servicios)
     @ManyToOne
@@ -122,5 +132,13 @@ public class Servicio {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public String getFotoServicio() {
+		return fotoServicio;
+	}
+
+	public void setFotoServicio(String fotoServicio) {
+		this.fotoServicio = fotoServicio;
 	}
 }

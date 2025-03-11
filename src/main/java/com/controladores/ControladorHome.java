@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import com.servicios.ServicioServicios;
 
 @Controller
-public class ControladorDashboard {
+public class ControladorHome {
 
     @Autowired
     private ServicioServicios servicioServicios;

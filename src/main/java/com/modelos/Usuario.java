@@ -54,10 +54,13 @@ public class Usuario {
 			 message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
 	private String fotoPerfil;
 	
+	@NotBlank(message="Por favor, ingresa una telefono válido")
 	@Pattern(regexp = "\\d{10,15}", message="El número de teléfono debe contener entre 10 y 15 dígitos")
 	private String telefono;
 
-	private String direccion; // campo opcional
+	@NotBlank(message="Por favor, ingresa una contraseña")
+	@Size(min=3, message="La ciudad debe tener al menos 3 caracteres")
+	private String ciudad; // campo opcional
 
 	/* Relación con servicios ofrecidos
     @OneToMany(mappedBy = "usuarioCreador", fetch = FetchType.LAZY)
@@ -78,6 +81,9 @@ public class Usuario {
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date updatedAt;
+
+	@OneToMany(mappedBy = "creador", fetch = FetchType.LAZY)
+	private List<Servicio> serviciosCreados;
 	
 	public Usuario() {}
 
@@ -114,7 +120,7 @@ public class Usuario {
 	}
 
 	public String getDireccion() {
-		return direccion;
+		return ciudad;
 	}
 
 	public Date getCreatedAt() {
@@ -158,7 +164,7 @@ public class Usuario {
 	}
 
 	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+		this.ciudad = direccion;
 	}
 
 	public void setCreatedAt(Date createdAt) {
@@ -186,5 +192,4 @@ public class Usuario {
 		this.serviciosSolicitados = serviciosSolicitados;
 	}
 	*/
-
 }
