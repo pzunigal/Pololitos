@@ -52,7 +52,7 @@ public class ServicioController {
         servicio.setUsuario(usuario); // Asigna el usuario de la sesión
         servicioServicios.guardar(servicio);
         return "redirect:/"; // de preferencia que rediriga ala vista personal de usuario donde ve unicamente
-                             // sus servicios
+                             // sus servicios de cual uno es creador o proveedor
     }
 
 }
