@@ -56,6 +56,14 @@ public class ServicioServicios {
         return repositorioServicios.findByCategoria(categoria);
     }
 
+
+    // Buscar servicios solicitados por un usuario (si la relación existe)
+    public List<Servicio> buscarServiciosSolicitados(Usuario usuario) {
+        return usuario.getServiciosSolicitados();
+    }
+
+
+
     /* 
     // Obtener todos los servicios
     public List<Servicio> obtenerTodosLosServicios() {
