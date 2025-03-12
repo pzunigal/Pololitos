@@ -16,6 +16,6 @@ public class ControladorHome {
     @GetMapping("/")
 	public String index(Model model) {
 		model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
-		return "index";
+		return "index.jsp";
 	}
 }

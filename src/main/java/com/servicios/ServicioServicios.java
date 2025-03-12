@@ -56,6 +56,7 @@ public class ServicioServicios {
         return repositorioServicios.findByCategoria(categoria);
     }
 
+
     // Solicitar un servicio (requiere inicio de sesión)
     public void solicitarServicio(Long servicioId, Usuario usuario) {
         //busca si existe el servicio

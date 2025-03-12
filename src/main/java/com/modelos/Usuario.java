@@ -5,22 +5,8 @@ import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
-import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name="usuarios")
@@ -62,8 +48,8 @@ public class Usuario {
 	@Size(min=3, message="La ciudad debe tener al menos 3 caracteres")
 	private String ciudad; // campo opcional
 
-	/* Relación con servicios ofrecidos
-    @OneToMany(mappedBy = "usuarioCreador", fetch = FetchType.LAZY)
+	// Relacion con servicios ofrecidos
+    @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Servicio> serviciosOfrecidos;
 
     // Relación con servicios solicitados
@@ -73,7 +59,7 @@ public class Usuario {
         joinColumns = @JoinColumn(name = "usuario_id"),
         inverseJoinColumns = @JoinColumn(name = "servicio_id")
     )
-    private List<Servicio> serviciosSolicitados; */
+    private List<Servicio> serviciosSolicitados;
 	
 	@Column(updatable=false)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
@@ -130,6 +116,22 @@ public class Usuario {
 	public Date getUpdatedAt() {
 		return updatedAt;
 	}
+
+    public List<Servicio> getServiciosOfrecidos() {
+        return serviciosOfrecidos;
+    }
+
+    public void setServiciosOfrecidos(List<Servicio> serviciosOfrecidos) {
+        this.serviciosOfrecidos = serviciosOfrecidos;
+    }
+
+    public List<Servicio> getServiciosSolicitados() {
+        return serviciosSolicitados;
+    }
+
+    public void setServiciosSolicitados(List<Servicio> serviciosSolicitados) {
+        this.serviciosSolicitados = serviciosSolicitados;
+    }
 
 	public void setId(Long id) {
 		this.id = id;
@@ -192,4 +194,5 @@ public class Usuario {
 		this.serviciosSolicitados = serviciosSolicitados;
 	}
 	*/
+
 }
