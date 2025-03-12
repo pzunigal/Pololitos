@@ -39,7 +39,10 @@ public class Servicio {
     @Positive(message="El precio debe ser mayor a 0")
     private Double precio;
 
-    private String ubicacion;
+	@NotBlank(message="La ciudad es obligatoria")
+    @Size(min=3, max=100, message="La ciudad debe tener entre 3 y 30 caracteres")
+    private String ciudad;
+
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date fechaPublicacion = new Date();
 
@@ -87,7 +90,7 @@ public class Servicio {
 	}
 
 	public String getUbicacion() {
-		return ubicacion;
+		return ciudad;
 	}
 
 	public Date getFechaPublicacion() {
@@ -119,7 +122,7 @@ public class Servicio {
 	}
 
 	public void setUbicacion(String ubicacion) {
-		this.ubicacion = ubicacion;
+		this.ciudad = ubicacion;
 	}
 
 	public void setFechaPublicacion(Date fechaPublicacion) {

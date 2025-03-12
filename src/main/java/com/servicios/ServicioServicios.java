@@ -56,6 +56,11 @@ public class ServicioServicios {
         return repositorioServicios.findByCategoria(categoria);
     }
 
+    // buscar por precio
+    public List<Servicio> buscarPorPrecio(Double precio) {
+        return repositorioServicios.findByPrecioLessThanEqual(precio);
+    }
+
 
     // Solicitar un servicio (requiere inicio de sesión)
     public void solicitarServicio(Long servicioId, Usuario usuario) {

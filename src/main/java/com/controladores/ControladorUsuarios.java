@@ -24,7 +24,7 @@ public class ControladorUsuarios {
     @GetMapping("/registro")
     public String mostrarRegistro(Model model) {	
         model.addAttribute("nuevoUsuario", new Usuario()); // Agregar el atributo al modelo
-        return "index.jsp";
+        return "registro.jsp";
     }
 
 	@PostMapping("/registro")
@@ -34,11 +34,11 @@ public class ControladorUsuarios {
 		servicioUsuarios.registrarUsuario(nuevoUsuario, result);
 		
 		if(result.hasErrors()) {
-			return "index.jsp";
+			return "registro.jsp";
 		} else {
 			//Guardo al nuevo usuario en sesión
 			session.setAttribute("usuarioEnSesion", nuevoUsuario);
-			return "redirect:/";
+			return "redirect:/home";
 		}
 		
 	}
@@ -66,14 +66,14 @@ public class ControladorUsuarios {
             return "login.jsp";
         } else {
             session.setAttribute("usuarioEnSesion", usuario);
-            return "redirect:/";
+            return "redirect:/home";
         }
     }
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/";
+		return "redirect:/home";
 	}
 
 	@GetMapping("/editarPerfil")
@@ -104,7 +104,7 @@ public class ControladorUsuarios {
         return "redirect:/login";
     }
 	
-	//comentario de prueba
+	// Actualizar los datos del usuario en sesión
 	usuarioEnSesion.setNombre(usuario.getNombre());
 	usuarioEnSesion.setEmail(usuario.getEmail());
 	usuarioEnSesion.setTelefono(usuario.getTelefono());
