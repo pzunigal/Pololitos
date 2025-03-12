@@ -35,6 +35,15 @@ body {
     height: 100%;
 } */
 
+.input-group-two {
+    display: flex;
+    gap: 10px; /* Espacio entre los campos de contraseña */
+}
+
+.input-group-two .input-group {
+    flex: 1; /* Hace que ambos campos ocupen el mismo espacio */
+}
+
 .login-container {
     background-color: #141519;
     padding: 20px;
