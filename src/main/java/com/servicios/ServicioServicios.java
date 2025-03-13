@@ -56,34 +56,22 @@ public class ServicioServicios {
         return repositorioServicios.findByCategoria(categoria);
     }
 
-
-    // Buscar servicios solicitados por un usuario (si la relación existe)
-    public List<Servicio> buscarServiciosSolicitados(Usuario usuario) {
-        return usuario.getServiciosSolicitados();
+    // buscar por precio
+    public List<Servicio> buscarPorPrecio(Double precio) {
+        return repositorioServicios.findByPrecioLessThanEqual(precio);
     }
 
-
-
-    /* 
-    // Obtener todos los servicios
-    public List<Servicio> obtenerTodosLosServicios() {
-        return (List<Servicio>) repositorioServicios.findAll();
-    }
-
-    // Obtener un servicio por id
-    public Servicio obtenerServicioPorId(Long id) {
-        return repositorioServicios.findById(id).orElse(null);
-    }
 
     // Solicitar un servicio (requiere inicio de sesión)
     public void solicitarServicio(Long servicioId, Usuario usuario) {
+        //busca si existe el servicio
         Optional<Servicio> servicio = repositorioServicios.findById(servicioId);
 
+        //si existe, se asigna el usuario que solicita el servicio
         if (servicio.isPresent()) {
-            Servicio servicioEncontrado = servicio.get();
-            servicioEncontrado.setUsuario(usuario);
-            repositorioServicios.save(servicioEncontrado);
+            Servicio servicioEncontrado = servicio.get(); //obtiene el servicio
+            servicioEncontrado.setUsuario(usuario); //asigna el usuario
+            repositorioServicios.save(servicioEncontrado); //guarda el servicio con el usuario asignado
         }
     }
-        */
 }

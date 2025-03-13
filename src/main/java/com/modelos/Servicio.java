@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,6 +15,7 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -37,9 +39,20 @@ public class Servicio {
     @Positive(message="El precio debe ser mayor a 0")
     private Double precio;
 
-    private String ubicacion;
+	@NotBlank(message="La ciudad es obligatoria")
+    @Size(min=3, max=100, message="La ciudad debe tener entre 3 y 30 caracteres")
+    private String ciudad;
+
     @DateTimeFormat(pattern="yyyy-MM-dd")
     private Date fechaPublicacion = new Date();
+
+	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", 
+			 message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
+	private String fotoServicio;
+
+	@ManyToOne(fetch=FetchType.LAZY)
+	@JoinColumn(name="usuario_id") 
+	private Usuario creador;
 
     // Relación con Usuario (Un usuario puede publicar muchos servicios)
     @ManyToOne
@@ -77,7 +90,7 @@ public class Servicio {
 	}
 
 	public String getUbicacion() {
-		return ubicacion;
+		return ciudad;
 	}
 
 	public Date getFechaPublicacion() {
@@ -109,7 +122,7 @@ public class Servicio {
 	}
 
 	public void setUbicacion(String ubicacion) {
-		this.ubicacion = ubicacion;
+		this.ciudad = ubicacion;
 	}
 
 	public void setFechaPublicacion(Date fechaPublicacion) {
@@ -122,5 +135,13 @@ public class Servicio {
 
 	public void setCategoria(Categoria categoria) {
 		this.categoria = categoria;
+	}
+
+	public String getFotoServicio() {
+		return fotoServicio;
+	}
+
+	public void setFotoServicio(String fotoServicio) {
+		this.fotoServicio = fotoServicio;
 	}
 }
