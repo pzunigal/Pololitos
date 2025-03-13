@@ -29,7 +29,7 @@ public class ControladorHome {
 	// Método para manejar la búsqueda con filtros
     @GetMapping("/buscar")
     public String buscar(
-        @RequestParam(value = "titulo", required = false) String nombre,
+        @RequestParam(value = "nombre", required = false) String nombre,
         @RequestParam(value = "usuario", required = false) Usuario usuario,
         @RequestParam(value = "categoria", required = false) Categoria categoria,
         @RequestParam(value = "precio", required = false) Double precio,
