@@ -20,7 +20,7 @@ import com.servicios.ServicioServicios;
 import jakarta.validation.Valid;
 
 @Controller
-public class ServicioController {
+public class ControladorServicios {
 
     @Autowired
     private ServicioServicios servicioServicios;
