@@ -39,7 +39,7 @@
                     <form:input path="telefono"/>
                     <form:errors path="telefono"/>
                 </div>
-            </div>
+            </div> 
             <div class="input-group">
                 <form:label path="fotoPerfil">URL perfil:</form:label>
                 <form:input path="fotoPerfil"/>
