@@ -33,7 +33,7 @@ public class ControladorServicios {
         List<Categoria> categorias = servicioCategorias.obtenerTodas();
         model.addAttribute("categorias", categorias);
         model.addAttribute("servicio", new Servicio());
-        return "testingFormAddService.jsp";
+        return "nuevoServicio.jsp";
     }
 
     // endpoint para guardar el servicio
@@ -46,7 +46,7 @@ public class ControladorServicios {
             List<Categoria> categorias = servicioCategorias.obtenerTodas();
             model.addAttribute("categorias", categorias);
             model.addAttribute("usuario", usuario); // para mantener el usuario en sesion incluso si tenemos errores
-            return "testingFormAddService.jsp";
+            return "nuevoServicio.jsp";
         }
 
         servicio.setUsuario(usuario); // Asigna el usuario de la sesión
