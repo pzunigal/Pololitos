@@ -33,13 +33,13 @@
                 <input type="text" placeholder="¿Qué necesitas hacer?">
                 <a href=""><img src="img/busqueda.png" alt=""></a>
             </div>
-            
+
             <c:choose>
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
                     <span>Bienvenido, ${sessionScope.usuarioEnSesion.nombre} ${sessionScope.usuarioEnSesion.apellido}</span>
                     <a href="/logout"><button>Cerrar Sesión</button></a>
                 </c:when>
-                
+
                 <c:otherwise>
                     <a href="/login"><button>Login</button></a>
                     <a href="/registro"><button>Register</button></a>
@@ -54,6 +54,28 @@
                 <h1>Publica un Pololo. <br>Alguien lo hará por ti.</h1>
                 <p>Conectamos personas que necesitan ayuda con tareas y las conectamos con profesionales</p>
                 <button>SOLICITAR ANUNCIO</button>
+            </div>
+        </div>
+
+        <!-- Sección restaurada de Empleos Recomendados -->
+        <div class="section">
+            <h2>Empleos Recomendados</h2>
+            <div class="cards">
+                <div class="card">
+                    <img src="img/work.jpg" alt="Trabajo recomendado">
+                    <h2>Fontanero</h2>
+                    <p>Ciudad: Santiago</p>
+                </div>
+                <div class="card">
+                    <img src="img/work.jpg" alt="Trabajo recomendado">
+                    <h2>Electricista</h2>
+                    <p>Ciudad: Valparaíso</p>
+                </div>
+                <div class="card">
+                    <img src="img/work.jpg" alt="Trabajo recomendado">
+                    <h2>Carpintero</h2>
+                    <p>Ciudad: Concepción</p>
+                </div>
             </div>
         </div>
     </main>
