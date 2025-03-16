@@ -38,8 +38,9 @@
             </div>
             
             <div class="mb-3">
-                <label for="ubicacion" class="form-label">Ubicación (opcional):</label>
-                <form:input path="ubicacion" class="form-control"/>
+                <label for="ciudad" class="form-label">Ciudad:</label>
+                <form:input path="ciudad" class="form-control"/>
+                <form:errors path="ciudad" class="text-danger"/>
             </div>
             
             <div class="mb-3">
