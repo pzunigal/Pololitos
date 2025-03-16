@@ -41,7 +41,7 @@ public class Usuario {
 	private String fotoPerfil;
 	
 	@NotBlank(message="Por favor, ingresa una telefono válido")
-	@Pattern(regexp = "\\d{10,15}", message="El número de teléfono debe contener entre 10 y 15 dígitos")
+	@Pattern(regexp = "\\d{9,15}", message="El número de teléfono debe contener entre 10 y 15 dígitos")
 	private String telefono;
 
 	@NotBlank(message="Por favor, ingresa una contraseña")
