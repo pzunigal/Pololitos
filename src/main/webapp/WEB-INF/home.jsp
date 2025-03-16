@@ -8,6 +8,7 @@
 <title>Pololitos</title>
 <!-- CSS -->
 <!--<link rel="stylesheet" href="/css/dashboard.css">-->
+<link rel="stylesheet" href="/css/home.css">
 <!-- BOOTSTRAP -->
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <!-- FONT AWESOME (iconos) -->
@@ -26,28 +27,37 @@
                     <li><a href="#">Contacto</a></li>
                     <li><a href="#">Nosotros</a></li>
                 </ul>
+            </nav>
         </div>
         <div class="user-info">
-            <a href=""><img src="img/busqueda.png" alt=""></a>
+            <div class="circle-busqueda"><input type="text" placeholder="¿Que necesitas hacer?"><a href=""><img src="img/busqueda.png" alt=""></a></div>
             <a href=""><img src="img/user.png" alt="Usuario"></a>
             <button>Cerrar Sesión</button>
         </div>
     </header>
-    <main class="row">
-        <div class="col-8">
-            <c:forEach items="$servicios" var="servicio">
-                <div class="card" style="width: 18rem;">
-                    <img src="${servicio.fotoServicio}" class="card-img-top" alt="...">
-                    <div class="card-body">
-                        <h5 class="card-title"><a href="/home/${servicio.id}">${servicio.titulo}</a></h5>
-                        <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-                    </div>
-                  </div>
-                  <div class="card-footer text-end">
-                    <c:if test="${servicio.creador.id == usuarioEnSesion.id }" >
-                        <a href="/editar/${servicio.id}" ><i class="fa-solid fa-pen"></i></a>
-                    </c:if>
-            </c:forEach>
+    <main>
+        <div class="container">
+            <div class="content">
+                <h1>Publica un Pololo. <br>Alguien lo hará por ti.</h1>
+                <p>Conectamos personas que necesitan ayuda con tareas y las conectamos con profesionales</p>
+                <button>SOLICITAR ANUNCIO</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Empleos Recomendados</h2>
+            <div class="cards">
+                <div class="card">
+                    <img src="img/work.jpg" alt="">
+                    <h2>Fontanero</h2>
+                    <p>Ciudad: </p>
+                </div>
+                <div class="card">
+                    <img src="img/work.jpg" alt="">
+                    <h2>Fontanero</h2>
+                    <p>Ciudad: </p>
+                </div>
+            </div>
         </div>
     </main>
     <footer>
