@@ -23,7 +23,7 @@ public class ControladorHome {
     @GetMapping("/home")
 	public String index(Model model) {
 		model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
-		return "index.jsp";
+		return "home.jsp";
 	}
 
 	// Método para manejar la búsqueda con filtros
