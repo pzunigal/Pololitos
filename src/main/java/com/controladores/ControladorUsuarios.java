@@ -38,7 +38,7 @@ public class ControladorUsuarios {
 		} else {
 			//Guardo al nuevo usuario en sesión
 			session.setAttribute("usuarioEnSesion", nuevoUsuario);
-			return "redirect:/home";
+			return "redirect:/";
 		}
 		
 	}
@@ -66,14 +66,14 @@ public class ControladorUsuarios {
             return "login.jsp";
         } else {
             session.setAttribute("usuarioEnSesion", usuario);
-            return "redirect:/home";
+            return "redirect:/";
         }
     }
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/home";
+		return "redirect:/";
 	}
 
 	@GetMapping("/editarPerfil")
@@ -114,7 +114,5 @@ public class ControladorUsuarios {
 	session.setAttribute("usuarioEnSession", usuarioEnSesion);
 
 	return "redirect:/perfil";
-	
 	}
-
 }
