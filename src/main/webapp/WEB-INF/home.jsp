@@ -38,6 +38,7 @@
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
                     <span>Bienvenido, ${sessionScope.usuarioEnSesion.nombre} ${sessionScope.usuarioEnSesion.apellido}</span>
                     <a href="/logout"><button>Cerrar Sesión</button></a>
+                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
                 </c:when>
                 
                 <c:otherwise>
