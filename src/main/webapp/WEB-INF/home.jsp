@@ -42,8 +42,8 @@
                         <h5 class="card-title"><a href="/home/${servicio.id}">${servicio.titulo}</a></h5>
                         <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
                     </div>
-                  </div>
-                  <div class="card-footer text-end">
+                </div>
+                <div class="card-footer text-end">
                     <c:if test="${servicio.creador.id == usuarioEnSesion.id }" >
                         <a href="/editar/${servicio.id}" ><i class="fa-solid fa-pen"></i></a>
                     </c:if>
