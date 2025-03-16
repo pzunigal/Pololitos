@@ -42,7 +42,7 @@
                 
                 <c:otherwise>
                     <a href="/login"><button>Login</button></a>
-                    <a href="/register"><button>Register</button></a>
+                    <a href="/registro"><button>Register</button></a>
                 </c:otherwise>
             </c:choose>
         </div>
