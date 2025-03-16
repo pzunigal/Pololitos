@@ -30,15 +30,15 @@
         </div>
         <div class="user-info">
             <div class="circle-busqueda">
-                <input type="text" placeholder="¿Qué necesitas hacer?">
-                <a href=""><img src="img/busqueda.png" alt=""></a>
+                <input type="text" placeholder="¿Qué servicio buscas?">
+                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
             </div>
             
             <c:choose>
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
                     <span>Bienvenido, ${sessionScope.usuarioEnSesion.nombre} ${sessionScope.usuarioEnSesion.apellido}</span>
-                    <a href="/logout"><button>Cerrar Sesión</button></a>
                     <a href="/servicios/publicar"><button>Crear Servicio</button></a>
+                    <a href="/logout"><button>Cerrar Sesión</button></a>
                 </c:when>
                 
                 <c:otherwise>
@@ -53,7 +53,7 @@
         <div class="container">
             <div class="content">
                 <h1>Publica un Pololo. <br>Alguien lo hará por ti.</h1>
-                <p>Conectamos personas que necesitan ayuda con tareas y las conectamos con profesionales</p>
+                <p>Conectamos a personas que buscan ayuda con expertos dispuestos a brindar soluciones</p>
                 <button>SOLICITAR ANUNCIO</button>
             </div>
         </div>
