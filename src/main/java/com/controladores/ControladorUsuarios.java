@@ -66,14 +66,14 @@ public class ControladorUsuarios {
             return "login.jsp";
         } else {
             session.setAttribute("usuarioEnSesion", usuario);
-            return "redirect:/home";
+            return "redirect:/";
         }
     }
 	
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.invalidate();
-		return "redirect:/home";
+		return "redirect:/";
 	}
 
 	@GetMapping("/editarPerfil")
