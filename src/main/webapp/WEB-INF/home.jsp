@@ -27,6 +27,7 @@
                     <li><a href="#">Contacto</a></li>
                     <li><a href="#">Nosotros</a></li>
                 </ul>
+            </nav>
         </div>
         <div class="user-info">
             <div class="circle-busqueda"><input type="text" placeholder="¿Que necesitas hacer?"><a href=""><img src="img/busqueda.png" alt=""></a></div>

@@ -20,6 +20,7 @@
                     <li><a href="#">Contacto</a></li>
                     <li><a href="#">Nosotros</a></li>
                 </ul>
+            </nav>
         </div>
         <div class="user-info">
             <a href=""><img src="img/busqueda.png" alt=""></a>
