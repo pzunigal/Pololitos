@@ -20,7 +20,7 @@ public class ControladorHome {
     @Autowired
     private ServicioServicios servicioServicios;
 
-    @GetMapping("/home")
+    @GetMapping("/")
 	public String index(Model model) {
 		model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
 		return "home.jsp";

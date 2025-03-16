@@ -39,9 +39,9 @@ public class ControladorServicios {
     // endpoint para guardar el servicio
     @PostMapping("/servicios/publicar")
     public String crearServicio(@Valid @ModelAttribute("servicio") Servicio servicio,
-            BindingResult result,
-            @SessionAttribute("usuario") Usuario usuario,
-            Model model) {
+                                BindingResult result,
+                                @SessionAttribute("usuario") Usuario usuario,
+                                Model model) {
         if (result.hasErrors()) {
             List<Categoria> categorias = servicioCategorias.obtenerTodas();
             model.addAttribute("categorias", categorias);
