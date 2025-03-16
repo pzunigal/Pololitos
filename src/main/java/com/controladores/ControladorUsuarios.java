@@ -38,7 +38,7 @@ public class ControladorUsuarios {
 		} else {
 			//Guardo al nuevo usuario en sesión
 			session.setAttribute("usuarioEnSesion", nuevoUsuario);
-			return "redirect:/home";
+			return "redirect:/";
 		}
 		
 	}
@@ -114,7 +114,5 @@ public class ControladorUsuarios {
 	session.setAttribute("usuarioEnSession", usuarioEnSesion);
 
 	return "redirect:/perfil";
-	
 	}
-
 }
