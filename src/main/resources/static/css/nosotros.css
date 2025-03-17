@@ -8,25 +8,6 @@ body {
     min-height: 100vh;
 }
 
-<<<<<<< HEAD
-.img-logo {
-    background-size: cover;
-    background-position: center;
-    width: 700px;
-}
-
-.divider {
-    width: 1px;
-    background-color: #141519;
-    height: 40%;
-    padding-right: 4.5px;
-    border-radius: 5px;
-    margin-right: 50px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-=======
->>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 header {
     position:fixed;
     top: 0;
@@ -262,7 +243,7 @@ main::before {
     margin-bottom: 20px;
     box-shadow: 0,4px,10px,rgba(0,0,0,1.2);
 }
-   
+
 
 
 /* Footer */
@@ -276,8 +257,5 @@ footer {
     text-align: center;
     padding: 7px 0;
     font-size: 14px;
-<<<<<<< HEAD
-=======
     z-index: 1001;
->>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 }
