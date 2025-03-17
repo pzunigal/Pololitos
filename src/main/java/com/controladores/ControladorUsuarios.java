@@ -101,7 +101,7 @@ public class ControladorUsuarios {
 		usuario.setEmail(usuarioEnSesion.getEmail());
 		usuario.setTelefono(usuarioEnSesion.getTelefono());
 
-		return "editarPerfil.jsp";
+		return "editarUsuario.jsp";
 	}
 
 	@PostMapping("/actualizarPerfil")
@@ -109,7 +109,7 @@ public class ControladorUsuarios {
 								   BindingResult result,
 								   HttpSession session) {
 	if (result.hasErrors()) {
-		return "editarPerfil.jsp";
+		return "editarUsuario.jsp";
 	}
 
 	Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");

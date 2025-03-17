@@ -17,10 +17,6 @@
             </a>
             <nav>
                 <ul class="nav-links">
-<<<<<<< HEAD
-                    <li><a href="/">Inicio</a></li>
-=======
->>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
                     <li><a href="/servicios">Servicios</a></li>
                 </ul>
             </nav>
@@ -34,7 +30,7 @@
     <main>
         <div class="profile-card">
             <h1 class="name">Editar Perfil</h1>
-            <form action="#" method="post">
+            <form action="/actualizarPerfil" method="post">
                 <label for="name">Nombre:</label>
                 <input type="text" id="name" name="name" class="input-field" placeholder="Ingresa tu nombre" required>
 
