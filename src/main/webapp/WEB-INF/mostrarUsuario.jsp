@@ -55,7 +55,7 @@
             <p class="contact-info">
                 Correo: <a href="mailto:${usuario.email}" class="link">${usuario.email}</a>
             </p>
-            <button href="/editarPerfil" class="edit-button">Editar Perfil</button>
+            <a href="/editarPerfil" class="edit-button">Editar Perfil</a>
         </div>
         <!-- Añadir la lista de servicios que ofrece visible para el propio usuario y otros,
         Añadir la lista de servicios que ha solicitado visible solo para el propio usuario-->
