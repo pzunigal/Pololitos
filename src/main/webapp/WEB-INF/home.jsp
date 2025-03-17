@@ -9,9 +9,9 @@
 <!-- CSS -->
 <link rel="stylesheet" href="/css/home.css">
 <!-- BOOTSTRAP -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
 <!-- FONT AWESOME (iconos) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"> -->
 </head>
 <body>
 	<header>
@@ -62,7 +62,7 @@
             <h2>Empleos Recomendados</h2>
             <div class="cards">
                 <div class="card">
-                    <img src="img/trabajo.jpg" alt="">
+                    <img src="img/work.jpg" alt="">
                     <h2>Fontanero</h2>
                     <p>Ciudad: </p>
                 </div>
