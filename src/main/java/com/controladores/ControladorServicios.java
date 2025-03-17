@@ -92,4 +92,18 @@ public class ControladorServicios {
         Matcher matcher = pattern.matcher(url);
         return matcher.matches();
     }
+
+    @GetMapping("/mis-servicios")
+    public String verMisServicios(HttpSession session, Model model) {
+        // Verificar si el usuario está logueado
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+        if (usuarioEnSesion == null) {
+            return "redirect:/login"; // Redirigir a login si no está logueado
+        }
+
+        // Obtener los servicios del usuario logueado
+        List<Servicio> servicios = servicioServicios.buscarPorUsuario(usuarioEnSesion);
+        model.addAttribute("servicios", servicios);
+        return "verMisServicios.jsp"; // Mostrar los servicios del usuario en esta vista
+    }
 }
