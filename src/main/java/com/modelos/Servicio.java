@@ -45,10 +45,9 @@ public class Servicio {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaPublicacion = new Date();
 
-	// Campo obligatorio
-	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
-	@NotBlank(message="Por favor, ingresa una foto de perfil")
-	private String fotoServicio;
+	
+    @NotBlank(message = "Por favor, suba una imagen del servicio")
+    private String fotoServicio;
 
 	// Relación con Usuario (Un usuario puede publicar muchos servicios)
 	@ManyToOne
