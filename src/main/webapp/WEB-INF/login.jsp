@@ -8,10 +8,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="/css/login-registro.css">
     </head>
 <body>
-    <img src="img/pololitos.png" alt="Logo pololitos" class="img-logo">
+    <a href="/">
+        <div class="logo">
+            <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+        </div>
+    </a>
     <div class="divider"></div>
     <div class="login-container">
         <h2>Iniciar Sesión</h2>
@@ -31,7 +35,11 @@
         <p>¿No tienes una cuenta? <a href="/registro">Registrate</a></p>
     </div>
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <ul class="nav-footer">
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+        </ul>
     </footer>
 </body>
 </html>

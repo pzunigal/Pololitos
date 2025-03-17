@@ -1,6 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<<<<<<< HEAD
+=======
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 <!DOCTYPE html>
 <html>
 <head>
@@ -11,14 +14,33 @@
 <body>
 	<header>
         <div class="nav-container">
+<<<<<<< HEAD
             <div class="logo">
                 <img src="img/pololitosBlanco.png" alt="Logo pololitos">
             </div>
             <nav>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/servicios">Servicios</a></li>
+                    </ul>
+                </nav>
+        </div>
+        <div class="user-info">
+            <div class="circle-busqueda"><input type="text" placeholder="¿Que necesitas hacer?"><a href=""><img src="img/busqueda.png" alt=""></a></div>
+            <a href=""><img src="img/user.png" alt="Usuario"></a>
+            <button>Cerrar Sesión</button>
+=======
+            <a href="/">
+                <div class="logo">
+                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+                </div>
+            </a>
+            <nav>
                 <ul class="nav-links">
-                    <li><a href="/">Inicio</a></li>
                     <li><a href="/servicios">Servicios</a></li>
                 </ul>
+            </nav>
         </div>
         <div class="user-info">
             <div class="circle-busqueda">
@@ -40,6 +62,7 @@
                     <a href="/registro"><button>Regístrate</button></a>
                 </c:otherwise>
             </c:choose>
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
         </div>
     </header>
     <main>
