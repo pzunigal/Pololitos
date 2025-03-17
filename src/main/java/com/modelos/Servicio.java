@@ -14,7 +14,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
@@ -45,8 +44,9 @@ public class Servicio {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaPublicacion = new Date();
 
-	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
-	private String fotoServicio;
+	
+    @NotBlank(message = "Por favor, suba una imagen del servicio")
+    private String fotoServicio;
 
 	// Relación con Usuario (Un usuario puede publicar muchos servicios)
 	@ManyToOne
@@ -89,7 +89,7 @@ public class Servicio {
 		return precio;
 	}
 
-	public String getUbicacion() {
+	public String getCiudad() {
 		return ciudad;
 	}
 
@@ -121,8 +121,8 @@ public class Servicio {
 		this.precio = precio;
 	}
 
-	public void setUbicacion(String ubicacion) {
-		this.ciudad = ubicacion;
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
 	}
 
 	public void setFechaPublicacion(Date fechaPublicacion) {
