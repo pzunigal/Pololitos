@@ -26,15 +26,12 @@
     </style>
 </head>
 <body>
-<<<<<<< HEAD
     <div class="container mt-4">
         <h2>Publicar un nuevo servicio</h2>
         
         <c:if test="${not empty error}">
             <div class="alert alert-danger">${error}</div>
         </c:if>
-=======
->>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 
     <div class="container mt-5">
         <div class="row justify-content-center">
@@ -49,7 +46,7 @@
                             <div class="alert alert-danger">${error}</div>
                         </c:if>
 
-                        <form:form modelAttribute="servicio" action="/publicar" method="post" class="needs-validation">
+                        <form:form modelAttribute="servicio" action="/publicar" method="post" class="needs-validation" enctype="multipart/form-data"> 
                             <div class="mb-3">
                                 <label for="nombre" class="form-label">Nombre del Servicio:</label>
                                 <div class="input-group">
@@ -82,7 +79,7 @@
 
                             <div class="mb-3">
                                 <label for="fotoServicio" class="form-label">Foto del Servicio:</label>
-                                <input type="file" id="fotoServicio" class="form-control" accept="image/*" onchange="previewImage(event)">
+                                <input type="file" id="fotoServicio" name="fotoServicio" class="form-control" accept="image/*" onchange="previewImage(event)">
                                 <img id="preview" class="mt-3 img-thumbnail" style="display:none; max-width: 200px;">
                             </div>
 
