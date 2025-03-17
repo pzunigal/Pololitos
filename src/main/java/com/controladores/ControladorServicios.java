@@ -21,6 +21,7 @@ import jakarta.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ControladorServicios {
@@ -59,7 +60,7 @@ public class ControladorServicios {
         }
 
         if (result.hasErrors()) {
-            logger.error("Errores de validación en el formulario: {}", result.getAllErrors());
+            logger.error("Errores en el formulario: {}", result.getAllErrors());
             cargarDatosFormulario(model, usuarioEnSesion, servicio, "Existen errores en los campos del formulario.");
             return "nuevoServicio.jsp";
         }
@@ -70,15 +71,20 @@ public class ControladorServicios {
             return "nuevoServicio.jsp";
         }
 
-        if (file.getSize() > 5_000_000) { // 5MB de límite
-            logger.error("La imagen subida es demasiado grande. Tamaño: {} bytes", file.getSize());
+        if (file.getSize() > 5_000_000) { // Límite de 5MB
+            logger.error("Imagen demasiado grande. Tamaño: {} bytes", file.getSize());
             cargarDatosFormulario(model, usuarioEnSesion, servicio, "La imagen es demasiado grande. Máximo permitido: 5MB.");
             return "nuevoServicio.jsp";
         }
 
         try {
-            String imageUrl = servicioCloudinary.uploadFile(file);
-            servicio.setFotoServicio(imageUrl);
+            Optional<String> imageUrl = Optional.ofNullable(servicioCloudinary.uploadFile(file));
+            if (imageUrl.isEmpty() || imageUrl.get().isBlank()) {
+                logger.error("La imagen no se pudo cargar correctamente.");
+                cargarDatosFormulario(model, usuarioEnSesion, servicio, "No se pudo obtener la URL de la imagen.");
+                return "nuevoServicio.jsp";
+            }
+            servicio.setImgUrl(imageUrl.get());
         } catch (Exception e) {
             logger.error("Error al subir la imagen: {}", e.getMessage());
             cargarDatosFormulario(model, usuarioEnSesion, servicio, "Error al subir la imagen: " + e.getMessage());

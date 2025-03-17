@@ -40,11 +40,12 @@ public class Servicio {
 	@JoinColumn(name = "usuario_id", nullable = false)
 	private Usuario usuario;
 
+	@NotNull(message = "Debe seleccionar una categoría")
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
 	private Categoria categoria;
 
-	@Column(updatable = false)
+	@Column(nullable = false, updatable = false)
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date createdAt;
 
@@ -115,12 +116,12 @@ public class Servicio {
 		this.fechaPublicacion = fechaPublicacion;
 	}
 
-	public String getFotoServicio() {
+	public String getImgUrl() {
 		return imgUrl;
 	}
 
-	public void setFotoServicio(String fotoServicio) {
-		this.imgUrl = fotoServicio;
+	public void setImgUrl(String imgUrl) {
+		this.imgUrl = imgUrl;
 	}
 
 	public Usuario getUsuario() {
