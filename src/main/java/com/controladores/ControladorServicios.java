@@ -112,22 +112,19 @@ public class ControladorServicios {
 
     @GetMapping("/editar-servicio/{id}")
     public String editarServicio(@PathVariable("id") Long id, HttpSession session, Model model) {
-        // Verificar si el usuario está logueado
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuarioEnSesion == null) {
-            return "redirect:/login"; // Redirigir a login si no está logueado
+            return "redirect:/login";
         }
 
-        // Buscar el servicio por ID
         Servicio servicio = servicioServicios.obtenerPorId(id);
         if (servicio == null || !servicio.getUsuario().equals(usuarioEnSesion)) {
-            // Si no existe o no pertenece al usuario, redirigir
             return "redirect:/mis-servicios";
         }
 
-        // Cargar los datos para el formulario de edición
         cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
-        return "editarServicio.jsp"; // Mostrar el formulario con los datos del servicio
+        model.addAttribute("servicio", servicioServicios.obtenerPorId(id));
+        return "editarServicio.jsp";
     }
 
     @PatchMapping("/actualizar-servicio/{id}")
