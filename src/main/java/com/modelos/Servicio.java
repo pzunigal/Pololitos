@@ -4,144 +4,127 @@ import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
-import jakarta.validation.constraints.Size;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "servicios")
 public class Servicio {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-	@NotBlank(message = "El nombre del servicio es obligatorio")
-	@Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")
-	private String nombre;
+    @NotBlank(message = "El nombre del servicio es obligatorio")
+    @Size(min = 3, max = 100, message = "El nombre debe tener entre 3 y 100 caracteres")
+    private String nombre;
 
-	@NotBlank(message = "La descripción del servicio es obligatoria")
-	@Size(min = 10, message = "La descripción debe tener al menos 10 caracteres")
-	private String descripcion;
+    @NotBlank(message = "La descripción del servicio es obligatoria")
+    @Size(min = 10, message = "La descripción debe tener al menos 10 caracteres")
+    private String descripcion;
 
-	@NotNull(message = "Debe especificar un precio")
-	@Positive(message = "El precio debe ser mayor a 0")
-	private Double precio;
+    @NotNull(message = "Debe especificar un precio")
+    @Positive(message = "El precio debe ser mayor a 0")
+    private Double precio;
 
-	@NotBlank(message = "La ciudad es obligatoria")
-	@Size(min = 3, max = 100, message = "La ciudad debe tener entre 3 y 30 caracteres")
-	private String ciudad;
+    @NotBlank(message = "La ciudad es obligatoria")
+    @Size(min = 3, max = 100, message = "La ciudad debe tener entre 3 y 100 caracteres")
+    private String ciudad;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date fechaPublicacion = new Date();
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date fechaPublicacion = new Date();
 
-	
     @NotBlank(message = "Por favor, suba una imagen del servicio")
     private String fotoServicio;
 
-	// Relación con Usuario (Un usuario puede publicar muchos servicios)
-	@ManyToOne
-	@JoinColumn(name = "creador_id", nullable = false)
-	private Usuario creador;
+    // Relación con Usuario (Un usuario puede publicar muchos servicios)
+    @ManyToOne
+    @JoinColumn(name = "usuario_id", nullable = false)
+    private Usuario usuario;
 
-	// Relación con Usuario (Un usuario puede publicar muchos servicios)
-	@ManyToOne
-	@JoinColumn(name = "usuario_id", nullable = false)
-	private Usuario usuario;
+    // Relación con Categoría (Un servicio pertenece a una categoría)
+    @ManyToOne
+    @JoinColumn(name = "categoria_id", nullable = false)
+    private Categoria categoria;
 
-	// Relación con Categoría (Un servicio pertenece a una categoría)
-	@ManyToOne
-	@JoinColumn(name = "categoria_id", nullable = false)
-	private Categoria categoria;
+    public Servicio() {}
 
-	public Servicio() {
-	}
+    @Column(updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date createdAt;
 
-	@Column(updatable = false)
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date createdAt;
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    private Date updatedAt;
 
-	@DateTimeFormat(pattern = "yyyy-MM-dd")
-	private Date updatedAt;
+    public Long getId() {
+        return id;
+    }
 
-	public Long getId() {
-		return id;
-	}
+    public String getNombre() {
+        return nombre;
+    }
 
-	public String getNombre() {
-		return nombre;
-	}
+    public String getDescripcion() {
+        return descripcion;
+    }
 
-	public String getDescripcion() {
-		return descripcion;
-	}
+    public Double getPrecio() {
+        return precio;
+    }
 
-	public Double getPrecio() {
-		return precio;
-	}
+    public String getCiudad() {
+        return ciudad;
+    }
 
-	public String getCiudad() {
-		return ciudad;
-	}
+    public Date getFechaPublicacion() {
+        return fechaPublicacion;
+    }
 
-	public Date getFechaPublicacion() {
-		return fechaPublicacion;
-	}
+    public Usuario getUsuario() {
+        return usuario;
+    }
 
-	public Usuario getUsuario() {
-		return usuario;
-	}
+    public Categoria getCategoria() {
+        return categoria;
+    }
 
-	public Categoria getCategoria() {
-		return categoria;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
 
-	public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
+    public void setDescripcion(String descripcion) {
+        this.descripcion = descripcion;
+    }
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
-	}
+    public void setPrecio(Double precio) {
+        this.precio = precio;
+    }
 
-	public void setPrecio(Double precio) {
-		this.precio = precio;
-	}
+    public void setCiudad(String ciudad) {
+        this.ciudad = ciudad;
+    }
 
-	public void setCiudad(String ciudad) {
-		this.ciudad = ciudad;
-	}
+    public void setFechaPublicacion(Date fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
+    }
 
-	public void setFechaPublicacion(Date fechaPublicacion) {
-		this.fechaPublicacion = fechaPublicacion;
-	}
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
-	public void setUsuario(Usuario usuario) {
-		this.usuario = usuario;
-	}
+    public void setCategoria(Categoria categoria) {
+        this.categoria = categoria;
+    }
 
-	public void setCategoria(Categoria categoria) {
-		this.categoria = categoria;
-	}
+    public String getFotoServicio() {
+        return fotoServicio;
+    }
 
-	public String getFotoServicio() {
-		return fotoServicio;
-	}
-
-	public void setFotoServicio(String fotoServicio) {
-		this.fotoServicio = fotoServicio;
-	}
+    public void setFotoServicio(String fotoServicio) {
+        this.fotoServicio = fotoServicio;
+    }
 }

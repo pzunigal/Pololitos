@@ -1,6 +1,5 @@
 package com.controladores;
 
-import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +7,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.modelos.Categoria;
 import com.modelos.Servicio;
@@ -28,24 +27,25 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioServicios servicioServicios;
+    
     @Autowired
     private ServicioCategorias servicioCategorias;
+    
     @Autowired
     private ServicioCloudinary servicioCloudinary;
 
-    // endpoint para renderizar el formulario visual
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 
         if (usuarioEnSesion == null) {
-            return "redirect:/login"; // Si no hay usuario en sesión, redirigir al login
+            return "redirect:/login";
         }
 
         List<Categoria> categorias = servicioCategorias.obtenerTodas();
         model.addAttribute("categorias", categorias);
         model.addAttribute("servicio", new Servicio());
-        model.addAttribute("usuario", usuarioEnSesion); // Agregar el usuario en sesión al modelo
+        model.addAttribute("usuario", usuarioEnSesion);
         return "nuevoServicio.jsp";
     }
 
@@ -58,7 +58,7 @@ public class ControladorServicios {
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 
         if (usuarioEnSesion == null) {
-            return "redirect:/login"; // Asegurar que hay un usuario en sesión
+            return "redirect:/login";
         }
 
         if (result.hasErrors()) {
@@ -68,19 +68,22 @@ public class ControladorServicios {
             return "nuevoServicio.jsp";
         }
 
-        // Subir imagen a Cloudinary
+        if (file.isEmpty()) {
+            model.addAttribute("error", "Debe subir una imagen para el servicio.");
+            return "nuevoServicio.jsp";
+        }
+
         try {
             String imageUrl = servicioCloudinary.uploadFile(file);
-            servicio.setFotoServicio(imageUrl); // Guardamos la URL en el campo 'fotoServicio'
-        } catch (IOException e) {
-            model.addAttribute("error", "Error al subir la imagen");
+            servicio.setFotoServicio(imageUrl);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
             return "nuevoServicio.jsp";
         }
 
         servicio.setUsuario(usuarioEnSesion);
         servicioServicios.guardar(servicio);
 
-        return "redirect:/perfilUsuario";
+        return "redirect:/";
     }
-
 }
