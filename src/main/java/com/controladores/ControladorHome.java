@@ -21,10 +21,26 @@ public class ControladorHome {
     private ServicioServicios servicioServicios;
 
     @GetMapping("/")
-	public String index(Model model) {
-		model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
+	public String index() {
 		return "home.jsp";
 	}
+
+    @GetMapping("/servicios")
+    public String servicios(Model model) {
+        model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
+        return "servicios.jsp";
+    }
+
+    @GetMapping("/contacto")
+    public String contacto() {
+        return "contacto.jsp";
+    }
+
+    @GetMapping("/nosotros")
+    public String nosotros() {
+        return "nosotros.jsp";
+    }
+    
 
 	// Método para manejar la búsqueda con filtros
     @GetMapping("/buscar")

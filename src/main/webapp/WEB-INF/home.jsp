@@ -21,10 +21,8 @@
             </div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Servicios</a></li>
-                    <li><a href="#">Contacto</a></li>
-                    <li><a href="#">Nosotros</a></li>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/servicios">Servicios</a></li>
                 </ul>
             </nav>
         </div>
@@ -36,14 +34,16 @@
             
             <c:choose>
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <span>Bienvenido, ${sessionScope.usuarioEnSesion.nombre} ${sessionScope.usuarioEnSesion.apellido}</span>
+                    <a href="/perfilUsuario">
+                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
+                    </a>
                     <a href="/servicios/publicar"><button>Crear Servicio</button></a>
                     <a href="/logout"><button>Cerrar Sesión</button></a>
                 </c:when>
                 
                 <c:otherwise>
-                    <a href="/login"><button>Login</button></a>
-                    <a href="/registro"><button>Register</button></a>
+                    <a href="/login"><button>Iniciar sesión</button></a>
+                    <a href="/registro"><button>Regístrate</button></a>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -76,7 +76,11 @@
     </main>
 
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <ul class="nav-footer">
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+        </ul>
     </footer>
 </body>
 </html>
