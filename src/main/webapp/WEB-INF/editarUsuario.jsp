@@ -17,6 +17,10 @@
             </a>
             <nav>
                 <ul class="nav-links">
+<<<<<<< HEAD
+                    <li><a href="/">Inicio</a></li>
+=======
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
                     <li><a href="/servicios">Servicios</a></li>
                 </ul>
             </nav>

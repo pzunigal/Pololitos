@@ -26,6 +26,15 @@
     </style>
 </head>
 <body>
+<<<<<<< HEAD
+    <div class="container mt-4">
+        <h2>Publicar un nuevo servicio</h2>
+        
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger">${error}</div>
+        </c:if>
+=======
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 
     <div class="container mt-5">
         <div class="row justify-content-center">

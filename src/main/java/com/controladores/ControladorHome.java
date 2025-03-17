@@ -41,7 +41,6 @@ public class ControladorHome {
         return "nosotros.jsp";
     }
     
-
 	// Método para manejar la búsqueda con filtros
     @GetMapping("/buscar")
     public String buscar(

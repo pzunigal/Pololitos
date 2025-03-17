@@ -77,17 +77,17 @@ public class ControladorUsuarios {
 	}
 
 	@GetMapping("/perfilUsuario")
-    public String mostrarPerfil(HttpSession session, Model model){
-        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+	public String mostrarPerfil(HttpSession session, Model model){
+		Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 
-        if (usuarioEnSesion == null) {
-            return "redirect:/login";
-        }
+		if (usuarioEnSesion == null) {
+			return "redirect:/login";
+		}
 
-        model.addAttribute("usuario", usuarioEnSesion);
+		model.addAttribute("usuario", usuarioEnSesion);
 		
-        return "mostrarUsuario.jsp";
-    }
+		return "mostrarUsuario.jsp";
+	}
 
 	@GetMapping("/editarPerfil")
 	public String editarPerfil(HttpSession session, @ModelAttribute("usuario") Usuario usuario) {

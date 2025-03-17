@@ -11,6 +11,26 @@
 <body>
 	<header>
         <div class="nav-container">
+            <div class="logo">
+                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+            </div>
+            <nav>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="/">Inicio</a></li>
+                        <li><a href="/servicios">Servicios</a></li>
+                    </ul>
+                </nav>
+        </div>
+        <div class="user-info">
+            <div class="circle-busqueda"><input type="text" placeholder="¿Que necesitas hacer?"><a href=""><img src="img/busqueda.png" alt=""></a></div>
+            <a href=""><img src="img/user.png" alt="Usuario"></a>
+            <button>Cerrar Sesión</button>
+        </div>
+    </header>
+    <main>
+        <img src="img/pololitos.png" alt="Logo pololitos" class="img-logo">
+        <div class="divider"></div>
             <a href="/">
                 <div class="logo">
                     <img src="img/pololitosBlanco.png" alt="Logo pololitos">
