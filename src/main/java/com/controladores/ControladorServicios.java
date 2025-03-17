@@ -12,16 +12,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import com.modelos.Categoria;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
+import com.servicios.FileUploadService;
 import com.servicios.ServicioCategorias;
-import com.servicios.ServicioCloudinary;
 import com.servicios.ServicioServicios;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 public class ControladorServicios {
@@ -33,9 +31,7 @@ public class ControladorServicios {
     private ServicioCategorias servicioCategorias;
 
     @Autowired
-    private ServicioCloudinary servicioCloudinary;
-
-    private static final Logger logger = LoggerFactory.getLogger(ControladorServicios.class);
+    private FileUploadService fileUploadService;
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
@@ -47,57 +43,6 @@ public class ControladorServicios {
         return "nuevoServicio.jsp";
     }
 
-    @PostMapping("/publicar")
-    public String crearServicio(@Valid @ModelAttribute("servicio") Servicio servicio,
-                                BindingResult result,
-                                @RequestParam("fotoServicio") MultipartFile file,
-                                HttpSession session,
-                                Model model) {
-
-        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-        if (usuarioEnSesion == null) {
-            return "redirect:/login";
-        }
-
-        if (result.hasErrors()) {
-            logger.error("Errores en el formulario: {}", result.getAllErrors());
-            cargarDatosFormulario(model, usuarioEnSesion, servicio, "Existen errores en los campos del formulario.");
-            return "nuevoServicio.jsp";
-        }
-
-        if (file.isEmpty()) {
-            logger.error("No se ha subido una imagen para el servicio.");
-            cargarDatosFormulario(model, usuarioEnSesion, servicio, "Debe subir una imagen para el servicio.");
-            return "nuevoServicio.jsp";
-        }
-
-        if (file.getSize() > 5_000_000) { // Límite de 5MB
-            logger.error("Imagen demasiado grande. Tamaño: {} bytes", file.getSize());
-            cargarDatosFormulario(model, usuarioEnSesion, servicio, "La imagen es demasiado grande. Máximo permitido: 5MB.");
-            return "nuevoServicio.jsp";
-        }
-
-        try {
-            Optional<String> imageUrl = Optional.ofNullable(servicioCloudinary.uploadFile(file));
-            if (imageUrl.isEmpty() || imageUrl.get().isBlank()) {
-                logger.error("La imagen no se pudo cargar correctamente.");
-                cargarDatosFormulario(model, usuarioEnSesion, servicio, "No se pudo obtener la URL de la imagen.");
-                return "nuevoServicio.jsp";
-            }
-            servicio.setImgUrl(imageUrl.get());
-        } catch (Exception e) {
-            logger.error("Error al subir la imagen: {}", e.getMessage());
-            cargarDatosFormulario(model, usuarioEnSesion, servicio, "Error al subir la imagen: " + e.getMessage());
-            return "nuevoServicio.jsp";
-        }
-
-        servicio.setUsuario(usuarioEnSesion);
-        servicioServicios.guardar(servicio);
-        logger.info("Servicio creado exitosamente: {}", servicio.getNombre());
-
-        return "redirect:/";
-    }
-
     private void cargarDatosFormulario(Model model, Usuario usuario, Servicio servicio, String error) {
         List<Categoria> categorias = servicioCategorias.obtenerTodas();
         model.addAttribute("categorias", categorias);
@@ -107,4 +52,46 @@ public class ControladorServicios {
             model.addAttribute("error", error);
         }
     }
+
+    @PostMapping("/publicar")
+    @Transactional
+    public String crearServicio(@Valid @ModelAttribute("servicio") Servicio servicio,
+            BindingResult result,
+            @RequestParam("file") MultipartFile file,
+            HttpSession session,
+            Model model) {
+
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+        if (usuarioEnSesion == null) {
+            return "redirect:/login";
+        }
+
+        if (result.hasErrors()) {
+            model.addAttribute("error", "Existen errores en los campos del formulario.");
+            return "nuevoServicio.jsp";
+        }
+
+        if (file.isEmpty()) {
+            model.addAttribute("error", "Debe subir una imagen para el servicio.");
+            return "nuevoServicio.jsp";
+        }
+
+        try {
+            // Llamamos al controlador de subida para obtener la URL de la imagen
+            String imageUrl = fileUploadService.uploadFile(file);
+            if (imageUrl == null || imageUrl.isBlank()) {
+                model.addAttribute("error", "No se pudo obtener la URL de la imagen.");
+                return "nuevoServicio.jsp";
+            }
+            servicio.setImgUrl(imageUrl);
+        } catch (Exception e) {
+            model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
+            return "nuevoServicio.jsp";
+        }
+
+        servicio.setUsuario(usuarioEnSesion);
+        servicioServicios.guardar(servicio);
+        return "redirect:/";
+    }
+
 }
