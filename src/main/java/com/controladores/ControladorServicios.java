@@ -7,12 +7,10 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import com.modelos.Categoria;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
-import com.servicios.FileUploadService;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioServicios;
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +18,8 @@ import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Controller
 public class ControladorServicios {
@@ -29,9 +29,6 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioCategorias servicioCategorias;
-
-    @Autowired
-    private FileUploadService fileUploadService;
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
@@ -57,7 +54,7 @@ public class ControladorServicios {
     @Transactional
     public String crearServicio(@Valid @ModelAttribute("servicio") Servicio servicio,
             BindingResult result,
-            @RequestParam("file") MultipartFile file,
+            @RequestParam("imgUrl") String imgUrl,
             HttpSession session,
             Model model) {
 
@@ -71,27 +68,28 @@ public class ControladorServicios {
             return "nuevoServicio.jsp";
         }
 
-        if (file.isEmpty()) {
-            model.addAttribute("error", "Debe subir una imagen para el servicio.");
+        if (imgUrl.isBlank()) {
+            model.addAttribute("error", "Debe ingresar una URL para la imagen.");
             return "nuevoServicio.jsp";
         }
 
-        try {
-            // Llamamos al controlador de subida para obtener la URL de la imagen
-            String imageUrl = fileUploadService.uploadFile(file);
-            if (imageUrl == null || imageUrl.isBlank()) {
-                model.addAttribute("error", "No se pudo obtener la URL de la imagen.");
-                return "nuevoServicio.jsp";
-            }
-            servicio.setImgUrl(imageUrl);
-        } catch (Exception e) {
-            model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
+        // Validación de la URL
+        if (!esUrlValida(imgUrl)) {
+            model.addAttribute("error", "La URL de la imagen debe terminar en .png, .jpg o .jpeg.");
             return "nuevoServicio.jsp";
         }
 
+        servicio.setImgUrl(imgUrl);
         servicio.setUsuario(usuarioEnSesion);
         servicioServicios.guardar(servicio);
         return "redirect:/";
     }
 
+    // Método para validar que la URL termina con .png, .jpg o .jpeg
+    private boolean esUrlValida(String url) {
+        String regex = "^(https?:\\/\\/)?([a-z0-9]+[.])*[a-z0-9-]+\\.[a-z]+(\\/[^\\s]*)*(\\.png|\\.jpg|\\.jpeg)$";
+        Pattern pattern = Pattern.compile(regex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(url);
+        return matcher.matches();
+    }
 }

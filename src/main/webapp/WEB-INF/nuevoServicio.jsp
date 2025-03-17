@@ -43,7 +43,7 @@
                         <div class="card-body">
                             
 
-                            <form:form modelAttribute="servicio" action="/publicar" method="POST" class="needs-validation" enctype="multipart/form-data"> 
+                            <form:form modelAttribute="servicio" action="/publicar" method="POST" class="needs-validation">
                                 <div class="mb-3">
                                     <label for="nombre" class="form-label">Nombre del Servicio:</label>
                                     <div class="input-group">
@@ -75,10 +75,9 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="imageUrl" class="form-label">Foto del Servicio:</label>
-                                    <form:input path="imgUrl" type="file" class="form-control" accept="image/*" />
+                                    <label for="imgUrl" class="form-label">URL de la Foto del Servicio:</label>
+                                    <form:input path="imgUrl" type="text" class="form-control" placeholder="Ingrese la URL de la imagen" required="true"/>
                                     <form:errors path="imgUrl" class="text-danger"/>
-                                    <img id="preview" class="mt-3 img-thumbnail" style="display:none; max-width: 200px;">
                                 </div>
 
                                 <div class="mb-3">
