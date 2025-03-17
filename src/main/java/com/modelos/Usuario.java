@@ -36,14 +36,19 @@ public class Usuario {
 	@Transient 
 	private String confirmacion;
 	
+	// Campo obligatorio
 	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", 
 			 message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
+	@NotBlank(message="Por favor, ingresa una foto de perfil")
 	private String fotoPerfil;
 	
-	@Pattern(regexp = "\\d{10,15}", message="El número de teléfono debe contener entre 10 y 15 dígitos")
+	@NotBlank(message="Por favor, ingresa una telefono válido")
+	@Pattern(regexp = "\\d{9,15}", message="El número de teléfono debe contener entre 10 y 15 dígitos")
 	private String telefono;
 
-	private String direccion; // campo opcional
+	@NotBlank(message="Por favor, ingresa una contraseña")
+	@Size(min=3, message="La ciudad debe tener al menos 3 caracteres")
+	private String ciudad;
 
 	// Relacion con servicios ofrecidos
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -64,6 +69,9 @@ public class Usuario {
 	
 	@DateTimeFormat(pattern="yyyy-MM-dd")
 	private Date updatedAt;
+
+	@OneToMany(mappedBy = "creador", fetch = FetchType.LAZY)
+	private List<Servicio> serviciosCreados;
 	
 	public Usuario() {}
 
@@ -99,8 +107,8 @@ public class Usuario {
 		return telefono;
 	}
 
-	public String getDireccion() {
-		return direccion;
+	public String getCiudad() {
+		return ciudad;
 	}
 
 	public Date getCreatedAt() {
@@ -159,8 +167,8 @@ public class Usuario {
 		this.telefono = telefono;
 	}
 
-	public void setDireccion(String direccion) {
-		this.direccion = direccion;
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
 	}
 
 	public void setCreatedAt(Date createdAt) {
@@ -170,4 +178,23 @@ public class Usuario {
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
 	}
+
+	/*
+	public List<Servicio> getServiciosOfrecidos() {
+		return serviciosOfrecidos;
+	}
+
+	public void setServiciosOfrecidos(List<Servicio> serviciosOfrecidos) {
+		this.serviciosOfrecidos = serviciosOfrecidos;
+	}
+
+	public List<Servicio> getServiciosSolicitados() {
+		return serviciosSolicitados;
+	}
+
+	public void setServiciosSolicitados(List<Servicio> serviciosSolicitados) {
+		this.serviciosSolicitados = serviciosSolicitados;
+	}
+	*/
+
 }

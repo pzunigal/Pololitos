@@ -12,6 +12,15 @@ body {
     position: relative;
 }
 
+.input-group-two {
+    display: flex;
+    gap: 10px; 
+}
+
+.input-group-two .input-group {
+    flex: 1;
+}
+
 .img-logo {
     background-size: cover;
     background-position: center;

@@ -23,9 +23,9 @@
             </div>
             <div class="input-group">
                 <form:label path="passwordLogin">Contraseña</form:label>
-                <form:input path="passwordLogin"/>
+                <form:input path="passwordLogin" type="password"/>
                 <form:errors path="passwordLogin"/>
-            </div>
+            </div>            
             <button type="submit">Ingresar</button>
         </form:form>
         <p>¿No tienes una cuenta? <a href="/registro">Registrate</a></p>

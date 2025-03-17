@@ -38,8 +38,15 @@
             </div>
             
             <div class="mb-3">
-                <label for="ubicacion" class="form-label">Ubicación (opcional):</label>
-                <form:input path="ubicacion" class="form-control"/>
+                <label for="ciudad" class="form-label">Ciudad:</label>
+                <form:input path="ciudad" class="form-control"/>
+                <form:errors path="ciudad" class="text-danger"/>
+            </div>
+
+            <div class="mb-3">
+                <label for="fotoServicio" class="form-label">Foto del servicio:</label>
+                <form:input path="fotoServicio" class="form-control"/>
+                <form:errors path="fotoServicio" class="text-danger"/>
             </div>
             
             <div class="mb-3">
@@ -50,6 +57,7 @@
                         <form:option value="${categoria.id}" label="${categoria.nombre}"/>
                     </c:forEach>
                 </form:select>
+                <!-- Definir lista de categorias -->
                 <form:errors path="categoria" class="text-danger"/>
             </div>
             

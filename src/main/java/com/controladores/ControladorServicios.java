@@ -20,7 +20,7 @@ import com.servicios.ServicioServicios;
 import jakarta.validation.Valid;
 
 @Controller
-public class ServicioController {
+public class ControladorServicios {
 
     @Autowired
     private ServicioServicios servicioServicios;
@@ -33,26 +33,26 @@ public class ServicioController {
         List<Categoria> categorias = servicioCategorias.obtenerTodas();
         model.addAttribute("categorias", categorias);
         model.addAttribute("servicio", new Servicio());
-        return "testingFormAddService.jsp";
+        return "nuevoServicio.jsp";
     }
 
     // endpoint para guardar el servicio
     @PostMapping("/servicios/publicar")
     public String crearServicio(@Valid @ModelAttribute("servicio") Servicio servicio,
-            BindingResult result,
-            @SessionAttribute("usuario") Usuario usuario,
-            Model model) {
+                                BindingResult result,
+                                @SessionAttribute("usuario") Usuario usuario,
+                                Model model) {
         if (result.hasErrors()) {
             List<Categoria> categorias = servicioCategorias.obtenerTodas();
             model.addAttribute("categorias", categorias);
             model.addAttribute("usuario", usuario); // para mantener el usuario en sesion incluso si tenemos errores
-            return "testingFormAddService.jsp";
+            return "nuevoServicio.jsp";
         }
 
         servicio.setUsuario(usuario); // Asigna el usuario de la sesión
         servicioServicios.guardar(servicio);
         return "redirect:/"; // de preferencia que rediriga ala vista personal de usuario donde ve unicamente
-                             // sus servicios
+                             // sus servicios de cual uno es creador o proveedor
     }
 
 }
