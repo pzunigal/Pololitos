@@ -16,9 +16,7 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="/">Inicio</a></li>
-                    <li><a href="#">Servicios</a></li>
-                    <li><a href="/contacto">Contacto</a></li>
-                    <li><a href="/nosotros">Nosotros</a></li>
+                    <li><a href="/servicios">Servicios</a></li>
                 </ul>
             </nav>
         </div>
@@ -58,7 +56,11 @@
         </div>
     </main>
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <ul class="nav-footer">
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+        </ul>
     </footer>
 </body>
 </html>

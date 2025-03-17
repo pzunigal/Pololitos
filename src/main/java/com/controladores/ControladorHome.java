@@ -21,10 +21,15 @@ public class ControladorHome {
     private ServicioServicios servicioServicios;
 
     @GetMapping("/")
-	public String index(Model model) {
-		model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
+	public String index() {
 		return "home.jsp";
 	}
+
+    @GetMapping("/servicios")
+    public String servicios(Model model) {
+        model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
+        return "servicios.jsp";
+    }
 
     @GetMapping("/contacto")
     public String contacto() {

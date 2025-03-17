@@ -45,7 +45,9 @@ public class Servicio {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date fechaPublicacion = new Date();
 
+	// Campo obligatorio
 	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
+	@NotBlank(message="Por favor, ingresa una foto de perfil")
 	private String fotoServicio;
 
 	// Relación con Usuario (Un usuario puede publicar muchos servicios)
@@ -89,7 +91,7 @@ public class Servicio {
 		return precio;
 	}
 
-	public String getUbicacion() {
+	public String getCiudad() {
 		return ciudad;
 	}
 
@@ -121,8 +123,8 @@ public class Servicio {
 		this.precio = precio;
 	}
 
-	public void setUbicacion(String ubicacion) {
-		this.ciudad = ubicacion;
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
 	}
 
 	public void setFechaPublicacion(Date fechaPublicacion) {

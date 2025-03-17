@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,15 +17,29 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="/">Inicio</a></li>
-                    <li><a href="#">Servicios</a></li>
-                    <li><a href="/contacto">Contacto</a></li>
-                    <li><a href="/nosotros">Nosotros</a></li>
+                    <li><a href="/servicios">Servicios</a></li>
                 </ul>
         </div>
         <div class="user-info">
-            <div class="circle-busqueda"><input type="text" placeholder="¿Que necesitas hacer?"><a href=""><img src="img/busqueda.png" alt=""></a></div>
-            <a href=""><img src="img/user.png" alt="Usuario"></a>
-            <button>Cerrar Sesión</button>
+            <div class="circle-busqueda">
+                <input type="text" placeholder="¿Qué servicio buscas?">
+                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
+            </div>
+            
+            <c:choose>
+                <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                    <a href="/perfilUsuario">
+                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
+                    </a>
+                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
+                    <a href="/logout"><button>Cerrar Sesión</button></a>
+                </c:when>
+                
+                <c:otherwise>
+                    <a href="/login"><button>Iniciar sesión</button></a>
+                    <a href="/registro"><button>Regístrate</button></a>
+                </c:otherwise>
+            </c:choose>
         </div>
     </header>
     <main>
@@ -36,7 +51,11 @@
         </div>
     </main>
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <ul class="nav-footer">
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+        </ul>
     </footer>
 </body>
 </html>

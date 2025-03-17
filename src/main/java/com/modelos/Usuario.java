@@ -36,8 +36,10 @@ public class Usuario {
 	@Transient 
 	private String confirmacion;
 	
+	// Campo obligatorio
 	@Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", 
 			 message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
+	@NotBlank(message="Por favor, ingresa una foto de perfil")
 	private String fotoPerfil;
 	
 	@NotBlank(message="Por favor, ingresa una telefono válido")
@@ -46,7 +48,7 @@ public class Usuario {
 
 	@NotBlank(message="Por favor, ingresa una contraseña")
 	@Size(min=3, message="La ciudad debe tener al menos 3 caracteres")
-	private String ciudad; // campo opcional
+	private String ciudad;
 
 	// Relacion con servicios ofrecidos
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -105,7 +107,7 @@ public class Usuario {
 		return telefono;
 	}
 
-	public String getDireccion() {
+	public String getCiudad() {
 		return ciudad;
 	}
 
@@ -165,8 +167,8 @@ public class Usuario {
 		this.telefono = telefono;
 	}
 
-	public void setDireccion(String direccion) {
-		this.ciudad = direccion;
+	public void setCiudad(String ciudad) {
+		this.ciudad = ciudad;
 	}
 
 	public void setCreatedAt(Date createdAt) {
