@@ -8,10 +8,9 @@
 <title>Pololitos</title>
 <!-- CSS -->
 <link rel="stylesheet" href="/css/home.css">
-<!-- BOOTSTRAP -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<!-- FONT AWESOME (iconos) -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"> -->
 </head>
 <body>
 	<header>
@@ -21,10 +20,8 @@
             </div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Servicios</a></li>
-                    <li><a href="#">Contacto</a></li>
-                    <li><a href="#">Nosotros</a></li>
+                    <li><a href="/">Inicio</a></li>
+                    <li><a href="/servicios">Servicios</a></li>
                 </ul>
             </nav>
         </div>
@@ -36,7 +33,9 @@
             
             <c:choose>
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <span>Bienvenido, ${sessionScope.usuarioEnSesion.nombre} ${sessionScope.usuarioEnSesion.apellido}</span>
+                    <a href="/perfilUsuario">
+                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
+                    </a>
                     <a href="/servicios/publicar"><button>Crear Servicio</button></a>
                     <a href="/logout"><button>Cerrar Sesión</button></a>
                 </c:when>
@@ -76,7 +75,11 @@
     </main>
 
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <ul class="nav-footer">
+            <li><a href="/contacto">Contacto</a></li>
+            <li><a href="/nosotros">Nosotros</a></li>
+        </ul>
     </footer>
 </body>
 </html>

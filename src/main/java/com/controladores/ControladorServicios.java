@@ -54,5 +54,4 @@ public class ControladorServicios {
         return "redirect:/"; // de preferencia que rediriga ala vista personal de usuario donde ve unicamente
                              // sus servicios de cual uno es creador o proveedor
     }
-
 }

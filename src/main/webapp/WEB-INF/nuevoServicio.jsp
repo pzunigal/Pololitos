@@ -12,7 +12,7 @@
 </head>
 <body>
     <div class="container mt-4">
-        <h2>Publicar un Nuevo Servicio</h2>
+        <h2>Publicar un nuevo servicio</h2>
         
         <c:if test="${not empty error}">
             <div class="alert alert-danger">${error}</div>
