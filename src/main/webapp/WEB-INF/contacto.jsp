@@ -1,5 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<<<<<<< HEAD
+=======
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,6 +14,7 @@
 <body>
 	<header>
         <div class="nav-container">
+<<<<<<< HEAD
             <div class="logo">
                 <img src="img/pololitosBlanco.png" alt="Logo pololitos">
             </div>
@@ -25,6 +30,39 @@
             <div class="circle-busqueda"><input type="text" placeholder="¿Que necesitas hacer?"><a href=""><img src="img/busqueda.png" alt=""></a></div>
             <a href=""><img src="img/user.png" alt="Usuario"></a>
             <button>Cerrar Sesión</button>
+=======
+            <a href="/">
+                <div class="logo">
+                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/servicios">Servicios</a></li>
+                </ul>
+            </nav>
+        </div>
+        <div class="user-info">
+            <div class="circle-busqueda">
+                <input type="text" placeholder="¿Qué servicio buscas?">
+                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
+            </div>
+            
+            <c:choose>
+                <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                    <a href="/perfilUsuario">
+                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
+                    </a>
+                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
+                    <a href="/logout"><button>Cerrar Sesión</button></a>
+                </c:when>
+                
+                <c:otherwise>
+                    <a href="/login"><button>Iniciar sesión</button></a>
+                    <a href="/registro"><button>Regístrate</button></a>
+                </c:otherwise>
+            </c:choose>
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
         </div>
     </header>
     <main>

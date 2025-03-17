@@ -8,19 +8,21 @@
 <title>Pololitos</title>
 <!-- CSS -->
 <link rel="stylesheet" href="/css/home.css">
-
-<!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"> -->
+<!-- BOOTSTRAP -->
+<!--  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+<!-- FONT AWESOME (iconos) -->
+<!--  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css"> -->
 </head>
 <body>
 	<header>
         <div class="nav-container">
-            <div class="logo">
-                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-            </div>
+            <a href="/">
+                <div class="logo">
+                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+                </div>
+            </a>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="/">Inicio</a></li>
                     <li><a href="/servicios">Servicios</a></li>
                 </ul>
             </nav>
@@ -41,8 +43,8 @@
                 </c:when>
                 
                 <c:otherwise>
-                    <a href="/login"><button>Login</button></a>
-                    <a href="/registro"><button>Register</button></a>
+                    <a href="/login"><button>Iniciar sesión</button></a>
+                    <a href="/registro"><button>Regístrate</button></a>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -61,7 +63,7 @@
             <h2>Empleos Recomendados</h2>
             <div class="cards">
                 <div class="card">
-                    <img src="img/trabajo.jpg" alt="">
+                    <img src="img/work.jpg" alt="">
                     <h2>Fontanero</h2>
                     <p>Ciudad: </p>
                 </div>

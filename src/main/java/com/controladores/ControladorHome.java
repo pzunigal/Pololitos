@@ -21,15 +21,15 @@ public class ControladorHome {
     private ServicioServicios servicioServicios;
 
     @GetMapping("/")
-    public String home(){
-        return "home.jsp";
-    }
+	public String index() {
+		return "home.jsp";
+	}
 
     @GetMapping("/servicios")
-	public String index(Model model) {
-		model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
-		return "servicios.jsp";
-	}
+    public String servicios(Model model) {
+        model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
+        return "servicios.jsp";
+    }
 
     @GetMapping("/contacto")
     public String contacto() {
@@ -40,7 +40,7 @@ public class ControladorHome {
     public String nosotros() {
         return "nosotros.jsp";
     }
-
+    
 	// Método para manejar la búsqueda con filtros
     @GetMapping("/buscar")
     public String buscar(

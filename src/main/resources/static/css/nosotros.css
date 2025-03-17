@@ -8,6 +8,7 @@ body {
     min-height: 100vh;
 }
 
+<<<<<<< HEAD
 .img-logo {
     background-size: cover;
     background-position: center;
@@ -24,6 +25,8 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+=======
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 header {
     position:fixed;
     top: 0;
@@ -273,4 +276,8 @@ footer {
     text-align: center;
     padding: 7px 0;
     font-size: 14px;
+<<<<<<< HEAD
+=======
+    z-index: 1001;
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
 }

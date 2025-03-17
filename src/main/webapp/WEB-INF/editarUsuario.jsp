@@ -10,12 +10,17 @@
 <body>
 	<header>
         <div class="nav-container">
-            <div class="logo">
-                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-            </div>
+            <a href="/">
+                <div class="logo">
+                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+                </div>
+            </a>
             <nav>
                 <ul class="nav-links">
+<<<<<<< HEAD
                     <li><a href="/">Inicio</a></li>
+=======
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
                     <li><a href="/servicios">Servicios</a></li>
                 </ul>
             </nav>

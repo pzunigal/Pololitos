@@ -11,7 +11,11 @@
     <link rel="stylesheet" href="/css/login-registro.css">
     </head>
 <body>
-    <img src="img/pololitos.png" alt="Logo pololitos" class="img-logo">
+    <a href="/">
+        <div class="logo">
+            <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+        </div>
+    </a>
     <div class="divider"></div>
     <div class="login-container">
         <h2>Iniciar Sesión</h2>

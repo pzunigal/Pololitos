@@ -47,9 +47,22 @@
                     <form:errors path="fotoPerfil" class="text-danger"/>
                 </div>
                 <div class="input-group">
+<<<<<<< HEAD
                     <form:label path="email" >E-mail:</form:label>
                     <form:input path="email" class="form-control" />
                     <form:errors path="email" class="text-danger" />
+=======
+                    <form:label path="apellido">Apellido:</form:label>
+                    <form:input path="apellido"/>
+                    <form:errors path="apellido"/>
+                </div>
+            </div>
+            <div class="input-group-two">
+                <div class="input-group">
+                    <form:label path="ciudad">Ciudad:</form:label>
+                    <form:input path="ciudad"/>
+                    <form:errors path="ciudad"/>
+>>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
                 </div>
                 <div class="input-group">
                     <form:label path="password">Password:</form:label>
