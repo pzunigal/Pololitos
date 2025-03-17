@@ -36,14 +36,12 @@ public class ServicioCloudinary {
             }
 
             // Verificar las extensiones de la imagen
-            @SuppressWarnings("null")
             String fileName = file.getOriginalFilename().toLowerCase();
             if (!(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png"))) {
                 throw new IllegalArgumentException("El archivo debe ser JPG, JPEG o PNG");
             }
 
             // Parametros para subir el archivo a Cloudinary
-            @SuppressWarnings("unchecked")
             Map<String, Object> uploadParams = ObjectUtils.asMap(
                 "folder", "servicios",
                 "resource_type", "image",
@@ -52,12 +50,13 @@ public class ServicioCloudinary {
             );
 
             // Subir el archivo a Cloudinary
-            @SuppressWarnings("unchecked")
             Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), uploadParams);
             return (String) uploadResult.get("secure_url");
 
         } catch (IOException e) {
             throw new RuntimeException("Error al subir la imagen a Cloudinary", e);
+        } catch (IllegalArgumentException e) {
+            throw new RuntimeException("Error en los parámetros de la imagen: " + e.getMessage(), e);
         }
     }
 }

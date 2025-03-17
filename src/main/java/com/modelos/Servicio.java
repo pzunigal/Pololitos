@@ -34,14 +34,12 @@ public class Servicio {
 	private Date fechaPublicacion = new Date();
 
 	@NotBlank(message = "Por favor, suba una imagen del servicio")
-	private String fotoServicio;
+	private String imgUrl;
 
-	// Relación con Usuario (Un usuario puede publicar muchos servicios)
 	@ManyToOne
 	@JoinColumn(name = "usuario_id", nullable = false)
 	private Usuario usuario;
 
-	// Relación con Categoría (Un servicio pertenece a una categoría)
 	@ManyToOne
 	@JoinColumn(name = "categoria_id", nullable = false)
 	private Categoria categoria;
@@ -56,7 +54,19 @@ public class Servicio {
 	public Servicio() {
 	}
 
-	// Getters y setters
+	@PrePersist
+	protected void onCreate() {
+		this.createdAt = new Date();
+		this.updatedAt = new Date();
+	}
+
+	@PreUpdate
+	protected void onUpdate() {
+		this.updatedAt = new Date();
+	}
+
+	// Getters y Setters
+
 	public Long getId() {
 		return id;
 	}
@@ -106,11 +116,11 @@ public class Servicio {
 	}
 
 	public String getFotoServicio() {
-		return fotoServicio;
+		return imgUrl;
 	}
 
 	public void setFotoServicio(String fotoServicio) {
-		this.fotoServicio = fotoServicio;
+		this.imgUrl = fotoServicio;
 	}
 
 	public Usuario getUsuario() {
@@ -143,16 +153,5 @@ public class Servicio {
 
 	public void setUpdatedAt(Date updatedAt) {
 		this.updatedAt = updatedAt;
-	}
-
-	@PrePersist
-	protected void onCreate() {
-		this.createdAt = new Date();
-		this.updatedAt = new Date();
-	}
-
-	@PreUpdate
-	protected void onUpdate() {
-		this.updatedAt = new Date();
 	}
 }
