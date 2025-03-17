@@ -14,10 +14,10 @@
             </div>
             <nav>
                 <ul class="nav-links">
-                    <li><a href="/home">Inicio</a></li>
+                    <li><a href="/">Inicio</a></li>
                     <li><a href="#">Servicios</a></li>
-                    <li><a href="#">Contacto</a></li>
-                    <li><a href="#">Nosotros</a></li>
+                    <li><a href="/contacto">Contacto</a></li>
+                    <li><a href="/nosotros">Nosotros</a></li>
                 </ul>
             </nav>
         </div>

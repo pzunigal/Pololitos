@@ -26,6 +26,17 @@ public class ControladorHome {
 		return "home.jsp";
 	}
 
+    @GetMapping("/contacto")
+    public String contacto() {
+        return "contacto.jsp";
+    }
+
+    @GetMapping("/nosotros")
+    public String nosotros() {
+        return "nosotros.jsp";
+    }
+    
+
 	// Método para manejar la búsqueda con filtros
     @GetMapping("/buscar")
     public String buscar(
