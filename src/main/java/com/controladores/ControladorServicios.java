@@ -73,23 +73,34 @@ public class ControladorServicios {
 
         // Verificación si no se sube una imagen
         if (file.isEmpty()) {
-            model.addAttribute("error", "Debe subir una imagen para el servicio.");
+            logger.error("No se ha subido una imagen para el servicio.");
             List<Categoria> categorias = servicioCategorias.obtenerTodas();
             model.addAttribute("categorias", categorias);
             model.addAttribute("usuario", usuarioEnSesion);
+            model.addAttribute("error", "Debe subir una imagen para el servicio.");
+            return "nuevoServicio.jsp";
+        }
+
+        // Verificación del tamaño de la imagen (puedes ajustar el tamaño según tus necesidades)
+        if (file.getSize() > 5000000) { // 5MB de límite de tamaño
+            logger.error("La imagen subida es demasiado grande. Tamaño: " + file.getSize());
+            List<Categoria> categorias = servicioCategorias.obtenerTodas();
+            model.addAttribute("categorias", categorias);
+            model.addAttribute("usuario", usuarioEnSesion);
+            model.addAttribute("error", "La imagen es demasiado grande. El tamaño máximo permitido es 5MB.");
             return "nuevoServicio.jsp";
         }
 
         try {
             // Subir la imagen
             String imageUrl = servicioCloudinary.uploadFile(file);
-            servicio.setFotoServicio(imageUrl); // Guardar la URL de la imagen, no el archivo
-
+            servicio.setFotoServicio(imageUrl);
         } catch (Exception e) {
-            model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
+            logger.error("Error al subir la imagen: " + e.getMessage());
             List<Categoria> categorias = servicioCategorias.obtenerTodas();
             model.addAttribute("categorias", categorias);
             model.addAttribute("usuario", usuarioEnSesion);
+            model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
             return "nuevoServicio.jsp";
         }
 
@@ -99,5 +110,4 @@ public class ControladorServicios {
 
         return "redirect:/";
     }
-
 }
