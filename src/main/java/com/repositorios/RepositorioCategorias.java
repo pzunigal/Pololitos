@@ -13,5 +13,6 @@ public interface RepositorioCategorias extends CrudRepository<Categoria, Long> {
 
 
     //metodo para obtener todas las categorias:
+    @SuppressWarnings("null")
     List<Categoria> findAll();
 }
