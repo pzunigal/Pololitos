@@ -14,13 +14,19 @@ public class ServicioCloudinary {
 
     private final Cloudinary cloudinary;
 
+    @Value("${cloudinary.cloud_name}")
+    private String cloudName;
+
+    @Value("${cloudinary.api_key}")
+    private String apiKey;
+
+    @Value("${cloudinary.api_secret}")
+    private String apiSecret;
+
     @Value("${cloudinary.folder}")
     private String folder;
 
-    public ServicioCloudinary(
-            @Value("${cloudinary.cloud_name}") String cloudName,
-            @Value("${cloudinary.api_key}") String apiKey,
-            @Value("${cloudinary.api_secret}") String apiSecret) {
+    public ServicioCloudinary() {
         this.cloudinary = new Cloudinary(ObjectUtils.asMap(
                 "cloud_name", cloudName,
                 "api_key", apiKey,
@@ -29,6 +35,7 @@ public class ServicioCloudinary {
     }
 
     public String uploadFile(MultipartFile file) throws IOException {
+        // Usar el nuevo formato de la versión 2.x
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(),
                 ObjectUtils.asMap("folder", folder, "use_filename", true, "unique_filename", false));
 
