@@ -30,9 +30,9 @@
             </div>
             <div class="input-group-two">
                 <div class="input-group">
-                    <form:label path="direccion">Ciudad:</form:label>
-                    <form:input path="direccion"/>
-                    <form:errors path="direccion"/>
+                    <form:label path="ciudad">Ciudad:</form:label>
+                    <form:input path="ciudad"/>
+                    <form:errors path="ciudad"/>
                 </div>
                 <div class="input-group">
                     <form:label path="telefono">Telefono:</form:label>
