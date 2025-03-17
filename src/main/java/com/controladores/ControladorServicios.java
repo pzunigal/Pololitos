@@ -8,6 +8,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+
 import com.modelos.Categoria;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
@@ -105,5 +108,67 @@ public class ControladorServicios {
         List<Servicio> servicios = servicioServicios.buscarPorUsuario(usuarioEnSesion);
         model.addAttribute("servicios", servicios);
         return "verMisServicios.jsp"; // Mostrar los servicios del usuario en esta vista
+    }
+
+    @GetMapping("/editar-servicio/{id}")
+    public String editarServicio(@PathVariable("id") Long id, HttpSession session, Model model) {
+        // Verificar si el usuario está logueado
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+        if (usuarioEnSesion == null) {
+            return "redirect:/login"; // Redirigir a login si no está logueado
+        }
+
+        // Buscar el servicio por ID
+        Servicio servicio = servicioServicios.obtenerPorId(id);
+        if (servicio == null || !servicio.getUsuario().equals(usuarioEnSesion)) {
+            // Si no existe o no pertenece al usuario, redirigir
+            return "redirect:/mis-servicios";
+        }
+
+        // Cargar los datos para el formulario de edición
+        cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
+        return "editarServicio.jsp"; // Mostrar el formulario con los datos del servicio
+    }
+
+    @PatchMapping("/actualizar-servicio/{id}")
+    @Transactional
+    public String actualizarServicio(@PathVariable("id") Long id,
+            @Valid @ModelAttribute("servicio") Servicio servicio,
+            BindingResult result,
+            @RequestParam("imgUrl") String imgUrl,
+            HttpSession session, Model model) {
+
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+        if (usuarioEnSesion == null) {
+            return "redirect:/login";
+        }
+
+        // Validar si el servicio existe y si pertenece al usuario
+        Servicio servicioExistente = servicioServicios.obtenerPorId(id);
+        if (servicioExistente == null || !servicioExistente.getUsuario().equals(usuarioEnSesion)) {
+            return "redirect:/mis-servicios";
+        }
+
+        // Validación del formulario
+        if (result.hasErrors()) {
+            model.addAttribute("error", "Existen errores en los campos del formulario.");
+            return "editarServicio.jsp";
+        }
+
+        // Validación de la URL de la imagen
+        if (!esUrlValida(imgUrl)) {
+            model.addAttribute("error", "La URL de la imagen debe terminar en .png, .jpg o .jpeg.");
+            return "editarServicio.jsp";
+        }
+
+        // Actualizar el servicio
+        servicioExistente.setNombre(servicio.getNombre());
+        servicioExistente.setDescripcion(servicio.getDescripcion());
+        servicioExistente.setPrecio(servicio.getPrecio());
+        servicioExistente.setCategoria(servicio.getCategoria());
+        servicioExistente.setImgUrl(imgUrl);
+
+        servicioServicios.guardar(servicioExistente); // Guardar los cambios
+        return "redirect:/mis-servicios"; // Redirigir al listado de mis servicios
     }
 }
