@@ -12,9 +12,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.modelos.Categoria;
+import com.modelos.Resena;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioCategorias;
+import com.servicios.ServicioResenas;
 import com.servicios.ServicioServicios;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -32,6 +34,23 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioCategorias servicioCategorias;
+
+    @Autowired
+    private ServicioResenas servicioResenas;
+
+    @GetMapping("/servicio/{id}/resenas")
+    public String verResenas(@PathVariable("id") Long id, Model model) {
+        Servicio servicio = servicioServicios.obtenerPorId(id);
+        if (servicio == null ) {
+            return "redirect:/";
+        }
+
+        List<Resena> resenas = servicioResenas.getResenasByServicio(id);
+        model.addAttribute("servicio", servicio);
+        model.addAttribute("resenas", resenas);
+        return "verResenas.jsp";
+
+    }
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
