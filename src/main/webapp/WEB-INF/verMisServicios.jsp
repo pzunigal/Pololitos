@@ -65,7 +65,6 @@
             </a>
             <nav>
                 <ul class="nav">
-                    <li class="nav-item"><a href="/servicios" class="nav-link text-white">Servicios</a></li>
                     <li class="nav-item"><a href="/mis-servicios" class="nav-link text-white">Mis Servicios</a></li>
                     <c:choose>
                         <c:when test="${not empty sessionScope.usuarioEnSesion}">
@@ -99,7 +98,7 @@
 
                                         <!-- Botones de acción -->
                                         <div class="action-buttons">
-                                            <a href="/editar-servicio/${servicio.id}" class="btn btn-warning">
+                                            <a href="<c:url value='/editar-servicio/${servicio.id}' />" class="btn btn-warning">
                                                 <i class="fas fa-pencil-alt"></i> Editar
                                             </a>
                                             <a href="/eliminar-servicio/${servicio.id}" class="btn btn-danger" onclick="return confirm('¿Estás seguro de eliminar este servicio?');">

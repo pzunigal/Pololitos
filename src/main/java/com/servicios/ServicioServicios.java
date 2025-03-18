@@ -9,6 +9,8 @@ import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.repositorios.RepositorioServicios;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class ServicioServicios {
 
@@ -20,9 +22,9 @@ public class ServicioServicios {
     }
 
     public Servicio obtenerPorId(Long id) {
-        Optional<Servicio> servicio = repositorioServicios.findById(id);
-        return servicio.orElse(null);
-    }
+    return repositorioServicios.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Servicio con ID " + id + " no encontrado"));
+}
 
     public Servicio guardar(Servicio servicio) {
         return repositorioServicios.save(servicio);
