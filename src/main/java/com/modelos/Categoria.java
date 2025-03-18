@@ -25,7 +25,7 @@ public class Categoria {
     private Long id;
 
     @NotBlank(message="El nombre de la categoría es obligatorio")
-    @Size(min=3, max=50, message="El nombre debe tener entre 3 y 50 caracteres")
+    @Size(min=3, max=255, message="El nombre debe tener entre 3 y 50 caracteres")
     private String nombre;
 
     // Relación con Servicio (Una categoría puede tener muchos servicios)
