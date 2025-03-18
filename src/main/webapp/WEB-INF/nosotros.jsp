@@ -11,14 +11,23 @@
 <body>
 	<header>
         <div class="nav-container">
-            <div class="logo">
-                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-            </div>
+            <a href="/">
+                <div class="logo">
+                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+                </div>
+            </a>
             <nav>
-                <ul class="nav-links">
-                    <li><a href="/">Inicio</a></li>
-                    <li><a href="/servicios">Servicios</a></li>
-                </ul>
+                <nav>
+                    <ul class="nav-links">
+                        <li><a href="/servicios">Servicios</a></li>
+                        <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
+                        <c:choose>
+                            <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                                <li><a href="/mis-servicios">Mis Servicios</a></li>
+                            </c:when>
+                        </c:choose>
+                    </ul>
+                </nav>
         </div>
         <div class="user-info">
             <div class="circle-busqueda">
