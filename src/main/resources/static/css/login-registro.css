@@ -94,6 +94,13 @@ h2 {
     color: white;
 }
 
+.text-danger {
+    color: #ff4d4d; /* Rojo fuerte */
+    font-size: 14px;
+    margin-top: 5px;
+    display: block;
+}
+
 .input-group input:focus {
     outline: none;
     border: 2px solid #007bff;
