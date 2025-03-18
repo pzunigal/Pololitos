@@ -21,6 +21,10 @@ public class ServicioServicios {
         return (List<Servicio>) repositorioServicios.findAll();
     }
 
+    public boolean existsById(Long id) {
+        return repositorioServicios.existsById(id); // Verifica si el servicio existe
+    }
+
     public Servicio obtenerPorId(Long id) {
     return repositorioServicios.findById(id)
             .orElseThrow(() -> new EntityNotFoundException("Servicio con ID " + id + " no encontrado"));

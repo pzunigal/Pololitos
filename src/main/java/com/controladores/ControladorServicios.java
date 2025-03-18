@@ -1,5 +1,6 @@
 package com.controladores;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,7 +22,7 @@ import com.servicios.ServicioServicios;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
+
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -89,7 +90,7 @@ public class ControladorServicios {
         servicio.setImgUrl(imgUrl);
         servicio.setUsuario(usuarioEnSesion);
         servicioServicios.guardar(servicio);
-        return "redirect:/";
+        return "redirect:/mis-servicios";
     }
 
     // Método para validar que la URL termina con .png, .jpg o .jpeg
@@ -178,6 +179,25 @@ public class ControladorServicios {
 
         servicioServicios.guardar(servicioExistente); // Guardar los cambios
         return "redirect:/mis-servicios";
+    }
+
+    @PostMapping("/eliminar-servicio/{id}")
+    @Transactional
+    public String eliminarServicio(@PathVariable("id") Long id, Model model) {
+        try {
+            // Obtener el servicio a eliminar
+            Servicio servicio = servicioServicios.obtenerPorId(id);
+            if (servicio != null) {
+                // Eliminar el servicio
+                servicioServicios.eliminar(id);
+            }
+            // Redirigir de nuevo a la página de servicios
+            return "redirect:/mis-servicios";
+        } catch (Exception e) {
+            // En caso de error, puedes redirigir a una página de error o mostrar un mensaje
+            model.addAttribute("error", true);
+            return "redirect:/mis-servicios";
+        }
     }
 
 }
