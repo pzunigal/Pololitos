@@ -1,30 +1,30 @@
+/* Estilos generales */
 body {
-    margin: 0;
-    padding: 0;
     font-family: Arial, sans-serif;
     background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);
+    background-size: cover;
+    background-position: center;
+    margin: 0;
+    padding: 0;
     display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+}
+
+.fila-contenedor {
+    display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background-size: cover;
-    background-position: center;
-    position: relative;
-}
-
-.input-group-two {
-    display: flex;
-    gap: 10px; 
-}
-
-.input-group-two .input-group {
-    flex: 1;
 }
 
 .img-logo {
     background-size: cover;
     background-position: center;
-    width: 700px;
+    width: 500px;
 }
 
 .divider {
@@ -37,13 +37,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-/* .login-container {
-    background-color: black;
-    color: white;
-    width: 100%;
-    height: 100%;
-} */
-
+/* Contenedor del formulario */
 .login-container {
     background-color: #141519;
     padding: 20px;
@@ -53,52 +47,84 @@ body {
     text-align: center;
 }
 
-.login-container h2 {
-    margin-bottom: 20px;
-    color: #ffffff;
+.login-container-register {
+    background: #222;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    width: 390px;
+    color: white;
 }
 
-.input-group {
-    margin-bottom: 15px;
+h2 {
+    color: white;
+    margin-bottom: 28px;
+}
+
+.input-group, .input-group-two {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
     text-align: left;
+    margin-bottom: 15px;
+}
+
+.input-group-two {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
 }
 
 .input-group label {
     display: block;
+    font-weight: bold;
+    color: white;
     margin-bottom: 5px;
-    color: #555;
 }
 
 .input-group input {
     width: 100%;
     padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    border: none;
+    border-radius: 5px;
     box-sizing: border-box;
+    font-size: 14px;
+    background-color: #333;
+    color: white;
+}
+
+.input-group input:focus {
+    outline: none;
+    border: 2px solid #007bff;
 }
 
 button {
-    width: 100%;
-    padding: 10px;
-    background-color: #28a745;
+    background-color: #007bff;
+    color: white;
     border: none;
-    border-radius: 4px;
-    color: #fff;
+    padding: 12px;
+    width: 100%;
+    border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+    margin-top: 10px;
 }
 
 button:hover {
-    background-color: #218838;
+    background-color: #0056b3;
+    transform: scale(1.05);
 }
 
 p {
-    margin-top: 15px;
-    color: #555;
+    font-size: 14px;
+    color: white;
+    margin-top: 10px;
 }
 
 p a {
-    color: #28a745;
+    color: #007bff;
     text-decoration: none;
 }
 
@@ -106,20 +132,50 @@ p a:hover {
     text-decoration: underline;
 }
 
+.miniTexto {
+    font-size: 12px;
+    color: #bbb;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+/* Footer */
+
 footer {
-    position: absolute;
+    position: relative;
     bottom: 0;
     left: 0;
     width: 100%;
-    background-color: rgba(20, 21, 25, 0.92);
-    color: #fff;
+    background-color: rgba(15, 16, 20, 0.95);
+    color: #ddd;
     text-align: center;
-    padding: 7px 0;
+    padding: 12px 0;
+    font-size: 15px;
+    font-weight: 300;
+    margin-top: auto;
+}
+
+footer p {
+    margin: 5px 0;
     font-size: 14px;
 }
 
-.miniTexto {
+.nav-footer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+}
+
+.nav-footer a {
+    color: #bbb;
+    text-decoration: none;
     font-size: 14px;
-    color: #555;
-    margin-top: 10px;
+    transition: color 0.3s ease;
+}
+
+.nav-footer a:hover {
+    color: #fff;
 }
