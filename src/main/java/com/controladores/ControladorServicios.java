@@ -1,12 +1,15 @@
 package com.controladores;
 
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,8 +21,10 @@ import com.modelos.Usuario;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioResenas;
 import com.servicios.ServicioServicios;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
-import jakarta.transaction.Transactional;
+
 import jakarta.validation.Valid;
 
 import java.util.List;
@@ -104,7 +109,7 @@ public class ControladorServicios {
         servicio.setImgUrl(imgUrl);
         servicio.setUsuario(usuarioEnSesion);
         servicioServicios.guardar(servicio);
-        return "redirect:/";
+        return "redirect:/mis-servicios";
     }
 
     // Método para validar que la URL termina con .png, .jpg o .jpeg
@@ -136,14 +141,19 @@ public class ControladorServicios {
             return "redirect:/login";
         }
 
-        Servicio servicio = servicioServicios.obtenerPorId(id);
-        if (servicio == null || !servicio.getUsuario().equals(usuarioEnSesion)) {
-            return "redirect:/mis-servicios";
-        }
+        try {
+            Servicio servicio = servicioServicios.obtenerPorId(id);
 
-        cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
-        model.addAttribute("servicio", servicioServicios.obtenerPorId(id));
-        return "editarServicio.jsp";
+            if (!servicio.getUsuario().getId().equals(usuarioEnSesion.getId())) {
+                return "redirect:/mis-servicios";
+            }
+
+            cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
+            model.addAttribute("servicio", servicio);
+            return "editarServicio.jsp";
+        } catch (EntityNotFoundException e) {
+            return "redirect:/mis-servicios"; // Si no encuentra el servicio, redirige
+        }
     }
 
     @PatchMapping("/actualizar-servicio/{id}")
@@ -159,25 +169,27 @@ public class ControladorServicios {
             return "redirect:/login";
         }
 
-        // Validar si el servicio existe y si pertenece al usuario
+        // Buscar el servicio existente
         Servicio servicioExistente = servicioServicios.obtenerPorId(id);
-        if (servicioExistente == null || !servicioExistente.getUsuario().equals(usuarioEnSesion)) {
+        if (servicioExistente == null || !servicioExistente.getUsuario().getId().equals(usuarioEnSesion.getId())) {
             return "redirect:/mis-servicios";
         }
 
         // Validación del formulario
         if (result.hasErrors()) {
             model.addAttribute("error", "Existen errores en los campos del formulario.");
+            model.addAttribute("servicio", servicioExistente);
             return "editarServicio.jsp";
         }
 
         // Validación de la URL de la imagen
         if (!esUrlValida(imgUrl)) {
             model.addAttribute("error", "La URL de la imagen debe terminar en .png, .jpg o .jpeg.");
+            model.addAttribute("servicio", servicioExistente);
             return "editarServicio.jsp";
         }
 
-        // Actualizar el servicio
+        // Actualizar el servicio existente con los nuevos datos
         servicioExistente.setNombre(servicio.getNombre());
         servicioExistente.setDescripcion(servicio.getDescripcion());
         servicioExistente.setPrecio(servicio.getPrecio());
@@ -185,6 +197,43 @@ public class ControladorServicios {
         servicioExistente.setImgUrl(imgUrl);
 
         servicioServicios.guardar(servicioExistente); // Guardar los cambios
-        return "redirect:/mis-servicios"; // Redirigir al listado de mis servicios
+        return "redirect:/mis-servicios";
     }
+
+    @PostMapping("/eliminar-servicio/{id}")
+    @Transactional
+    public String eliminarServicio(@PathVariable("id") Long id, Model model) {
+        try {
+            // Obtener el servicio a eliminar
+            Servicio servicio = servicioServicios.obtenerPorId(id);
+            if (servicio != null) {
+                // Eliminar el servicio
+                servicioServicios.eliminar(id);
+            }
+            // Redirigir de nuevo a la página de servicios
+            return "redirect:/mis-servicios";
+        } catch (Exception e) {
+            // En caso de error, puedes redirigir a una página de error o mostrar un mensaje
+            model.addAttribute("error", true);
+            return "redirect:/mis-servicios";
+        }
+    }
+    // Endpoint para ver los detalles completos de un servicio
+    @GetMapping("/servicio/detalles/{id}")
+    public String verDetallesServicio(@PathVariable("id") Long id, Model model) {
+        // Obtener el servicio por su ID
+        Servicio servicio = servicioServicios.obtenerPorId(id);
+
+        // Si el servicio no existe, redirigir a la lista de servicios
+        if (servicio == null) {
+            return "redirect:/servicios";
+        }
+
+        // Pasar el servicio a la vista
+        model.addAttribute("servicio", servicio);
+
+        // Devolver la vista con el detalle del servicio
+        return "verServicioCompleto.jsp";
+    }
+
 }

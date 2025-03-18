@@ -20,12 +20,12 @@
                 <div class="input-group">
                     <form:label path="emailLogin">Dirección de email</form:label>
                     <form:input path="emailLogin"/>
-                    <form:errors path="emailLogin"/>
+                    <form:errors path="emailLogin" class="text-danger"/>
                 </div>
                 <div class="input-group">
                     <form:label path="passwordLogin">Contraseña</form:label>
                     <form:input path="passwordLogin" type="password"/>
-                    <form:errors path="passwordLogin"/>
+                    <form:errors path="passwordLogin" class="text-danger"/>
                 </div>            
                 <button type="submit">Ingresar</button>
             </form:form>
