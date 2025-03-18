@@ -76,16 +76,9 @@
                             <img src="${servicio.imgUrl}" class="card-img-top" alt="${servicio.nombre}">
                             <div class="card-body">
                                 <h5 class="card-title">${servicio.nombre}</h5>
-                                <p class="card-text">${servicio.descripcion}</p>
                                 <p><strong>Precio:</strong> $${servicio.precio}</p>
                                 <p><strong>Ubicación:</strong> ${servicio.ciudad}</p>
-                                
                                 <!-- Botón de editar con icono de lápiz -->
-                                <a href="${pageContext.request.contextPath}/editar-servicio/${servicio.id}" class="btn btn-warning">
-                                    <i class="bi bi-pencil"></i> Editar
-                                </a>
-                                
-                                <!-- Formulario de eliminar con icono de papelera -->
                                 <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post" style="display:inline;">
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
                                         <i class="bi bi-trash"></i> Eliminar
