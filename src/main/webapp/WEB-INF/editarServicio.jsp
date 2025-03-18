@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -52,7 +54,8 @@
         
             <div class="mb-3">
                 <label for="fechaPublicacion" class="form-label">Fecha de Publicación</label>
-                <input type="text" class="form-control" id="fechaPublicacion" name="fechaPublicacion" value="${servicio.fechaPublicacion}" disabled>
+                <input type="text" class="form-control" id="fechaPublicacion" name="fechaPublicacion" 
+                       value="<fmt:formatDate value='${servicio.fechaPublicacion}' pattern='dd/MM/yyyy'/>" disabled>
             </div>
         
             <div class="mb-3">
