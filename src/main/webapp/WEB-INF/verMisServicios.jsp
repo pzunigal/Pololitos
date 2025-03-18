@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mis Servicios</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Agregar Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <style>
         /* Custom Styles */
         body {
@@ -77,12 +79,23 @@
                                 <p class="card-text">${servicio.descripcion}</p>
                                 <p><strong>Precio:</strong> $${servicio.precio}</p>
                                 <p><strong>Ubicación:</strong> ${servicio.ciudad}</p>
-                                <a href="${pageContext.request.contextPath}/editar-servicio/${servicio.id}" class="btn btn-warning">Editar</a>
+                                
+                                <!-- Botón de editar con icono de lápiz -->
+                                <a href="${pageContext.request.contextPath}/editar-servicio/${servicio.id}" class="btn btn-warning">
+                                    <i class="bi bi-pencil"></i> Editar
+                                </a>
+                                
+                                <!-- Formulario de eliminar con icono de papelera -->
                                 <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post" style="display:inline;">
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
-                                        Eliminar
+                                        <i class="bi bi-trash"></i> Eliminar
                                     </button>
                                 </form>
+                                
+                                <!-- Botón de ojo para ver detalles con icono de ojo -->
+                                <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-info">
+                                    <i class="bi bi-eye"></i> Ver detalles
+                                </a>
                             </div>
                         </div>
                     </div>

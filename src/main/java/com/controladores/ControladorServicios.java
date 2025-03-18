@@ -199,5 +199,22 @@ public class ControladorServicios {
             return "redirect:/mis-servicios";
         }
     }
+    // Endpoint para ver los detalles completos de un servicio
+    @GetMapping("/servicio/detalles/{id}")
+    public String verDetallesServicio(@PathVariable("id") Long id, Model model) {
+        // Obtener el servicio por su ID
+        Servicio servicio = servicioServicios.obtenerPorId(id);
+
+        // Si el servicio no existe, redirigir a la lista de servicios
+        if (servicio == null) {
+            return "redirect:/servicios";
+        }
+
+        // Pasar el servicio a la vista
+        model.addAttribute("servicio", servicio);
+
+        // Devolver la vista con el detalle del servicio
+        return "verServicioCompleto.jsp";
+    }
 
 }
