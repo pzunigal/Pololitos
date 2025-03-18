@@ -6,7 +6,7 @@
 <head>
 <meta charset="UTF-8">
 <title>Mostrar Usuario</title>
-<link rel="stylesheet" href="/css/dashboard.css">
+<link rel="stylesheet" href="/css/mostrarUsuario.css">
 </head>
 <body>
 	<header>
@@ -45,7 +45,7 @@
         <div class="profile-card">
             <img src="${usuario.fotoPerfil}" alt="Foto de perfil">
             <h1 class="name">${usuario.nombre} ${usuario.apellido}</h1>
-            <p class="city">${usuario.ciudad}</p>
+            <p class="city">Ciudad: ${usuario.ciudad}</p>
             <p class="contact-info">
                 Teléfono: <a href="tel:${usuario.telefono}" class="link">${usuario.telefono}</a>
             </p>
