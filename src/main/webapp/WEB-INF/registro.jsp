@@ -33,7 +33,7 @@
                     <div class="input-group">
                         <form:label path="ciudad">Ciudad:</form:label>
                         <form:input path="ciudad"/>
-                        <form:errors path="ciudad"/>
+                        <form:errors path="ciudad" class="text-danger"/>
                     </div>
                     <div class="input-group">
                         <form:label path="telefono">Telefono:</form:label>
