@@ -42,6 +42,11 @@
                     </div>
                 </div> 
                 <div class="input-group">
+                    <form:label path="email">Correo:</form:label>
+                    <form:input path="email"/>
+                    <form:errors path="email" class="text-danger"/>
+                </div>
+                <div class="input-group">
                     <form:label path="fotoPerfil">URL perfil:</form:label>
                     <form:input path="fotoPerfil"/>
                     <form:errors path="fotoPerfil" class="text-danger"/>
