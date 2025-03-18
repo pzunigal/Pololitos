@@ -2,7 +2,7 @@ package com.repositorios;
 
 import java.util.List;
 
-import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import com.modelos.Categoria;
@@ -10,31 +10,19 @@ import com.modelos.Servicio;
 import com.modelos.Usuario;
 
 @Repository
-public interface RepositorioServicios extends CrudRepository<Servicio, Long>{
+public interface RepositorioServicios extends JpaRepository<Servicio, Long> {
     
-    //buscar servicios por nombre ignorando case(mayusculas y minusculas)
+    // Buscar servicios por nombre ignorando case (mayúsculas y minúsculas)
     List<Servicio> findByNombreContainingIgnoreCase(String nombre);
 
-    //buscar servicio atraves de un usuario
-    //servira para revisar el perfil de un usuario y visualizar todos los servicios que ofrece
+    // Buscar servicios a través de un usuario
+    // Servirá para revisar el perfil de un usuario y visualizar todos los servicios que ofrece
     List<Servicio> findByUsuario(Usuario usuario);
 
-    //servira para poder filtrar servicios con una categoria especifica seleccionada atraves de una interfaz interactiva de filtros
+    // Servirá para filtrar servicios con una categoría específica seleccionada a través de una interfaz interactiva de filtros
     List<Servicio> findByCategoria(Categoria categoria);
 
-    //servira para buscar o filtrar servicios que tengan un precio menor o igual al filtro aplicado
-    //a futuro se puede personalizar de distintas maneras con logica
+    // Servirá para buscar o filtrar servicios que tengan un precio menor o igual al filtro aplicado
+    // A futuro se puede personalizar de distintas maneras con lógica
     List<Servicio> findByPrecioLessThanEqual(Double precio);
-
-
-
-    /*
-    // Buscar servicios por categoría
-    List<Servicio> findByCategoria(String categoria);
-    
-    // Buscar servicios ofrecidos por un usuario específico
-    List<Servicio> findByOfrecidoPor(Usuario usuario);
-
-    // Buscar servicios solicitados por un usuario específico
-    List<Servicio> findBySolicitadoPor(Usuario usuario);*/
 }
