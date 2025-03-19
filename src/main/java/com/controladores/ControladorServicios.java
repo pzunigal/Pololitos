@@ -199,6 +199,7 @@ public class ControladorServicios {
             return "redirect:/mis-servicios";
         }
     }
+
     // Endpoint para ver los detalles completos de un servicio
     @GetMapping("/servicio/detalles/{id}")
     public String verDetallesServicio(@PathVariable("id") Long id, Model model) {
@@ -215,6 +216,18 @@ public class ControladorServicios {
 
         // Devolver la vista con el detalle del servicio
         return "verServicioCompleto.jsp";
+    }
+
+    @GetMapping("/servicios")
+    public String mostrarServicios(Model model) {
+        // Obtener las categorías y sus servicios asociados, ya ordenados
+        List<Categoria> categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
+
+        // Pasar las categorías y servicios a la vista
+        model.addAttribute("categorias", categoriasConServicios);
+
+        // Retornar el nombre de la vista (servicios.jsp)
+        return "servicios.jsp";
     }
 
 }

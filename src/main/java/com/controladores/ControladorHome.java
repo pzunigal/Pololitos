@@ -27,11 +27,6 @@ public class ControladorHome {
         return "home.jsp";
     }
 
-    @GetMapping("/servicios")
-    public String servicios(Model model) {
-        model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
-        return "servicios.jsp";
-    }
 
     @GetMapping("/contacto")
     public String contacto() {

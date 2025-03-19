@@ -9,7 +9,6 @@ import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.repositorios.RepositorioCategorias;
 import com.repositorios.RepositorioServicios;
-
 import jakarta.persistence.EntityNotFoundException;
 
 @Service
@@ -26,8 +25,15 @@ public class ServicioServicios {
             List<Servicio> servicios = repositorioServicios.findByCategoria(categoria);
             categoria.setServicios(servicios); // Asegúrate de tener un `setServicios` en `Categoria`
         }
+        
+        // Ordenar las categorías por el tamaño de los servicios (de mayor a menor)
+        categorias.sort((c1, c2) -> Integer.compare(c2.getServicios().size(), c1.getServicios().size()));
+        
         return categorias;
     }
+
+
+
     public List<Servicio> obtenerTodosLosServicios() {
         return (List<Servicio>) repositorioServicios.findAll();
     }
@@ -73,4 +79,7 @@ public class ServicioServicios {
             repositorioServicios.save(servicioEncontrado);
         }
     }
+    
+
+
 }
