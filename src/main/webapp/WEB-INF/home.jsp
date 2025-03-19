@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 
 <!DOCTYPE html>
 <html>
@@ -61,20 +63,23 @@
             </div>
         </div>
 
-        <div class="section">
+        <div class="section" id="empleosRecomendados">
             <h2>Empleos Recomendados</h2>
-            <div class="cards">
-                <div class="card">
-                    <img src="img/work.jpg" alt="">
-                    <h2>Fontanero</h2>
-                    <p>Ciudad: </p>
+            <c:forEach var="categoria" items="${categorias}">
+                <div class="section categoria" data-count="${fn:length(categoria.servicios)}">
+                    <h2>${categoria.nombre}</h2>
+                    <div class="cards">
+                        <c:forEach var="servicio" items="${categoria.servicios}">
+                            <div class="card">
+                                <h2>${servicio.nombre}</h2>
+                <img src="${servicio.imgUrl}" class="card-img-top img-card-profile-service" alt="${servicio.nombre}">
+
+                                <p>Precio: $${servicio.precio}</p>
+                            </div>
+                        </c:forEach>
+                    </div>
                 </div>
-                <div class="card">
-                    <img src="img/trabajo.jpg" alt="">
-                    <h2>Fontanero</h2>
-                    <p>Ciudad: </p>
-                </div>
-            </div>
+            </c:forEach>
         </div>
     </main>
 
@@ -85,5 +90,20 @@
             <li><a href="/nosotros">Nosotros</a></li>
         </ul>
     </footer>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const categorias = document.querySelectorAll(".categoria");
+            let visibles = 0;
+    
+            categorias.forEach(categoria => {
+                const count = parseInt(categoria.getAttribute("data-count"), 10);
+                if (count === 0 || visibles >= 2) {
+                    categoria.style.display = "none"; // Oculta si no tiene servicios o ya hay 2 visibles
+                } else {
+                    visibles++;
+                }
+            });
+        });
+    </script>
 </body>
 </html>

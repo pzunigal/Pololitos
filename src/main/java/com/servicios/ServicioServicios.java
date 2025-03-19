@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import com.modelos.Categoria;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
+import com.repositorios.RepositorioCategorias;
 import com.repositorios.RepositorioServicios;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -16,7 +17,17 @@ public class ServicioServicios {
 
     @Autowired
     private RepositorioServicios repositorioServicios;
+    @Autowired
+    private RepositorioCategorias repositorioCategorias;
 
+    public List<Categoria> obtenerCategoriasConServicios() {
+        List<Categoria> categorias = repositorioCategorias.findAll();
+        for (Categoria categoria : categorias) {
+            List<Servicio> servicios = repositorioServicios.findByCategoria(categoria);
+            categoria.setServicios(servicios); // Asegúrate de tener un `setServicios` en `Categoria`
+        }
+        return categorias;
+    }
     public List<Servicio> obtenerTodosLosServicios() {
         return (List<Servicio>) repositorioServicios.findAll();
     }
@@ -26,9 +37,9 @@ public class ServicioServicios {
     }
 
     public Servicio obtenerPorId(Long id) {
-    return repositorioServicios.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException("Servicio con ID " + id + " no encontrado"));
-}
+        return repositorioServicios.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Servicio con ID " + id + " no encontrado"));
+    }
 
     public Servicio guardar(Servicio servicio) {
         return repositorioServicios.save(servicio);
