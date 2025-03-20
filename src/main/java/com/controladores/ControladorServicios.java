@@ -19,12 +19,14 @@ import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioServicios;
+import com.servicios.ServicioUsuarios;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
 
 import jakarta.validation.Valid;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +39,9 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioCategorias servicioCategorias;
+
+    @Autowired
+    private ServicioUsuarios servicioUsuarios;
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
@@ -200,23 +205,35 @@ public class ControladorServicios {
         }
     }
 
-    // Endpoint para ver los detalles completos de un servicio
     @GetMapping("/servicio/detalles/{id}")
-    public String verDetallesServicio(@PathVariable("id") Long id, Model model) {
-        // Obtener el servicio por su ID
-        Servicio servicio = servicioServicios.obtenerPorId(id);
+public String verDetallesServicio(@PathVariable("id") Long id, Model model, Principal principal,
+                                   HttpSession session) {
+    // Obtener el servicio por su ID
+    Servicio servicio = servicioServicios.obtenerPorId(id);
 
-        // Si el servicio no existe, redirigir a la lista de servicios
-        if (servicio == null) {
-            return "redirect:/servicios";
-        }
-
-        // Pasar el servicio a la vista
-        model.addAttribute("servicio", servicio);
-
-        // Devolver la vista con el detalle del servicio
-        return "verServicioCompleto.jsp";
+    // Si el servicio no existe, redirigir a la lista de servicios
+    if (servicio == null) {
+        return "redirect:/servicios"; // Redirige si el servicio no se encuentra
     }
+
+    // Obtener el usuario en sesión (si existe)
+    Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+
+    // Verificar si el usuario en sesión es el autor del servicio
+    boolean isAuthorInSesion = false;
+    if (usuarioEnSesion != null) {
+        isAuthorInSesion = usuarioEnSesion.getId().equals(servicio.getUsuario().getId());
+    }
+
+    // Pasar el servicio, el usuario y la variable isAuthorInSesion al modelo
+    model.addAttribute("servicio", servicio);
+    model.addAttribute("usuarioSesion", usuarioEnSesion);
+    model.addAttribute("isAuthorInSesion", isAuthorInSesion); // Esta es la variable que usaremos en el JSP
+
+    // Devolver la vista con el detalle del servicio
+    return "verServicioCompleto.jsp"; // Aquí cargamos la JSP que muestra los detalles
+}
+
 
     @GetMapping("/servicios")
     public String mostrarServicios(Model model) {

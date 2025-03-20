@@ -30,8 +30,7 @@
                                 <p class="card-text">${servicio.descripcion}</p>
                                 <p class="card-text"><strong>Precio:</strong> $${servicio.precio}</p>
                                 <p class="card-text"><small class="text-muted">Autor: ${servicio.usuario.nombre}</small></p>
-                                
-                                <a href="solicitarServicio?id=${servicio.id}" class="btn btn-primary">
+                                <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-info">
                                     <i class="fas fa-hand-paper"></i> Solicitar Servicio
                                 </a>
                                 
