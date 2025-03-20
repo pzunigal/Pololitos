@@ -24,4 +24,14 @@ public class SolicitudServicio {
     public List<Solicitud> obtenerSolicitudesPorSolicitante(Usuario solicitante) {
         return solicitudRepositorio.findBySolicitante(solicitante);
     }
+
+    public List<Solicitud> obtenerTodasLasSolicitudes() {
+        return solicitudRepositorio.findAll();
+    }
+     // Obtener solicitudes de los servicios del usuario (proveedor)
+     public List<Solicitud> obtenerSolicitudesPorProveedor(Usuario proveedor) {
+        // Filtrar las solicitudes cuya relación con el servicio sea de un proveedor específico
+        return solicitudRepositorio.findByServicio_Usuario(proveedor);
+    }
+
 }

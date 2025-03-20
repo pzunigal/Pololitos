@@ -77,4 +77,22 @@ public class ControladorSolicitud {
         mav.addObject("solicitudes", solicitudesEnviadas);
         return mav;
     }
+
+    @GetMapping("/mis-solicitudes-recibidas")
+public ModelAndView verMisSolicitudesRecibidas(HttpSession session) {
+    // Obtener usuario en sesión
+    Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+    if (usuarioEnSesion == null) {
+        return new ModelAndView("redirect:/login"); // Redirigir si no hay usuario en sesión
+    }
+
+    // Obtener todas las solicitudes recibidas por los servicios de este usuario
+    List<Solicitud> solicitudesRecibidas = solicitudServicio.obtenerSolicitudesPorProveedor(usuarioEnSesion);
+
+    // Crear y devolver la vista con las solicitudes
+    ModelAndView mav = new ModelAndView("misSolicitudesRecibidas.jsp");
+    mav.addObject("solicitudes", solicitudesRecibidas);
+    return mav;
+}
+
 }
