@@ -49,12 +49,15 @@
                             <div class="card">
                                 <div class="card-body">
                                     <h5 class="card-title">Enviar Solicitud</h5>
-                                    <form action="/crearSolicitud" method="post">
+                                    <form action="${pageContext.request.contextPath}/crear-solicitud" method="post">
                                         <div class="form-group">
                                             <textarea class="form-control" name="mensaje" placeholder="Escribe aquí un mensaje..." required></textarea>
                                         </div>
+                                        <input type="hidden" name="servicioId" value="<c:out value='${servicio.id}'/>" />
                                         <button type="submit" class="btn btn-primary mt-3">Enviar Solicitud</button>
                                     </form>
+                                    
+                                    
                                 </div>
                             </div>
                         </div>
