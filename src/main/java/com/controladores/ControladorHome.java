@@ -21,15 +21,12 @@ public class ControladorHome {
     private ServicioServicios servicioServicios;
 
     @GetMapping("/")
-	public String index() {
-		return "home.jsp";
-	}
-
-    @GetMapping("/servicios")
-    public String servicios(Model model) {
-        model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
-        return "servicios.jsp";
+    public String index(Model model) {
+        List<Categoria> categorias = servicioServicios.obtenerCategoriasConServicios();
+        model.addAttribute("categorias", categorias);
+        return "home.jsp";
     }
+
 
     @GetMapping("/contacto")
     public String contacto() {
@@ -40,16 +37,15 @@ public class ControladorHome {
     public String nosotros() {
         return "nosotros.jsp";
     }
-    
-	// Método para manejar la búsqueda con filtros
+
+    // Método para manejar la búsqueda con filtros
     @GetMapping("/buscar")
     public String buscar(
-        @RequestParam(value = "nombre", required = false) String nombre,
-        @RequestParam(value = "usuario", required = false) Usuario usuario,
-        @RequestParam(value = "categoria", required = false) Categoria categoria,
-        @RequestParam(value = "precio", required = false) Double precio,
-        Model model
-    ) {
+            @RequestParam(value = "nombre", required = false) String nombre,
+            @RequestParam(value = "usuario", required = false) Usuario usuario,
+            @RequestParam(value = "categoria", required = false) Categoria categoria,
+            @RequestParam(value = "precio", required = false) Double precio,
+            Model model) {
         List<Servicio> serviciosEncontrados = new ArrayList<>();
 
         // Filtrar por nombre
@@ -66,7 +62,7 @@ public class ControladorHome {
         if (precio != null) {
             serviciosEncontrados.addAll(servicioServicios.buscarPorPrecio(precio));
         }
-		
+
         // Filtrar por usuario
         if (usuario != null) {
             serviciosEncontrados.addAll(servicioServicios.buscarPorUsuario(usuario));
@@ -75,6 +71,6 @@ public class ControladorHome {
         // Pasamos los resultados de la búsqueda al modelo
         model.addAttribute("servicios", serviciosEncontrados);
 
-        return "resultadoBusqueda.jsp";  // Nombre de la vista donde se mostrarán los resultados
+        return "resultadoBusqueda.jsp"; // Nombre de la vista donde se mostrarán los resultados
     }
 }
