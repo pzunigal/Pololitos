@@ -3,6 +3,7 @@ package com.controladores;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -15,6 +16,7 @@ import com.servicios.SolicitudServicio;
 
 import jakarta.servlet.http.HttpSession;
 
+@Controller
 public class ControladorSolicitud {
     
     @Autowired
@@ -44,7 +46,7 @@ public class ControladorSolicitud {
         Solicitud nuevaSolicitud = new Solicitud();
         nuevaSolicitud.setSolicitante(usuarioEnSesion);
         nuevaSolicitud.setServicio(servicio);
-        nuevaSolicitud.setEstado("Pendiente"); // Estado por defecto
+        nuevaSolicitud.setEstado("Enviado"); // Estado por defecto
         nuevaSolicitud.setFechaSolicitud(new Date());
         nuevaSolicitud.setComentarioAdicional(mensaje);
 
