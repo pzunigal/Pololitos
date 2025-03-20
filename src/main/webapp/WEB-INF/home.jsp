@@ -30,6 +30,16 @@
                                         <li><a href="/mis-servicios">Mis Servicios</a></li>
                                     </c:when>
                                 </c:choose>
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                                        <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
+                                    </c:when>
+                                </c:choose>
+                                <c:choose>
+                                    <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                                        <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
+                                    </c:when>
+                                </c:choose>
                             </ul>
                         </nav>
                     </div>
