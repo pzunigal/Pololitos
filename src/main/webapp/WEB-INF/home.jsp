@@ -89,8 +89,36 @@
                                             <img src="${servicio.imgUrl}" class="card-img-top img-card-profile-service"
                                                 alt="${servicio.nombre}">
 
-                                            <p>Precio: $${servicio.precio}</p>
+                                            <p>$${servicio.precio}</p>
+                                            <p>${servicio.ciudad}</p>
+
+                                            <!-- Verifica si el usuario está logueado y si es dueño del servicio -->
+                                            <c:choose>
+                                                <c:when
+                                                    test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
+                                                    <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}"
+                                                        class="btn btn-primary">
+                                                        <i class="fas fa-hand-paper"></i> Solicitar Servicio
+                                                    </a>
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}"
+                                                        class="btn btn-secondary">
+                                                        <i class="fas fa-eye"></i> Ver
+                                                    </a>
+                                                </c:otherwise>
+                                            </c:choose>
+
+
+                                            <!--   <button class="btn btn-success mt-2" data-bs-toggle="modal"
+                                                data-bs-target="#contactModal"
+                                                onclick="openModal('${servicio.usuario.nombre}', '${servicio.nombre}')">
+                                                <i class="fas fa-comment-alt"></i> Contactar con el Vendedor
+                                                
+                                            </button> -->
                                         </div>
+                                        
                                     </c:forEach>
                                 </div>
                             </div>
@@ -112,7 +140,7 @@
 
                         categorias.forEach(categoria => {
                             const count = parseInt(categoria.getAttribute("data-count"), 10);
-                            if (count === 0 || visibles >= 2) {
+                            if (count === 0 || visibles >= 3) {
                                 categoria.style.display = "none"; // Oculta si no tiene servicios o ya hay 2 visibles
                             } else {
                                 visibles++;

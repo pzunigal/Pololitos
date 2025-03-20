@@ -14,6 +14,8 @@ import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioServicios;
 
+import jakarta.servlet.http.HttpSession;
+
 @Controller
 public class ControladorHome {
 
@@ -21,9 +23,15 @@ public class ControladorHome {
     private ServicioServicios servicioServicios;
 
     @GetMapping("/")
-    public String index(Model model) {
+    public String index(Model model, HttpSession session) {
         List<Categoria> categorias = servicioServicios.obtenerCategoriasConServicios();
         model.addAttribute("categorias", categorias);
+
+        // Obtener usuario en sesión
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+    
+        // Pasar datos al modelo
+        model.addAttribute("usuarioSesion", usuarioEnSesion); // Se envía el usuario en sesión
         return "home.jsp";
     }
 
