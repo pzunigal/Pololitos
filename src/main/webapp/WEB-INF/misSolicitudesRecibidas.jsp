@@ -46,17 +46,17 @@
                     <li><a href="/servicios">Servicios</a></li>
                     <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
                     <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}"> 
                             <li><a href="/mis-servicios">Mis Servicios</a></li>
                         </c:when>
                     </c:choose>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}"> 
                             <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
                         </c:when>
                     </c:choose>
                     <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}"> 
                             <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
                         </c:when>
                     </c:choose>
@@ -98,9 +98,13 @@
                     <p><strong>Comentario:</strong> ${solicitud.comentarioAdicional}</p>
                     <p class="estado"><strong>Estado:</strong> ${solicitud.estado}</p>
                     
-                    <!-- Botón para contactar -->
-                    <a href="/chat?solicitanteId=${solicitud.solicitante.id}&solicitudId=${solicitud.id}"
-                       class="btn btn-primary mt-2">Contactarse</a>
+                    <!-- Formulario para crear el chat -->
+                    <form action="/chat/crear" method="post">
+                        <input type="hidden" name="solicitanteId" value="${solicitud.solicitante.id}">
+                        <input type="hidden" name="solicitudId" value="${solicitud.id}">
+                        <button type="submit" class="btn btn-primary mt-2">Contactarse</button>
+                    </form>
+                    
                 </div>
             </c:forEach>
         </div>

@@ -1,64 +1,64 @@
 package com.controladores;
 
 import com.servicios.ServicioChat;
-import com.servicios.ServicioMensaje;
 import com.modelos.Chat;
-import com.modelos.Mensaje;
-
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletionException;
 
 @Controller
+@RequestMapping("/chat")
 public class ControladorChat {
 
     private final ServicioChat servicioChat;
-    /* private final ServicioMensaje servicioMensaje; */
 
-    // Inyección de dependencias
-    public ControladorChat(ServicioChat servicioChat, ServicioMensaje servicioMensaje) {
+    public ControladorChat(ServicioChat servicioChat) {
         this.servicioChat = servicioChat;
-        /* this.servicioMensaje = servicioMensaje; */
     }
-    @PostMapping("/crear-chat")
-    public ResponseEntity<String> createChat(@RequestBody Chat chat) {
+
+    @PostMapping("/crear")
+    public String createChat(@RequestParam Long solicitanteId, @RequestParam Long solicitudId) {
         try {
-            String chatId = "chat-" + System.currentTimeMillis(); // Generar un ID único
-            chat.setId(chatId);
+            Chat chat = new Chat();
+            chat.setSolicitanteId(solicitanteId);
+            chat.setSolicitudId(solicitudId);
             chat.setFechaCreacion(new Date());
-            servicioChat.saveChat(chatId, chat);
-            return ResponseEntity.ok("Chat creado con éxito en Firebase!");
+
+            Chat createdChat = servicioChat.createChat(chat);
+
+            // Redirigir a la vista del chat con el ID creado
+            return "redirect:/chat/ver/" + createdChat.getId();
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Error creando el chat: " + e.getMessage());
+            return "redirect:/error?mensaje=" + e.getMessage();
         }
     }
 
-    
-    @GetMapping("/chat")
-    public String mostrarChat(@RequestParam(name = "solicitanteId") String solicitanteId,
-                              @RequestParam(name = "solicitudId") String solicitudId,
-                              Model model) {
-        String chatId = "chat-" + solicitanteId + "-" + solicitudId; 
+    @GetMapping("/ver/{chatId}")
+public String verChat(@PathVariable String chatId, Model model) {
+    try {
+        Chat chat = servicioChat.getChat(chatId).join(); // Espera la respuesta
 
-        CompletableFuture<Chat> chatFuture = servicioChat.getChat(chatId);
-
-        try {
-            Chat chat = chatFuture.get(); // Bloquea, pero lo manejamos con try-catch
-            List<Mensaje> mensajes = (chat != null && chat.getMensajes() != null) ? chat.getMensajes() : new ArrayList<>();
-            model.addAttribute("chatId", chatId);
-            model.addAttribute("mensajes", mensajes);
-        } catch (InterruptedException | ExecutionException e) {
-            model.addAttribute("chatId", chatId);
-            model.addAttribute("mensajes", new ArrayList<>()); // Si falla, chat vacío
+        if (chat == null) {
+            return "redirect:/error?mensaje=Chat no encontrado";
         }
 
-        return "chat.jsp";
+        model.addAttribute("chat", chat);
+        model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
+        model.addAttribute("chatId", chatId);
+        model.addAttribute("solicitanteId", chat.getSolicitanteId());
+
+        return "chat.jsp"; // Renderiza la vista `chat.jsp`
+    } catch (CompletionException e) {
+        // Si Firebase devuelve un error específico
+        return "redirect:/error?mensaje=Error al obtener el chat: " + e.getCause().getMessage();
+    } catch (Exception e) {
+        // Error genérico
+        return "redirect:/error?mensaje=No se pudo cargar el chat";
     }
+}
+
 }

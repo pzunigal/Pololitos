@@ -45,74 +45,68 @@
     </style>
 </head>
 <body>
-
 <header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
-            </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                    <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-servicios">Mis Servicios</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                        </c:when>
-                    </c:choose>
-                </ul>
-            </nav>
-        </div>
-        <div class="user-info">
-            <div class="circle-busqueda">
-                <input type="text" placeholder="¿Qué servicio buscas?">
-                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
+    <div class="nav-container">
+        <a href="/">
+            <div class="logo">
+                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
             </div>
-
-            <c:choose>
-                <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <a href="/perfilUsuario">
-                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                            width="40" height="40" style="border-radius: 50%;">
-                    </a>
-                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                    <a href="/logout"><button>Cerrar Sesión</button></a>
-                </c:when>
-
-                <c:otherwise>
-                    <a href="/login"><button>Iniciar sesión</button></a>
-                    <a href="/registro"><button>Regístrate</button></a>
-                </c:otherwise>
-            </c:choose>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="/servicios">Servicios</a></li>
+                <c:if test="${not empty sessionScope.usuarioEnSesion}">
+                    <li><a href="/mis-servicios">Mis Servicios</a></li>
+                    <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
+                    <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
+                </c:if>
+            </ul>
+        </nav>
+    </div>
+    <div class="user-info">
+        <div class="circle-busqueda">
+            <input type="text" placeholder="¿Qué servicio buscas?">
+            <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
         </div>
-    </header>
+        <c:choose>
+            <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                <a href="/perfilUsuario">
+                    <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
+                </a>
+                <a href="/servicios/publicar"><button>Crear Servicio</button></a>
+                <a href="/logout"><button>Cerrar Sesión</button></a>
+            </c:when>
+            <c:otherwise>
+                <a href="/login"><button>Iniciar sesión</button></a>
+                <a href="/registro"><button>Regístrate</button></a>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</header>
+
 <div class="container mt-5">
     <div class="chat-container">
-        <h2 class="text-center">Chat</h2>
+        <h2 class="text-center">${chat.nombre}</h2> <!-- Nombre del chat -->
         <p class="text-center">Conversación entre proveedor y cliente</p>
 
-        <div class="chat-box">
+        <div class="chat-box" id="chat-box">
+            <!-- Placeholder de la fecha de inicio de la conversación -->
+            <c:if test="${not empty chat.fechaCreacion}">
+                <div class="text-center text-muted my-2">
+                    <small>
+                        Inicio de la conversación: 
+                        <fmt:formatDate value="${chat.fechaCreacion}" pattern="dd MMMM yyyy"/>
+                    </small>
+                </div>
+            </c:if>
+
             <c:forEach var="mensaje" items="${mensajes}">
                 <div class="message ${mensaje.usuario.id == solicitanteId ? 'sent' : 'received'}">
                     ${mensaje.contenido}
                 </div>
             </c:forEach>
         </div>
-        
 
-        <!-- Formulario para enviar mensajes -->
         <form class="mt-3" id="mensaje-form">
             <input type="hidden" id="chatId" value="${chatId}">
             <div class="mb-3">
@@ -123,57 +117,45 @@
     </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
 document.getElementById("mensaje-form").addEventListener("submit", function(event) {
     event.preventDefault();
-
     let chatId = document.getElementById("chatId").value;
-    let mensajeInput = document.getElementById("mensaje-input").value;
-
-    if (mensajeInput.trim() === "") return;
-
-    let mensajeData = {
-        chatId: chatId,
-        contenido: mensajeInput,
-        usuario: { id: "USER_ID" }  // Reemplazar con el ID del usuario autenticado
-    };
-
+    let mensajeInput = document.getElementById("mensaje-input");
+    let mensajeTexto = mensajeInput.value.trim();
+    if (!mensajeTexto) return;
+    let mensajeData = { chatId: chatId, contenido: mensajeTexto };
     fetch("/crear-mensaje", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(mensajeData)
-    }).then(response => response.text()).then(data => {
-        console.log("Mensaje enviado:", data);
-        document.getElementById("mensaje-input").value = "";
+    }).then(() => {
+        mensajeInput.value = "";
         cargarMensajes(chatId);
     });
 });
 
-// Cargar mensajes en tiempo real cada 2 segundos
 function cargarMensajes(chatId) {
     fetch(`/chat-mensajes/${chatId}`)
         .then(response => response.json())
         .then(mensajes => {
             let chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML = ""; // Limpiar mensajes anteriores
+            chatBox.innerHTML = "";
             mensajes.forEach(mensaje => {
                 let div = document.createElement("div");
-                div.classList.add("message", mensaje.usuario.id === "USER_ID" ? "sent" : "received");
+                div.classList.add("message", mensaje.usuario.id == "USER_ID" ? "sent" : "received");
                 div.textContent = mensaje.contenido;
                 chatBox.appendChild(div);
             });
-            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+            chatBox.scrollTop = chatBox.scrollHeight;
         });
 }
-
-// Obtener mensajes cada 2 segundos
 setInterval(() => {
     let chatId = document.getElementById("chatId").value;
-    if (chatId) {
-        cargarMensajes(chatId);
-    }
+    if (chatId) cargarMensajes(chatId);
 }, 2000);
 </script>
+
 </body>
 </html>
