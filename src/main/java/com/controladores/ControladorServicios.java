@@ -19,7 +19,7 @@ import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioServicios;
-import com.servicios.ServicioUsuarios;
+
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
@@ -40,8 +40,8 @@ public class ControladorServicios {
     @Autowired
     private ServicioCategorias servicioCategorias;
 
-    @Autowired
-    private ServicioUsuarios servicioUsuarios;
+    /* @Autowired
+    private ServicioUsuarios servicioUsuarios; */
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
