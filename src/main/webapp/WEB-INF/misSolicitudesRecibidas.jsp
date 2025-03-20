@@ -42,6 +42,10 @@
                     <p><strong>Servicio:</strong> ${solicitud.servicio.nombre}</p>
                     <p><strong>Comentario:</strong> ${solicitud.comentarioAdicional}</p>
                     <p class="estado"><strong>Estado:</strong> ${solicitud.estado}</p>
+                    
+                    <!-- Botón para contactar -->
+                    <a href="/chat?solicitanteId=${solicitud.solicitante.id}&proveedorId=${solicitud.servicio.usuario.id}" 
+                       class="btn btn-primary mt-2">Contactarse</a>
                 </div>
             </c:forEach>
         </div>

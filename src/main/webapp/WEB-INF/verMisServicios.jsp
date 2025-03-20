@@ -81,13 +81,16 @@
                                 <!-- Botón de editar con icono de lápiz -->
                                 <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post" style="display:inline;">
                                     <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
-                                        <i class="bi bi-trash"></i> Eliminar
+                                        <i class="bi bi-trash"></i>
                                     </button>
                                 </form>
                                 
                                 <!-- Botón de ojo para ver detalles con icono de ojo -->
                                 <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-info">
-                                    <i class="bi bi-eye"></i> Ver detalles
+                                    <i class="bi bi-eye"></i>
+                                </a>
+                                <a href="${pageContext.request.contextPath}/editar-servicio/${servicio.id}" class="btn btn-info">
+                                    <i class="bi bi-pencil"></i>
                                 </a>
                             </div>
                         </div>
