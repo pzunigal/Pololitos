@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <!-- Asegúrate de incluir esta línea para utilizar fmt -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -88,25 +90,25 @@
     <div class="chat-container">
         <h2 class="text-center">${chat.nombre}</h2> <!-- Nombre del chat -->
         <p class="text-center">Conversación entre proveedor y cliente</p>
-
+    
         <div class="chat-box" id="chat-box">
-            <!-- Placeholder de la fecha de inicio de la conversación -->
-            <c:if test="${not empty chat.fechaCreacion}">
+            <!-- Mostrar la fecha de inicio de la conversación -->
+            <c:if test="${not empty fechaCreacionFormateada}">
                 <div class="text-center text-muted my-2">
                     <small>
                         Inicio de la conversación: 
-                        <fmt:formatDate value="${chat.fechaCreacion}" pattern="dd MMMM yyyy"/>
+                        <span>${fechaCreacionFormateada}</span>
                     </small>
                 </div>
             </c:if>
-
+    
             <c:forEach var="mensaje" items="${mensajes}">
                 <div class="message ${mensaje.usuario.id == solicitanteId ? 'sent' : 'received'}">
                     ${mensaje.contenido}
                 </div>
             </c:forEach>
         </div>
-
+    
         <form class="mt-3" id="mensaje-form">
             <input type="hidden" id="chatId" value="${chatId}">
             <div class="mb-3">
@@ -115,47 +117,8 @@
             <button type="submit" class="btn btn-primary w-100">Enviar</button>
         </form>
     </div>
+    
 </div>
-
-
-<script>
-document.getElementById("mensaje-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    let chatId = document.getElementById("chatId").value;
-    let mensajeInput = document.getElementById("mensaje-input");
-    let mensajeTexto = mensajeInput.value.trim();
-    if (!mensajeTexto) return;
-    let mensajeData = { chatId: chatId, contenido: mensajeTexto };
-    fetch("/crear-mensaje", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(mensajeData)
-    }).then(() => {
-        mensajeInput.value = "";
-        cargarMensajes(chatId);
-    });
-});
-
-function cargarMensajes(chatId) {
-    fetch(`/chat-mensajes/${chatId}`)
-        .then(response => response.json())
-        .then(mensajes => {
-            let chatBox = document.getElementById("chat-box");
-            chatBox.innerHTML = "";
-            mensajes.forEach(mensaje => {
-                let div = document.createElement("div");
-                div.classList.add("message", mensaje.usuario.id == "USER_ID" ? "sent" : "received");
-                div.textContent = mensaje.contenido;
-                chatBox.appendChild(div);
-            });
-            chatBox.scrollTop = chatBox.scrollHeight;
-        });
-}
-setInterval(() => {
-    let chatId = document.getElementById("chatId").value;
-    if (chatId) cargarMensajes(chatId);
-}, 2000);
-</script>
 
 </body>
 </html>

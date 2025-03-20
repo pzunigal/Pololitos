@@ -1,13 +1,12 @@
 package com.modelos;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class Chat {
     private String id;
     private String nombre;
-    private Date fechaCreacion;
+    private long fechaCreacion;
     private List<Mensaje> mensajes; 
     private Long solicitanteId;
     private Long solicitudId;
@@ -16,7 +15,7 @@ public class Chat {
         this.mensajes = new ArrayList<>(); // Inicializa el array de mensajes vacío
     }
 
-    public Chat(String id, String nombre, Date fechaCreacion, List<Mensaje> mensajes, Long solicitanteId, Long solicitudId) {
+    public Chat(String id, String nombre, long fechaCreacion, List<Mensaje> mensajes, Long solicitanteId, Long solicitudId) {
         this.id = id;
         this.nombre = nombre;
         this.fechaCreacion = fechaCreacion;
@@ -42,11 +41,11 @@ public class Chat {
         this.nombre = nombre;
     }
 
-    public Date getFechaCreacion() {
+    public long getFechaCreacion() {
         return fechaCreacion;
     }
 
-    public void setFechaCreacion(Date fechaCreacion) {
+    public void setFechaCreacion(long fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 

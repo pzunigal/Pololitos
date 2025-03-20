@@ -6,6 +6,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.springframework.stereotype.Repository;
 import com.modelos.Chat;
+import java.util.Date;
 
 @Repository
 public class RepositorioChat {
@@ -25,6 +26,7 @@ public class RepositorioChat {
     public String saveChat(Chat chat) {
         DatabaseReference newRef = databaseReference.push();
         chat.setId(newRef.getKey());  // Firebase genera el ID automáticamente
+        chat.setFechaCreacion(new Date().getTime()); // Guardar como timestamp
         newRef.setValueAsync(chat);
         return chat.getId();
     }

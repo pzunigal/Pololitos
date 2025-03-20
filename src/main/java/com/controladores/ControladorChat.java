@@ -6,6 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.concurrent.CompletionException;
@@ -23,12 +24,14 @@ public class ControladorChat {
     @PostMapping("/crear")
     public String createChat(@RequestParam Long solicitanteId, @RequestParam Long solicitudId) {
         try {
+            // Crear un objeto de tipo Chat
             Chat chat = new Chat();
             chat.setSolicitanteId(solicitanteId);
             chat.setSolicitudId(solicitudId);
-            chat.setFechaCreacion(new Date());
+            chat.setFechaCreacion(new Date().getTime()); // Establecer la fecha de creación como timestamp
 
-            Chat createdChat = servicioChat.createChat(chat);
+            // Guardar el chat en Firebase
+            Chat createdChat = servicioChat.createChat(chat); // Usar el servicio para crear el chat
 
             // Redirigir a la vista del chat con el ID creado
             return "redirect:/chat/ver/" + createdChat.getId();
@@ -38,27 +41,32 @@ public class ControladorChat {
     }
 
     @GetMapping("/ver/{chatId}")
-public String verChat(@PathVariable String chatId, Model model) {
-    try {
-        Chat chat = servicioChat.getChat(chatId).join(); // Espera la respuesta
+    public String verChat(@PathVariable String chatId, Model model) {
+        try {
+            Chat chat = servicioChat.getChat(chatId).join(); // Espera la respuesta
 
-        if (chat == null) {
-            return "redirect:/error?mensaje=Chat no encontrado";
+            if (chat == null) {
+                return "redirect:/error?mensaje=Chat no encontrado";
+            }
+
+            // Formatear la fecha
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+            String formattedDate = dateFormat.format(new Date(chat.getFechaCreacion()));
+
+            model.addAttribute("chat", chat);
+            model.addAttribute("fechaCreacionFormateada", formattedDate); // Pasar la fecha formateada
+            model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
+            model.addAttribute("chatId", chatId);
+            model.addAttribute("solicitanteId", chat.getSolicitanteId());
+
+            return "chat.jsp"; // Renderiza la vista `chat.jsp`
+        } catch (CompletionException e) {
+            // Si Firebase devuelve un error específico
+            return "redirect:/error?mensaje=Error al obtener el chat: " + e.getCause().getMessage();
+        } catch (Exception e) {
+            // Error genérico
+            return "redirect:/error?mensaje=No se pudo cargar el chat";
         }
-
-        model.addAttribute("chat", chat);
-        model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
-        model.addAttribute("chatId", chatId);
-        model.addAttribute("solicitanteId", chat.getSolicitanteId());
-
-        return "chat.jsp"; // Renderiza la vista `chat.jsp`
-    } catch (CompletionException e) {
-        // Si Firebase devuelve un error específico
-        return "redirect:/error?mensaje=Error al obtener el chat: " + e.getCause().getMessage();
-    } catch (Exception e) {
-        // Error genérico
-        return "redirect:/error?mensaje=No se pudo cargar el chat";
     }
-}
 
 }
