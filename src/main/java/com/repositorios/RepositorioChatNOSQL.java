@@ -9,11 +9,11 @@ import com.modelos.Chat;
 import java.util.Date;
 
 @Repository
-public class RepositorioChat {
+public class RepositorioChatNOSQL {
 
     private final DatabaseReference databaseReference;
 
-    public RepositorioChat(FirebaseDatabase firebaseDatabase) {
+    public RepositorioChatNOSQL(FirebaseDatabase firebaseDatabase) {
         this.databaseReference = firebaseDatabase.getReference("chats");
     }
 

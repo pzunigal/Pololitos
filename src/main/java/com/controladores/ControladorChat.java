@@ -1,6 +1,9 @@
 package com.controladores;
 
 import com.servicios.ServicioChat;
+
+import jakarta.servlet.http.HttpSession;
+
 import com.modelos.Chat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,7 +25,7 @@ public class ControladorChat {
     }
 
     @PostMapping("/crear")
-    public String createChat(@RequestParam Long solicitanteId, @RequestParam Long solicitudId) {
+    public String createChat(@RequestParam Long solicitanteId, @RequestParam Long solicitudId, HttpSession session) {
         try {
             // Crear un objeto de tipo Chat
             Chat chat = new Chat();
@@ -33,11 +36,20 @@ public class ControladorChat {
             // Guardar el chat en Firebase
             Chat createdChat = servicioChat.createChat(chat); // Usar el servicio para crear el chat
 
+            // Agregar la variable que indica que el chat fue creado
+            session.setAttribute("isChatCreated_" + solicitudId, true);
+
             // Redirigir a la vista del chat con el ID creado
             return "redirect:/chat/ver/" + createdChat.getId();
         } catch (Exception e) {
             return "redirect:/error?mensaje=" + e.getMessage();
         }
+    }
+
+    @PostMapping("/continuar")
+    public String continuarChat(@RequestParam("solicitudId") Long solicitudId, HttpSession session) {
+        // Redirigir a la vista del chat existente
+        return "redirect:/chat/ver/" + solicitudId;
     }
 
     @GetMapping("/ver/{chatId}")
@@ -68,5 +80,4 @@ public class ControladorChat {
             return "redirect:/error?mensaje=No se pudo cargar el chat";
         }
     }
-
 }

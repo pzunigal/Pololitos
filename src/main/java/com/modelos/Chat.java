@@ -1,20 +1,29 @@
 package com.modelos;
-
 import java.util.ArrayList;
 import java.util.List;
 
+@jakarta.persistence.Entity  // Indica que esta clase es una entidad JPA
 public class Chat {
+    
+    @jakarta.persistence.Id  // Define el campo como clave primaria
     private String id;
+    
     private String nombre;
+    
     private long fechaCreacion;
+    
+    @jakarta.persistence.Transient  // No persistir esta propiedad en la base de datos
     private List<Mensaje> mensajes; 
+    
     private Long solicitanteId;
     private Long solicitudId;
 
+    // Constructor vacío
     public Chat() {
         this.mensajes = new ArrayList<>(); // Inicializa el array de mensajes vacío
     }
 
+    // Constructor con parámetros
     public Chat(String id, String nombre, long fechaCreacion, List<Mensaje> mensajes, Long solicitanteId, Long solicitudId) {
         this.id = id;
         this.nombre = nombre;
