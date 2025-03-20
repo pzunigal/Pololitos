@@ -15,7 +15,7 @@ import com.modelos.Servicio;
 import com.modelos.Solicitud;
 import com.modelos.Usuario;
 import com.servicios.ServicioServicios;
-import com.servicios.SolicitudServicio;
+import com.servicios.ServicioSolicitud;
 
 import jakarta.servlet.http.HttpSession;
 
@@ -23,7 +23,7 @@ import jakarta.servlet.http.HttpSession;
 public class ControladorSolicitud {
     
     @Autowired
-    private SolicitudServicio solicitudServicio;
+    private ServicioSolicitud solicitudServicio;
 
     @Autowired
     private ServicioServicios servicioServicio;

@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.modelos.Solicitud;
 import com.modelos.Usuario;
-import com.repositorios.SolicitudRepositorio;
+import com.repositorios.RepositorioSolicitud;
 
 @Service
-public class SolicitudServicio {
+public class ServicioSolicitud {
 
     @Autowired
-    private SolicitudRepositorio solicitudRepositorio;
+    private RepositorioSolicitud solicitudRepositorio;
 
     // Guardar solicitud
     public void guardarSolicitud(Solicitud solicitud) {

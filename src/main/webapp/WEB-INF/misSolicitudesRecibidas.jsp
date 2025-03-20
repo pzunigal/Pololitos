@@ -44,7 +44,7 @@
                     <p class="estado"><strong>Estado:</strong> ${solicitud.estado}</p>
                     
                     <!-- Botón para contactar -->
-                    <a href="/chat?solicitanteId=${solicitud.solicitante.id}&proveedorId=${solicitud.servicio.usuario.id}" 
+                    <a href="/chat?solicitanteId=${solicitud.solicitante.id}&solicitudId=${solicitud.id}"
                        class="btn btn-primary mt-2">Contactarse</a>
                 </div>
             </c:forEach>
