@@ -49,15 +49,19 @@
         <p class="text-center">Conversación entre proveedor y cliente</p>
 
         <div class="chat-box">
-            <!-- Mensajes de ejemplo (esto será dinámico más adelante) -->
-            <div class="message received">¡Hola! Estoy interesado en el servicio.</div>
-            <div class="message sent">¡Hola! Claro, ¿en qué puedo ayudarte?</div>
+            <c:forEach var="mensaje" items="${mensajes}">
+                <div class="message ${mensaje.usuario.id == solicitanteId ? 'sent' : 'received'}">
+                    ${mensaje.contenido}
+                </div>
+            </c:forEach>
         </div>
+        
 
-        <!-- Formulario para enviar mensajes (sin funcionalidad aún) -->
-        <form class="mt-3">
+        <!-- Formulario para enviar mensajes -->
+        <form class="mt-3" id="mensaje-form">
+            <input type="hidden" id="chatId" value="${chatId}">
             <div class="mb-3">
-                <textarea class="form-control" rows="2" placeholder="Escribe un mensaje..."></textarea>
+                <textarea class="form-control" id="mensaje-input" rows="2" placeholder="Escribe un mensaje..."></textarea>
             </div>
             <button type="submit" class="btn btn-primary w-100">Enviar</button>
         </form>
@@ -65,5 +69,56 @@
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById("mensaje-form").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    let chatId = document.getElementById("chatId").value;
+    let mensajeInput = document.getElementById("mensaje-input").value;
+
+    if (mensajeInput.trim() === "") return;
+
+    let mensajeData = {
+        chatId: chatId,
+        contenido: mensajeInput,
+        usuario: { id: "USER_ID" }  // Reemplazar con el ID del usuario autenticado
+    };
+
+    fetch("/crear-mensaje", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(mensajeData)
+    }).then(response => response.text()).then(data => {
+        console.log("Mensaje enviado:", data);
+        document.getElementById("mensaje-input").value = "";
+        cargarMensajes(chatId);
+    });
+});
+
+// Cargar mensajes en tiempo real cada 2 segundos
+function cargarMensajes(chatId) {
+    fetch(`/chat-mensajes/${chatId}`)
+        .then(response => response.json())
+        .then(mensajes => {
+            let chatBox = document.getElementById("chat-box");
+            chatBox.innerHTML = ""; // Limpiar mensajes anteriores
+            mensajes.forEach(mensaje => {
+                let div = document.createElement("div");
+                div.classList.add("message", mensaje.usuario.id === "USER_ID" ? "sent" : "received");
+                div.textContent = mensaje.contenido;
+                chatBox.appendChild(div);
+            });
+            chatBox.scrollTop = chatBox.scrollHeight; // Auto-scroll
+        });
+}
+
+// Obtener mensajes cada 2 segundos
+setInterval(() => {
+    let chatId = document.getElementById("chatId").value;
+    if (chatId) {
+        cargarMensajes(chatId);
+    }
+}, 2000);
+</script>
 </body>
 </html>

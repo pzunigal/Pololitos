@@ -2,36 +2,53 @@ package com.modelos;
 
 import java.util.Date;
 import java.util.List;
-import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
-public class Chat {  // ❌ Sin @Entity y @Table
-
-    private Long id;
-    private Solicitud solicitud;
-    private List<Mensaje> mensajes;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date createdAt;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private Date updatedAt;
+public class Chat {
+    private String id;
+    private String nombre;
+    private Date fechaCreacion;
+    private List<Mensaje> mensajes; 
 
     public Chat() {
-        this.createdAt = new Date();
-        this.updatedAt = new Date();
+    }
+
+    public Chat(String id, String nombre, Date fechaCreacion, List<Mensaje> mensajes) {
+        this.id = id;
+        this.nombre = nombre;
+        this.fechaCreacion = fechaCreacion;
+        this.mensajes = mensajes;
     }
 
     // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public Solicitud getSolicitud() { return solicitud; }
-    public void setSolicitud(Solicitud solicitud) { this.solicitud = solicitud; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public List<Mensaje> getMensajes() { return mensajes; }
-    public void setMensajes(List<Mensaje> mensajes) { this.mensajes = mensajes; }
+    public String getNombre() {
+        return nombre;
+    }
 
-    public Date getCreatedAt() { return createdAt; }
-    public Date getUpdatedAt() { return updatedAt; }
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public List<Mensaje> getMensajes() {
+        return mensajes;
+    }
+
+    public void setMensajes(List<Mensaje> mensajes) {
+        this.mensajes = mensajes;
+    }
 }

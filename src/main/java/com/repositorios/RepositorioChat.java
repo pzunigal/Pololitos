@@ -2,6 +2,8 @@ package com.repositorios;
 
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.modelos.Chat;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -14,14 +16,12 @@ public class RepositorioChat {
     }
 
     // Método para guardar un chat en Firebase
-    public void saveChat(String chatId, Object chatData) {
-        databaseReference.child(chatId).setValueAsync(chatData);
+    public void saveChat(String chatId, Chat chat) {
+        databaseReference.child(chatId).setValueAsync(chat);
     }
 
-    // Método para obtener un chat de Firebase
-    public DatabaseReference getChat(String chatId) {
-        return databaseReference.child(chatId);
+    // Método para obtener un chat de Firebase de forma asíncrona
+    public void getChat(String chatId, ValueEventListener listener) {
+        databaseReference.child(chatId).addListenerForSingleValueEvent(listener);
     }
-
-    // Otros métodos si es necesario, como obtener todos los chats, etc.
 }
