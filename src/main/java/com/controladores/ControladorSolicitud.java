@@ -61,7 +61,7 @@ public class ControladorSolicitud {
     }
 
     // Endpoint para ver las solicitudes enviadas
-    @GetMapping("/solicitudes/mis-enviadas")
+    @GetMapping("/mis-solicitudes-enviadas")
     public ModelAndView verMisSolicitudesEnviadas(HttpSession session) {
         // Obtener usuario en sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
