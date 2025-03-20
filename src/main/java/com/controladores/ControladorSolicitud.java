@@ -16,7 +16,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.modelos.Servicio;
 import com.modelos.Solicitud;
 import com.modelos.Usuario;
-import com.servicios.ServicioChat;
 import com.servicios.ServicioServicios;
 import com.servicios.ServicioSolicitud;
 import com.repositorios.RepositorioChatMySQL;
@@ -32,8 +31,8 @@ public class ControladorSolicitud {
     @Autowired
     private ServicioServicios servicioServicio;
 
-    @Autowired
-    private ServicioChat servicioChat;
+    /* @Autowired
+    private ServicioChat servicioChat; */
 
     @Autowired
     private RepositorioChatMySQL repositorioChat;
