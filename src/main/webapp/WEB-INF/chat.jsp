@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %> <!-- Asegúrate de incluir esta línea para utilizar fmt -->
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -45,80 +47,78 @@
     </style>
 </head>
 <body>
-
 <header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
-            </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                    <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-servicios">Mis Servicios</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                        </c:when>
-                    </c:choose>
-                </ul>
-            </nav>
-        </div>
-        <div class="user-info">
-            <div class="circle-busqueda">
-                <input type="text" placeholder="¿Qué servicio buscas?">
-                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
+    <div class="nav-container">
+        <a href="/">
+            <div class="logo">
+                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
             </div>
-
-            <c:choose>
-                <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <a href="/perfilUsuario">
-                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                            width="40" height="40" style="border-radius: 50%;">
-                    </a>
-                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                    <a href="/logout"><button>Cerrar Sesión</button></a>
-                </c:when>
-
-                <c:otherwise>
-                    <a href="/login"><button>Iniciar sesión</button></a>
-                    <a href="/registro"><button>Regístrate</button></a>
-                </c:otherwise>
-            </c:choose>
+        </a>
+        <nav>
+            <ul class="nav-links">
+                <li><a href="/servicios">Servicios</a></li>
+                <c:if test="${not empty sessionScope.usuarioEnSesion}">
+                    <li><a href="/mis-servicios">Mis Servicios</a></li>
+                    <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
+                    <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
+                </c:if>
+            </ul>
+        </nav>
+    </div>
+    <div class="user-info">
+        <div class="circle-busqueda">
+            <input type="text" placeholder="¿Qué servicio buscas?">
+            <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
         </div>
-    </header>
+        <c:choose>
+            <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                <a href="/perfilUsuario">
+                    <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
+                </a>
+                <a href="/servicios/publicar"><button>Crear Servicio</button></a>
+                <a href="/logout"><button>Cerrar Sesión</button></a>
+            </c:when>
+            <c:otherwise>
+                <a href="/login"><button>Iniciar sesión</button></a>
+                <a href="/registro"><button>Regístrate</button></a>
+            </c:otherwise>
+        </c:choose>
+    </div>
+</header>
+
 <div class="container mt-5">
     <div class="chat-container">
-        <h2 class="text-center">Chat</h2>
+        <h2 class="text-center">${chat.nombre}</h2> <!-- Nombre del chat -->
         <p class="text-center">Conversación entre proveedor y cliente</p>
-
-        <div class="chat-box">
-            <!-- Mensajes de ejemplo (esto será dinámico más adelante) -->
-            <div class="message received">¡Hola! Estoy interesado en el servicio.</div>
-            <div class="message sent">¡Hola! Claro, ¿en qué puedo ayudarte?</div>
+    
+        <div class="chat-box" id="chat-box">
+            <!-- Mostrar la fecha de inicio de la conversación -->
+            <c:if test="${not empty fechaCreacionFormateada}">
+                <div class="text-center text-muted my-2">
+                    <small>
+                        Inicio de la conversación: 
+                        <span>${fechaCreacionFormateada}</span>
+                    </small>
+                </div>
+            </c:if>
+    
+            <c:forEach var="mensaje" items="${mensajes}">
+                <div class="message ${mensaje.usuario.id == solicitanteId ? 'sent' : 'received'}">
+                    ${mensaje.contenido}
+                </div>
+            </c:forEach>
         </div>
-
-        <!-- Formulario para enviar mensajes (sin funcionalidad aún) -->
-        <form class="mt-3">
+    
+        <form class="mt-3" id="mensaje-form">
+            <input type="hidden" id="chatId" value="${chatId}">
             <div class="mb-3">
-                <textarea class="form-control" rows="2" placeholder="Escribe un mensaje..."></textarea>
+                <textarea class="form-control" id="mensaje-input" rows="2" placeholder="Escribe un mensaje..."></textarea>
             </div>
             <button type="submit" class="btn btn-primary w-100">Enviar</button>
         </form>
     </div>
+    
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
