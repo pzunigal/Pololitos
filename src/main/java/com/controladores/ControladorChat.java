@@ -1,7 +1,10 @@
 package com.controladores;
 
 import com.modelos.Chat;
+import com.modelos.Solicitud;
 import com.servicios.ServicioChat;
+import com.servicios.ServicioSolicitud;
+
 import jakarta.servlet.http.HttpSession;
 import com.modelos.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +23,9 @@ public class ControladorChat {
 
     @Autowired
     private ServicioChat servicioChat;
+
+    @Autowired
+    private ServicioSolicitud servicioSolicitud;
 
     @PostMapping("/continuar")
     public String continuarConversacion(@RequestParam("solicitudId") Long solicitudId, HttpSession session) {
@@ -57,6 +63,13 @@ public class ControladorChat {
 
             // Guardar el chat usando el servicio
             Chat createdChat = servicioChat.createChat(chat); // Usar el servicio para crear el chat
+
+            // Actualizar el estado de la solicitud a "Leído"
+            Solicitud solicitud = servicioSolicitud.getSolicitudById(solicitudId);
+            if (solicitud != null) {
+                solicitud.setEstado("Leído");
+                servicioSolicitud.guardarSolicitud(solicitud); // Guardar la solicitud con el nuevo estado
+            }
 
             // Agregar la variable que indica que el chat fue creado
             session.setAttribute("isChatCreated_" + solicitudId, true);

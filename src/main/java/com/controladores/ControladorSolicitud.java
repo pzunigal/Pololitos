@@ -113,5 +113,24 @@ public class ControladorSolicitud {
 
         return mav;
     }
+    @PostMapping("/aceptar-solicitud")
+    public String aceptarSolicitud(@RequestParam("solicitudId") Long solicitudId, RedirectAttributes redirectAttributes) {
+        // Obtener la solicitud por ID
+        Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+        if (solicitud == null) {
+            redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+            return "redirect:/mis-solicitudes-recibidas"; // Redirigir si la solicitud no existe
+        }
+
+        // Cambiar el estado de la solicitud a "Aceptada"
+        solicitud.setEstado("Aceptada");
+
+        // Guardar la solicitud con el nuevo estado
+        solicitudServicio.guardarSolicitud(solicitud);
+        redirectAttributes.addFlashAttribute("success", "Solicitud aceptada correctamente.");
+
+        // Redirigir de vuelta a la página de solicitudes recibidas
+        return "redirect:/mis-solicitudes-recibidas";
+    }
 
 }
