@@ -8,12 +8,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Servicio</title>
-    
+    <link rel="stylesheet" href="/css/servicios.css">
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <!-- SweetAlert2 para alertas -->
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <style>
@@ -26,6 +27,58 @@
     </style>
 </head>
 <body>
+    <header>
+        <div class="nav-container">
+            <a href="/">
+                <div class="logo">
+                    <img src="/img/pololitosBlanco.png" alt="Logo pololitos">
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/servicios">Servicios</a></li>
+                    <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                            <li><a href="/mis-servicios">Mis Servicios</a></li>
+                        </c:when>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                            <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
+                        </c:when>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                            <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
+                        </c:when>
+                    </c:choose>
+                </ul>
+            </nav>
+        </div>
+        <div class="user-info">
+            <div class="circle-busqueda">
+                <input type="text" placeholder="¿Qué servicio buscas?">
+                <a href=""><img src="/img/busqueda.png" alt="lupa de busqueda"></a>
+            </div>
+
+            <c:choose>
+                <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                    <a href="/perfilUsuario">
+                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
+                            width="40" height="40" style="border-radius: 50%;">
+                    </a>
+                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
+                    <a href="/logout"><button>Cerrar Sesión</button></a>
+                </c:when>
+
+                <c:otherwise>
+                    <a href="/login"><button>Iniciar sesión</button></a>
+                    <a href="/registro"><button>Regístrate</button></a>
+                </c:otherwise>
+            </c:choose>
+        </div>
+    </header>
     <div class="container mt-4">
         <h2>Publicar un nuevo servicio</h2>
         
