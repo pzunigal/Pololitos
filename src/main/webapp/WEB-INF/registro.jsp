@@ -11,9 +11,9 @@
     <link rel="stylesheet" href="/css/login-registro.css">
     </head>
 <body>
-    <main>
-        <img src="img/pololitos.png" alt="Logo pololitos" class="img-logo">
-        <div class="divider"></div>
+    <div class="fila-contenedor">
+    <a href="/"><img src="img/pololitos.png" alt="Logo pololitos" class="img-logo"></a>
+    <div class="divider"></div>
         <div class="login-container">
             <h2>Crear Cuenta</h2>
             <form:form action="" method="POST" modelAttribute="nuevoUsuario">
@@ -31,9 +31,9 @@
                 </div>
                 <div class="input-group-two">
                     <div class="input-group">
-                        <form:label path="direccion">Ciudad:</form:label>
-                        <form:input path="direccion"/>
-                        <form:errors path="direccion" class="text-danger"/>
+                        <form:label path="ciudad">Ciudad:</form:label>
+                        <form:input path="ciudad"/>
+                        <form:errors path="ciudad" class="text-danger"/>
                     </div>
                     <div class="input-group">
                         <form:label path="telefono">Telefono:</form:label>
@@ -42,44 +42,33 @@
                     </div>
                 </div> 
                 <div class="input-group">
+                    <form:label path="email">Correo:</form:label>
+                    <form:input path="email"/>
+                    <form:errors path="email" class="text-danger"/>
+                </div>
+                <div class="input-group">
                     <form:label path="fotoPerfil">URL perfil:</form:label>
                     <form:input path="fotoPerfil"/>
                     <form:errors path="fotoPerfil" class="text-danger"/>
                 </div>
-                <div class="input-group">
-<<<<<<< HEAD
-                    <form:label path="email" >E-mail:</form:label>
-                    <form:input path="email" class="form-control" />
-                    <form:errors path="email" class="text-danger" />
-=======
-                    <form:label path="apellido">Apellido:</form:label>
-                    <form:input path="apellido"/>
-                    <form:errors path="apellido"/>
-                </div>
-            </div>
-            <div class="input-group-two">
-                <div class="input-group">
-                    <form:label path="ciudad">Ciudad:</form:label>
-                    <form:input path="ciudad"/>
-                    <form:errors path="ciudad"/>
->>>>>>> 65bf976ce6e68befc246fbf66ed0f7487db0bb65
-                </div>
-                <div class="input-group">
-                    <form:label path="password">Password:</form:label>
-                    <form:password path="password" class="form-control" />
-                    <form:errors path="password" class="text-danger" />
-                </div>
-                <div class="input-group">
-                    <form:label path="confirmacion">Confirmacion:</form:label>
-                    <form:password path="confirmacion" class="form-control" />
-                    <form:errors path="confirmacion" class="text-danger" />
+                <div class="input-group-two">
+                    <div class="input-group">
+                        <form:label path="password">Password:</form:label>
+                        <form:password path="password" class="form-control" />
+                        <form:errors path="password" class="text-danger" />
+                    </div>
+                    <div class="input-group">
+                        <form:label path="confirmacion">Confirmacion:</form:label>
+                        <form:password path="confirmacion" class="form-control" />
+                        <form:errors path="confirmacion" class="text-danger" />
+                    </div>
                 </div>
                 <p class="miniTexto">Al crear una cuenta muestras tu conformidad con nuestros Términos de uso y nuestra Política de privacidad, confirmando además que tienes 18 años o más.</p>
                 <button type="submit">Crear Cuenta</button>
             </form:form>
             <p>¿Ya tienes una cuenta? <a href="/login">Acceder</a></p>
         </div>
-    </main>
+    </div>
     <footer>
         <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
         <ul class="nav-footer">
