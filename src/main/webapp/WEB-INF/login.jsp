@@ -22,7 +22,7 @@
         <form:form action="/iniciarSesion" method="POST" modelAttribute="loginUsuario">
             <div class="input-group">
                 <form:label path="emailLogin">Dirección de email</form:label>
-                <form:input path="emailLogin"/>
+                <form:input path="emailLogin" cssClass="error-text"/>
                 <form:errors path="emailLogin"/>
             </div>
             <div class="input-group">
