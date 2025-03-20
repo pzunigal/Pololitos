@@ -72,5 +72,13 @@ public class ServicioChat {
         Chat chat = repositorioChatMySQL.findBySolicitudId(solicitudId);
         return chat != null;
     }
+    public boolean existeConversacion(Long solicitudId) {
+        return repositorioChatMySQL.findBySolicitudId(solicitudId) != null;
+    }
+
+    public Chat getChatBySolicitudId(Long solicitudId) {
+        return repositorioChatMySQL.findBySolicitudId(solicitudId);
+    }
+    
 
 }

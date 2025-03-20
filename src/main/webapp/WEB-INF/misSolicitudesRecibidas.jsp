@@ -106,22 +106,23 @@
 
                                         <!-- Verificar si ya existe un chat para esta solicitud -->
                                         <c:choose>
-    <c:when test="${chatsCreados[solicitud.id]}">
-        <!-- Mostrar botón para continuar la conversación -->
-        <form action="/chat/continuar" method="post">
-            <input type="hidden" name="solicitudId" value="${solicitud.id}">
-            <button type="submit" class="btn btn-success mt-2">Continuar Conversación</button>
-        </form>
-    </c:when>
-    <c:otherwise>
-        <!-- Mostrar botón para iniciar una conversación -->
-        <form action="/chat/crear" method="post">
-            <input type="hidden" name="solicitanteId" value="${solicitud.solicitante.id}">
-            <input type="hidden" name="solicitudId" value="${solicitud.id}">
-            <button type="submit" class="btn btn-primary mt-2">Iniciar Conversación</button>
-        </form>
-    </c:otherwise>
-</c:choose>
+                                            <c:when test="${chatsCreados[solicitud.id]}">
+                                                <!-- Mostrar botón para continuar la conversación -->
+                                                <form action="/chat/continuar" method="post">
+                                                    <input type="hidden" name="solicitudId" value="${solicitud.id}">
+                                                    <button type="submit" class="btn btn-success mt-2">Continuar Conversación</button>
+                                                </form>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <!-- Mostrar botón para iniciar una conversación -->
+                                                <form action="/chat/crear" method="post">
+                                                    <input type="hidden" name="solicitanteId" value="${solicitud.solicitante.id}">
+                                                    <input type="hidden" name="solicitudId" value="${solicitud.id}">
+                                                    <button type="submit" class="btn btn-primary mt-2">Iniciar Conversación</button>
+                                                </form>
+                                            </c:otherwise>
+                                        </c:choose>
+                                        
 
 
 
