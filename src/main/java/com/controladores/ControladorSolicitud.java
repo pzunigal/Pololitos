@@ -31,43 +31,49 @@ public class ControladorSolicitud {
     @Autowired
     private ServicioServicios servicioServicio;
 
-    /* @Autowired
-    private ServicioChat servicioChat; */
+    /*
+     * @Autowired
+     * private ServicioChat servicioChat;
+     */
 
     @Autowired
     private RepositorioChatMySQL repositorioChat;
 
     @PostMapping("/crear-solicitud")
-    public String crearSolicitud(@RequestParam("mensaje") String mensaje, @RequestParam("servicioId") Long servicioId,
-            HttpSession session, RedirectAttributes redirectAttributes) {
+public String crearSolicitud(@RequestParam("mensaje") String mensaje, @RequestParam("servicioId") Long servicioId,
+        HttpSession session, RedirectAttributes redirectAttributes) {
 
-        // Obtener usuario en sesión
-        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-        if (usuarioEnSesion == null) {
-            return "redirect:/login"; // Redirigir si no hay usuario en sesión
-        }
-
-        // Obtener el servicio al que se quiere enviar la solicitud
-        Servicio servicio = servicioServicio.obtenerPorId(servicioId);
-        if (servicio == null) {
-            redirectAttributes.addFlashAttribute("error", "El servicio no existe.");
-            return "redirect:/servicios";
-        }
-
-        // Crear la nueva solicitud
-        Solicitud nuevaSolicitud = new Solicitud();
-        nuevaSolicitud.setSolicitante(usuarioEnSesion);
-        nuevaSolicitud.setServicio(servicio);
-        nuevaSolicitud.setEstado("Enviado"); // Estado por defecto
-        nuevaSolicitud.setFechaSolicitud(new Date());
-        nuevaSolicitud.setComentarioAdicional(mensaje);
-
-        // Guardar la solicitud
-        solicitudServicio.guardarSolicitud(nuevaSolicitud);
-        redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
-
-        return "redirect:/servicio/detalles/" + servicioId; // Redirigir a los detalles del servicio
+    // Verificar si el usuario está en sesión
+    Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+    if (usuarioEnSesion == null) {
+        // Guardar la URL a la que intentaba acceder en sesión
+        session.setAttribute("urlPendiente", "/servicio/detalles/" + servicioId);
+        return "redirect:/login"; // Redirigir al login
     }
+
+    // Obtener el servicio
+    Servicio servicio = servicioServicio.obtenerPorId(servicioId);
+    if (servicio == null) {
+        redirectAttributes.addFlashAttribute("error", "El servicio no existe.");
+        return "redirect:/servicios";
+    }
+
+    // Crear la solicitud
+    Solicitud nuevaSolicitud = new Solicitud();
+    nuevaSolicitud.setSolicitante(usuarioEnSesion);
+    nuevaSolicitud.setServicio(servicio);
+    nuevaSolicitud.setEstado("Enviado");
+    nuevaSolicitud.setFechaSolicitud(new Date());
+    nuevaSolicitud.setComentarioAdicional(mensaje);
+
+    // Guardar la solicitud
+    solicitudServicio.guardarSolicitud(nuevaSolicitud);
+    redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
+
+    // Redirigir a la página de solicitudes enviadas
+    return "redirect:/mis-solicitudes-enviadas";
+}
+
 
     // Endpoint para ver las solicitudes enviadas
     @GetMapping("/mis-solicitudes-enviadas")
@@ -112,8 +118,10 @@ public class ControladorSolicitud {
 
         return mav;
     }
+
     @PostMapping("/aceptar-solicitud")
-    public String aceptarSolicitud(@RequestParam("solicitudId") Long solicitudId, RedirectAttributes redirectAttributes) {
+    public String aceptarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+            RedirectAttributes redirectAttributes) {
         // Obtener la solicitud por ID
         Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
         if (solicitud == null) {
