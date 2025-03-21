@@ -239,17 +239,44 @@ public class ControladorServicios {
     public String mostrarServicios(Model model, HttpSession session) {
         // Obtener las categorías y sus servicios asociados, ya ordenados
         List<Categoria> categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
-    
+
         // Obtener usuario en sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-    
+
         // Pasar datos al modelo
         model.addAttribute("categorias", categoriasConServicios);
         model.addAttribute("usuarioSesion", usuarioEnSesion); // Se envía el usuario en sesión
-    
+
         // Retornar el nombre de la vista (servicios.jsp)
         return "servicios.jsp";
     }
-    
+
+    @GetMapping("/buscar-servicios")
+    public String buscarServicios(@RequestParam("query") String query, Model model) {
+        System.out.println("Iniciando búsqueda de servicios para el query: " + query);
+
+        List<Servicio> servicios = servicioServicios.buscarPorNombre(query);
+
+        // Imprimir la cantidad de servicios encontrados
+        System.out.println("Servicios encontrados: " + servicios.size());
+
+        // Imprimir los detalles de cada servicio encontrado
+        if (servicios.isEmpty()) {
+            System.out.println("No se encontraron servicios para el query: " + query);
+        } else {
+            for (Servicio servicio : servicios) {
+                System.out.println("Servicio encontrado: "
+                        + servicio.getNombre() + " - Precio: "
+                        + servicio.getPrecio() + " - Ciudad: "
+                        + servicio.getCiudad() + " - Autor: "
+                        + servicio.getUsuario().getNombre());
+            }
+        }
+
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("query", query);
+
+        return "resultadoBusqueda.jsp";
+    }
 
 }

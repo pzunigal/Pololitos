@@ -55,8 +55,8 @@ public class ServicioServicios {
         repositorioServicios.deleteById(id);
     }
 
-    public List<Servicio> buscarPorNombre(String nombre) {
-        return repositorioServicios.findByNombreContainingIgnoreCase(nombre);
+    public List<Servicio> buscarPorNombre(String query) {
+        return repositorioServicios.findByNombreContainingIgnoreCase(query);
     }
 
     public List<Servicio> buscarPorUsuario(Usuario usuario) {
@@ -79,7 +79,6 @@ public class ServicioServicios {
             repositorioServicios.save(servicioEncontrado);
         }
     }
-    
 
 
 }
