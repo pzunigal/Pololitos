@@ -8,7 +8,7 @@ import com.modelos.Solicitud;
 import com.modelos.Usuario;
 
 @Repository
-public interface SolicitudRepositorio extends JpaRepository<Solicitud, Long> {
+public interface RepositorioSolicitud extends JpaRepository<Solicitud, Long> {
     List<Solicitud> findBySolicitante(Usuario solicitante);
     List<Solicitud> findAll();
     // Obtener solicitudes donde el servicio es del usuario (proveedor)

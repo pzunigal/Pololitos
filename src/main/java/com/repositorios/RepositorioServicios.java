@@ -25,4 +25,5 @@ public interface RepositorioServicios extends JpaRepository<Servicio, Long> {
     // Servirá para buscar o filtrar servicios que tengan un precio menor o igual al filtro aplicado
     // A futuro se puede personalizar de distintas maneras con lógica
     List<Servicio> findByPrecioLessThanEqual(Double precio);
+
 }
