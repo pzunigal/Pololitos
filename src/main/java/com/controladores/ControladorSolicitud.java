@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.modelos.Chat;
 import com.modelos.Servicio;
 import com.modelos.Solicitud;
 import com.modelos.Usuario;
@@ -40,58 +41,66 @@ public class ControladorSolicitud {
     private RepositorioChatMySQL repositorioChat;
 
     @PostMapping("/crear-solicitud")
-public String crearSolicitud(@RequestParam("mensaje") String mensaje, @RequestParam("servicioId") Long servicioId,
-        HttpSession session, RedirectAttributes redirectAttributes) {
+    public String crearSolicitud(@RequestParam("mensaje") String mensaje, @RequestParam("servicioId") Long servicioId,
+            HttpSession session, RedirectAttributes redirectAttributes) {
 
-    // Verificar si el usuario está en sesión
-    Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-    if (usuarioEnSesion == null) {
-        // Guardar la URL a la que intentaba acceder en sesión
-        session.setAttribute("urlPendiente", "/servicio/detalles/" + servicioId);
-        return "redirect:/login"; // Redirigir al login
-    }
-
-    // Obtener el servicio
-    Servicio servicio = servicioServicio.obtenerPorId(servicioId);
-    if (servicio == null) {
-        redirectAttributes.addFlashAttribute("error", "El servicio no existe.");
-        return "redirect:/servicios";
-    }
-
-    // Crear la solicitud
-    Solicitud nuevaSolicitud = new Solicitud();
-    nuevaSolicitud.setSolicitante(usuarioEnSesion);
-    nuevaSolicitud.setServicio(servicio);
-    nuevaSolicitud.setEstado("Enviado");
-    nuevaSolicitud.setFechaSolicitud(new Date());
-    nuevaSolicitud.setComentarioAdicional(mensaje);
-
-    // Guardar la solicitud
-    solicitudServicio.guardarSolicitud(nuevaSolicitud);
-    redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
-
-    // Redirigir a la página de solicitudes enviadas
-    return "redirect:/mis-solicitudes-enviadas";
-}
-
-
-    // Endpoint para ver las solicitudes enviadas
-    @GetMapping("/mis-solicitudes-enviadas")
-    public ModelAndView verMisSolicitudesEnviadas(HttpSession session) {
-        // Obtener usuario en sesión
+        // Verificar si el usuario está en sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuarioEnSesion == null) {
-            return new ModelAndView("redirect:/login"); // Redirigir si no hay usuario en sesión
+            // Guardar la URL a la que intentaba acceder en sesión
+            session.setAttribute("urlPendiente", "/servicio/detalles/" + servicioId);
+            return "redirect:/login"; // Redirigir al login
         }
 
-        // Obtener todas las solicitudes enviadas por el usuario
-        List<Solicitud> solicitudesEnviadas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion);
+        // Obtener el servicio
+        Servicio servicio = servicioServicio.obtenerPorId(servicioId);
+        if (servicio == null) {
+            redirectAttributes.addFlashAttribute("error", "El servicio no existe.");
+            return "redirect:/servicios";
+        }
 
-        // Crear y devolver la vista con las solicitudes
-        ModelAndView mav = new ModelAndView("misSolicitudesEnviadas.jsp");
-        mav.addObject("solicitudes", solicitudesEnviadas);
-        return mav;
+        // Crear la solicitud
+        Solicitud nuevaSolicitud = new Solicitud();
+        nuevaSolicitud.setSolicitante(usuarioEnSesion);
+        nuevaSolicitud.setServicio(servicio);
+        nuevaSolicitud.setEstado("Enviado");
+        nuevaSolicitud.setFechaSolicitud(new Date());
+        nuevaSolicitud.setComentarioAdicional(mensaje);
+
+        // Guardar la solicitud
+        solicitudServicio.guardarSolicitud(nuevaSolicitud);
+        redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
+
+        // Redirigir a la página de solicitudes enviadas
+        return "redirect:/mis-solicitudes-enviadas";
     }
+
+    @GetMapping("/mis-solicitudes-enviadas")
+public ModelAndView verMisSolicitudesEnviadas(HttpSession session) {
+    Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+    if (usuarioEnSesion == null) {
+        return new ModelAndView("redirect:/login");
+    }
+
+    List<Solicitud> solicitudesEnviadas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion);
+
+    ModelAndView mav = new ModelAndView("misSolicitudesEnviadas.jsp");
+
+    // Map para almacenar si cada solicitud tiene un chat existente
+    Map<Long, Boolean> chatsCreados = new HashMap<>();
+
+    for (Solicitud solicitud : solicitudesEnviadas) {
+        // Verificar si ya existe un chat para la solicitud
+        boolean isChatCreated = repositorioChat.findBySolicitudId(solicitud.getId()) != null;
+        chatsCreados.put(solicitud.getId(), isChatCreated);
+    }
+
+    mav.addObject("solicitudes", solicitudesEnviadas);
+    mav.addObject("chatsCreados", chatsCreados);
+
+    return mav;
+}
+
 
     @GetMapping("/mis-solicitudes-recibidas")
     public ModelAndView verMisSolicitudesRecibidas(HttpSession session) {
