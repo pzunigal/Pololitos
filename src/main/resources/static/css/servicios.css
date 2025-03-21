@@ -453,3 +453,7 @@ footer p {
 .nav-footer a:hover {
     color: #fff;
 }
+
+.filter-container{
+    margin-top: 30px;
+}

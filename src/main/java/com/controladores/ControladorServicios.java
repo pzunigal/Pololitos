@@ -29,6 +29,7 @@ import java.security.Principal;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Controller
 public class ControladorServicios {
@@ -236,18 +237,24 @@ public class ControladorServicios {
     }
 
     @GetMapping("/servicios")
-    public String mostrarServicios(Model model, HttpSession session) {
-        // Obtener las categorías y sus servicios asociados, ya ordenados
-        List<Categoria> categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
-
+    public String mostrarServicios(@RequestParam(value = "categoriaId", required = false) Long categoriaId, Model model,
+            HttpSession session) {
         // Obtener usuario en sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 
-        // Pasar datos al modelo
-        model.addAttribute("categorias", categoriasConServicios);
-        model.addAttribute("usuarioSesion", usuarioEnSesion); // Se envía el usuario en sesión
+        List<Categoria> categoriasConServicios;
 
-        // Retornar el nombre de la vista (servicios.jsp)
+        if (categoriaId != null) {
+            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios()
+                    .stream()
+                    .filter(c -> c.getId().equals(categoriaId))
+                    .collect(Collectors.toList());
+        } else {
+            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
+        }
+
+        model.addAttribute("categorias", categoriasConServicios);
+        model.addAttribute("usuarioSesion", usuarioEnSesion);
         return "servicios.jsp";
     }
 
