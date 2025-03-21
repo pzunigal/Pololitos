@@ -353,3 +353,18 @@ footer p {
 .nav-footer a:hover {
     color: #fff;
 }
+#busqueda-container {
+    /* Estilos específicos para el contenedor */
+}
+
+#busqueda-input {
+    margin-top: 15px;
+}
+
+#busqueda-btn {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+#busqueda-icon {
+    /* Estilos específicos para el icono de la lupa */
+}
