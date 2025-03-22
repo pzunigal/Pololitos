@@ -364,9 +364,7 @@ footer p {
 .nav-footer a:hover {
     color: #fff;
 }
-#busqueda-container {
-    /* Estilos específicos para el contenedor */
-}
+
 
 #busqueda-input {
     margin-top: 15px;
@@ -376,9 +374,7 @@ footer p {
     background-color: rgba(0, 0, 0, 0);
 }
 
-#busqueda-icon {
-    /* Estilos específicos para el icono de la lupa */
-}
+
 
 /* Carrusel */
 
@@ -393,6 +389,7 @@ footer p {
     overflow-x: auto;
     scroll-behavior: smooth;
     scrollbar-width: none; /* Oculta la barra de desplazamiento en Firefox */
+    padding: 10px;
 }
 
 .carousel-btn {

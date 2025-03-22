@@ -98,7 +98,7 @@
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
-                                     <div class="btn-container">
+                                    <div class="btn-container">
                                             <!-- Botón de editar con icono de lápiz -->
                                         <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post" style="display:inline;">
                                             <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
