@@ -93,7 +93,7 @@
                 </div>
             </div>
             <div class="section" id="empleosRecomendados">
-                <h2>Nuevos servicios que podrían interesarte</h2>
+                <h2 class="section-title">Nuevos servicios que podrían interesarte</h2>
                 <div class="carousel-container">
                     <button class="carousel-btn prev" onclick="moverIzquierda()">&#10094;</button>
                     <div class="cards-wrapper">

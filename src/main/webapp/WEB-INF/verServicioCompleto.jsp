@@ -104,7 +104,9 @@
                                                     <p class="card-text">${servicio.descripcion}</p>
                                                     <p><strong>Precio:</strong> $${servicio.precio}</p>
                                                     <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
-                                                    <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
+                                                    <p><strong>Fecha de publicacion:</strong> 
+                                                        <span><fmt:formatDate value="${servicio.createdAt}" pattern="dd-MM-yyyy" /></span>
+                                                    </p>
                                                 </div>
                                             </div>
                                         </div>
