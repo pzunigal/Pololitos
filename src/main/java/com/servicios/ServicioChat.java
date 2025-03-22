@@ -2,10 +2,14 @@ package com.servicios;
 
 import org.springframework.stereotype.Service;
 import com.modelos.Chat;
+import com.modelos.Mensaje;
 import com.modelos.Solicitud;
 import com.modelos.Servicio;
 import com.repositorios.RepositorioChatMySQL;
 import com.repositorios.RepositorioChatNOSQL;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -20,8 +24,7 @@ public class ServicioChat {
     private final RepositorioChatMySQL repositorioChatMySQL;
 
     public ServicioChat(RepositorioChatNOSQL repositorioChatNOSQL, ServicioSolicitud servicioSolicitud,
-            ServicioServicios servicioServicios, RepositorioChatMySQL repositorioChatMySQL
-            ) {
+                        ServicioServicios servicioServicios, RepositorioChatMySQL repositorioChatMySQL) {
         this.repositorioChatNOSQL = repositorioChatNOSQL;
         this.servicioSolicitud = servicioSolicitud;
         this.servicioServicios = servicioServicios;
@@ -29,49 +32,61 @@ public class ServicioChat {
     }
 
     public Chat createChat(Chat chat) {
-        // Obtener los detalles de la solicitud y servicio
         Solicitud solicitud = servicioSolicitud.getSolicitudById(chat.getSolicitudId());
         Servicio servicio = servicioServicios.obtenerPorId(solicitud.getServicio().getId());
-    
-        // Construir el nombre del chat
+
         String nombreChat = servicio.getNombre() + " | " + servicio.getUsuario().getNombre() + " | " + servicio.getCiudad();
         chat.setNombre(nombreChat);
-    
-        // Crear el chat en Firebase
+
         String generatedId = repositorioChatNOSQL.saveChat(chat);
-        chat.setId(generatedId); // Asignar el ID generado por Firebase
-    
-        // Guardar el chat en MySQL (sin la lista de mensajes)
+        chat.setId(generatedId);
+
         repositorioChatMySQL.save(chat);
-    
         return chat;
     }
-    
 
     public CompletableFuture<Chat> getChat(String chatId) {
         CompletableFuture<Chat> future = new CompletableFuture<>();
+
         repositorioChatNOSQL.getChat(chatId, new ValueEventListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Chat chat = dataSnapshot.getValue(Chat.class);
+            public void onDataChange(DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    future.complete(null);
+                    return;
+                }
+
+                Chat chat = new Chat();
+                chat.setId(snapshot.child("id").getValue(String.class));
+                chat.setNombre(snapshot.child("nombre").getValue(String.class));
+                chat.setFechaCreacion(snapshot.child("fechaCreacion").getValue(Long.class));
+                chat.setSolicitanteId(snapshot.child("solicitanteId").getValue(Long.class));
+                chat.setSolicitudId(snapshot.child("solicitudId").getValue(Long.class));
+
+                List<Mensaje> mensajes = new ArrayList<>();
+                DataSnapshot mensajesSnapshot = snapshot.child("mensajes");
+                for (DataSnapshot mensajeSnapshot : mensajesSnapshot.getChildren()) {
+                    Mensaje mensaje = mensajeSnapshot.getValue(Mensaje.class);
+                    mensajes.add(mensaje);
+                }
+                chat.setMensajes(mensajes);
+
                 future.complete(chat);
             }
 
             @Override
-            public void onCancelled(DatabaseError databaseError) {
-                future.completeExceptionally(databaseError.toException());
+            public void onCancelled(DatabaseError error) {
+                future.completeExceptionally(error.toException());
             }
         });
+
         return future;
     }
 
-    // En el servicio de chat
     public boolean existeChatParaSolicitud(Long solicitudId) {
-        // Asumimos que tienes un repositorio de chat que permite obtener una
-        // conversación por solicitudId
-        Chat chat = repositorioChatMySQL.findBySolicitudId(solicitudId);
-        return chat != null;
+        return repositorioChatMySQL.findBySolicitudId(solicitudId) != null;
     }
+
     public boolean existeConversacion(Long solicitudId) {
         return repositorioChatMySQL.findBySolicitudId(solicitudId) != null;
     }
@@ -79,6 +94,4 @@ public class ServicioChat {
     public Chat getChatBySolicitudId(Long solicitudId) {
         return repositorioChatMySQL.findBySolicitudId(solicitudId);
     }
-    
-
 }

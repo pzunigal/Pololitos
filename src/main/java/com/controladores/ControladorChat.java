@@ -1,6 +1,7 @@
 package com.controladores;
 
 import com.modelos.Chat;
+import com.modelos.Mensaje;
 import com.modelos.Solicitud;
 import com.servicios.ServicioChat;
 import com.servicios.ServicioSolicitud;
@@ -82,31 +83,57 @@ public class ControladorChat {
     }
 
     @GetMapping("/ver/{chatId}")
-    public String verChat(@PathVariable String chatId, Model model) {
-        try {
-            // Esperar a que el CompletableFuture se resuelva y obtener el Chat
-            CompletableFuture<Chat> chatFuture = servicioChat.getChat(chatId);
-            Chat chat = chatFuture.join(); // Utiliza join() para esperar el resultado de manera sincrónica
+public String verChat(@PathVariable String chatId, Model model) {
+    try {
+        // Esperar a que el CompletableFuture se resuelva y obtener el Chat
+        CompletableFuture<Chat> chatFuture = servicioChat.getChat(chatId);
+        Chat chat = chatFuture.join(); // Bloquea hasta que obtenga el resultado
 
-            if (chat == null) {
-                return "redirect:/error?mensaje=Chat no encontrado";
-            }
-
-            // Formatear la fecha
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-            String formattedDate = dateFormat.format(new Date(chat.getFechaCreacion()));
-
-            model.addAttribute("chat", chat);
-            model.addAttribute("fechaCreacionFormateada", formattedDate); // Pasar la fecha formateada
-            model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
-            model.addAttribute("chatId", chatId);
-            model.addAttribute("solicitanteId", chat.getSolicitanteId());
-
-            return "chat.jsp"; // Renderiza la vista `chat.jsp`
-        } catch (Exception e) {
-            // Si ocurre una excepción, redirige al usuario con un mensaje de error
-            return "redirect:/error?mensaje=No se pudo cargar el chat";
+        if (chat == null) {
+            System.out.println("❌ Chat no encontrado para ID: " + chatId);
+            return "redirect:/error?mensaje=Chat no encontrado";
         }
+
+        // 🛠️ LOG: Mostrar información general del chat
+        System.out.println("📨 Accediendo al chat con ID: " + chatId);
+        System.out.println("👥 Solicitante ID: " + chat.getSolicitanteId());
+        System.out.println("📅 Fecha de creación (timestamp): " + chat.getFechaCreacion());
+        System.out.println("🧵 Nombre del chat: " + chat.getNombre());
+
+        // 🛠️ LOG: Mostrar mensajes del chat (si hay)
+        if (chat.getMensajes() != null && !chat.getMensajes().isEmpty()) {
+            System.out.println("💬 Mensajes del chat:");
+            for (Mensaje m : chat.getMensajes()) {
+                String contenido = m.getContenido() != null ? m.getContenido() : "[sin contenido]";
+                String autor = m.getNombreUsuario() != null ? m.getNombreUsuario() : "[desconocido]";
+                String fecha = (m.getCreatedAt() != null) ? m.getCreatedAt().toString() : "[fecha nula]";
+                System.out.println("   🗨️ " + autor + ": " + contenido + " (" + fecha + ")");
+                if (m.getCreatedAt() != null) {
+                    System.out.println("   🕒 Tipo de createdAt: " + m.getCreatedAt().getClass().getName());
+                }
+            }
+        } else {
+            System.out.println("📭 No hay mensajes en este chat.");
+        }
+
+        // Formatear la fecha para mostrar en la vista
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+        String formattedDate = dateFormat.format(new Date(chat.getFechaCreacion()));
+
+        // Cargar datos al modelo para JSP
+        model.addAttribute("chat", chat);
+        model.addAttribute("fechaCreacionFormateada", formattedDate);
+        model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
+        model.addAttribute("chatId", chatId);
+        model.addAttribute("solicitanteId", chat.getSolicitanteId());
+
+        return "chat.jsp"; // Renderiza la vista
+    } catch (Exception e) {
+        System.out.println("🚨 Error al cargar el chat: " + e.getMessage());
+        e.printStackTrace();
+        return "redirect:/error?mensaje=No se pudo cargar el chat";
     }
+}
+
 
 }
