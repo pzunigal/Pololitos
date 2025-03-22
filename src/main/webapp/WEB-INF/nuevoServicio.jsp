@@ -9,115 +9,158 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Servicio</title>
     <link rel="stylesheet" href="/css/navbar.css">
-    <link rel="stylesheet" href="/css/servicios.css">
+    <!-- Bootstrap 5 -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- FontAwesome para iconos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <!-- SweetAlert2 para alertas -->
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card {
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
 </head>
 <body>
-
-<header>
-    <div class="nav-container">
-        <a href="/">
-            <div class="logo">
-                <img src="/img/pololitosBlanco.png" alt="Logo pololitos">
-            </div>
-        </a>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="/servicios">Servicios</a></li>
-                <c:if test="${not empty sessionScope.usuarioEnSesion}">
-                    <li><a href="/mis-servicios">Mis Servicios</a></li>
-                    <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                    <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                </c:if>
-            </ul>
-        </nav>
-    </div>
-    <div class="user-info">
-        <div class="circle-busqueda">
-            <input type="text" placeholder="¿Qué servicio buscas?">
-            <a href=""><img src="/img/busqueda.png" alt="lupa de búsqueda"></a>
+    <header>
+        <div class="nav-container">
+            <a href="/">
+                <div class="logo">
+                    <img src="/img/pololitosBlanco.png" alt="Logo pololitos">
+                </div>
+            </a>
+            <nav>
+                <ul class="nav-links">
+                    <li><a href="/servicios">Servicios</a></li>
+                    <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                            <li><a href="/mis-servicios">Mis Servicios</a></li>
+                        </c:when>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                            <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
+                        </c:when>
+                    </c:choose>
+                    <c:choose>
+                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                            <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
+                        </c:when>
+                    </c:choose>
+                </ul>
+            </nav>
         </div>
-        <c:choose>
-            <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                <a href="/perfilUsuario">
-                    <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                         width="40" height="40" style="border-radius: 50%;">
-                </a>
-                <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                <a href="/logout"><button>Cerrar Sesión</button></a>
-            </c:when>
-            <c:otherwise>
-                <a href="/login"><button>Iniciar sesión</button></a>
-                <a href="/registro"><button>Regístrate</button></a>
-            </c:otherwise>
-        </c:choose>
-    </div>
-</header>
+        <div class="user-info">
+            <div class="circle-busqueda">
+                <input type="text" placeholder="¿Qué servicio buscas?">
+                <a href=""><img src="/img/busqueda.png" alt="lupa de busqueda"></a>
+            </div>
 
-<main class="servicio-form-container">
-    <h2>Publicar un nuevo servicio</h2>
+            <c:choose>
+                <c:when test="${not empty sessionScope.usuarioEnSesion}">
+                    <a href="/perfilUsuario">
+                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
+                            width="40" height="40" style="border-radius: 50%;">
+                    </a>
+                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
+                    <a href="/logout"><button>Cerrar Sesión</button></a>
+                </c:when>
 
-    <c:if test="${not empty error}">
-        <div class="alerta-error">${error}</div>
-    </c:if>
-
-    <div class="servicio-card">
-        <div class="form-header">
-            <h3><i class="fas fa-plus-circle"></i> Publicar Servicio</h3>
+                <c:otherwise>
+                    <a href="/login"><button>Iniciar sesión</button></a>
+                    <a href="/registro"><button>Regístrate</button></a>
+                </c:otherwise>
+            </c:choose>
         </div>
+    </header>
+    <div class="container mt-4">
+        <h2>Publicar un nuevo servicio</h2>
+        
+        <c:if test="${not empty error}">
+            <div class="alert alert-danger">${error}</div>
+        </c:if>
 
-        <form:form modelAttribute="servicio" action="/publicar" method="POST" class="form-servicio">
+        <div class="container mt-5">
+            <div class="row justify-content-center">
+                <div class="col-md-8">
+                    <div class="card">
+                        <div class="card-header bg-primary text-white text-center">
+                            <h3><i class="fas fa-plus-circle"></i> Publicar un Nuevo Servicio</h3>
+                        </div>
+                        <div class="card-body">
+                            
 
-            <div class="form-grupo">
-                <label for="nombre">Nombre del Servicio:</label>
-                <form:input path="nombre" class="input-servicio" />
-                <form:errors path="nombre" cssClass="error-texto" />
+                            <form:form modelAttribute="servicio" action="/publicar" method="POST" class="needs-validation">
+                                <div class="mb-3">
+                                    <label for="nombre" class="form-label">Nombre del Servicio:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-briefcase"></i></span>
+                                        <form:input path="nombre" class="form-control" required="true"/>
+                                    </div>
+                                    <form:errors path="nombre" class="text-danger"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="descripcion" class="form-label">Descripción:</label>
+                                    <form:textarea path="descripcion" class="form-control" rows="4" required="true"/>
+                                    <form:errors path="descripcion" class="text-danger"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="precio" class="form-label">Precio:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-dollar-sign"></i></span>
+                                        <form:input path="precio" type="number" step="0.01" class="form-control" required="true"/>
+                                    </div>
+                                    <form:errors path="precio" class="text-danger"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="ciudad" class="form-label">Ciudad:</label>
+                                    <form:input path="ciudad" class="form-control"/>
+                                    <form:errors path="ciudad" class="text-danger"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="imgUrl" class="form-label">URL de la Foto del Servicio:</label>
+                                    <form:input path="imgUrl" type="text" class="form-control" placeholder="Ingrese la URL de la imagen" required="true"/>
+                                    <form:errors path="imgUrl" class="text-danger"/>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label for="categoria" class="form-label">Categoría:</label>
+                                    <div class="input-group">
+                                        <span class="input-group-text"><i class="fas fa-list-alt"></i></span>
+                                        <form:select path="categoria.id" class="form-control" required="true">
+                                            <form:option value="" label="Seleccione una categoría"/>
+                                            <c:forEach var="categoria" items="${categorias}">
+                                                <form:option value="${categoria.id}" label="${categoria.nombre}"/>
+                                            </c:forEach>
+                                        </form:select>
+                                    </div>
+                                    <form:errors path="categoria" class="text-danger"/>
+                                </div>
+
+                                <div class="d-grid">
+                                    <button type="submit" class="btn btn-success">
+                                        <i class="fas fa-upload"></i> Publicar Servicio
+                                    </button>
+                                </div>
+                            </form:form>
+                        </div>
+                    </div>
+                </div>
             </div>
-
-            <div class="form-grupo">
-                <label for="descripcion">Descripción:</label>
-                <form:textarea path="descripcion" class="input-servicio" rows="4" />
-                <form:errors path="descripcion" cssClass="error-texto" />
-            </div>
-
-            <div class="form-grupo">
-                <label for="precio">Precio:</label>
-                <form:input path="precio" type="number" step="0.01" class="input-servicio" />
-                <form:errors path="precio" cssClass="error-texto" />
-            </div>
-
-            <div class="form-grupo">
-                <label for="ciudad">Ciudad:</label>
-                <form:input path="ciudad" class="input-servicio" />
-                <form:errors path="ciudad" cssClass="error-texto" />
-            </div>
-
-            <div class="form-grupo">
-                <label for="imgUrl">URL de la Foto del Servicio:</label>
-                <form:input path="imgUrl" class="input-servicio" />
-                <form:errors path="imgUrl" cssClass="error-texto" />
-            </div>
-
-            <div class="form-grupo">
-                <label for="categoria">Categoría:</label>
-                <form:select path="categoria.id" class="input-servicio">
-                    <form:option value="" label="Seleccione una categoría" />
-                    <c:forEach var="categoria" items="${categorias}">
-                        <form:option value="${categoria.id}" label="${categoria.nombre}" />
-                    </c:forEach>
-                </form:select>
-                <form:errors path="categoria" cssClass="error-texto" />
-            </div>
-
-            <div class="form-boton">
-                <button type="submit" class="btn-publicar">
-                    <i class="fas fa-upload"></i> Publicar Servicio
-                </button>
-            </div>
-
-        </form:form>
+        </div>
     </div>
-</main>
 
+    <!-- Bootstrap Bundle (JS incluido) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
