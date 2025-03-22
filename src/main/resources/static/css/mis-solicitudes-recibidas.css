@@ -23,6 +23,7 @@ header {
 }
 
 main {
+    padding-top: 50px;
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -30,7 +31,9 @@ main {
     background-size: cover;
     background-position: center;
     background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);
-}
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* Fija la imagen mientras se hace scroll */
+  }
 
 .container div {
     margin-left: 40px;
@@ -43,7 +46,7 @@ main {
     width: 100%;
 }
 
-.logo img {
+.logo-pololitos img {
     width: 9em;
     height: auto;
     padding-left: 20px;
@@ -126,6 +129,50 @@ main {
 
 /*Fin header*/
 
+/* Estilo del botón */
+.btn-chat {
+    font-size: 14px;
+    padding: 8px 16px; 
+    background-color: #28a745; 
+    color: white;
+    border: none;
+    border-radius: 25px; 
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s; 
+    width: 115px;
+}
+
+.btn-estado {
+    font-size: 14px;
+    padding: 8px 16px; 
+    background-color: orange; 
+    color: white;
+    border: none;
+    border-radius: 25px; 
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s; 
+    width: 115px;
+}
+
+.btn:hover {
+    background-color: #218838; 
+    transform: translateY(-2px); 
+}
+
+.btn:focus {
+    outline: none; 
+}
+
+
+table td {
+    text-align: center;
+    font-weight: bold;
+    color:floralwhite;
+}
+
+
 .container {
     padding: 20px;
     max-width: 1200px;
@@ -148,18 +195,12 @@ th, td {
 }
 
 th {
-    background-color: #f4f4f4;
+    background-color: #141519;
 }
 
 table thead {
     background-color: #007bff;
     color: white;
-}
-
-.btn {
-    font-size: 14px;
-    padding: 6px 12px;
-    margin-top: 5px;
 }
 
 .alert {
@@ -168,6 +209,7 @@ table thead {
     color: #721c24;
     border-radius: 5px;
 }
+
 
 
 /* Footer */
@@ -210,10 +252,18 @@ footer p {
     color: #fff;
 }
 
-#busqueda-input {
-    margin-top: 15px;
-}
-
 #busqueda-btn {
     background-color: rgba(0, 0, 0, 0);
+}
+
+h1 {
+    color: #fff;
+    display: block;
+    font-size: 2em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+    margin-top: 70px;
 }
