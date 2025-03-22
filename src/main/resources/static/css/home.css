@@ -178,7 +178,6 @@ main {
     color: #fff;
     margin-bottom: 20px;
     display: -webkit-box;
-    -webkit-line-clamp: 1;  /* Número de líneas permitidas */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -373,8 +372,6 @@ footer p {
 #busqueda-btn {
     background-color: rgba(0, 0, 0, 0);
 }
-
-
 
 /* Carrusel */
 

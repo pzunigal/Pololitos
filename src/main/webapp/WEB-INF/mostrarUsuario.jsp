@@ -78,6 +78,7 @@
                     <a href="/editarPerfil" class="edit-button">Editar Perfil</a>
                 </div>
             </div>
+
     
             <!-- Carrusel de servicios -->
             <div class="carousel-container">
@@ -120,6 +121,7 @@
                     <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
                 </div>
             </div>
+
         </div>
     </main>    
     <footer>

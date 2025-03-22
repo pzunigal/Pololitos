@@ -42,7 +42,7 @@
         <div class="user-info">
             <form action="/buscar-servicios" method="get">
                 <div class="circle-busqueda" id="busqueda-container">
-                    <input type="text" name="query" id="busqueda-input" placeholder="¿Que servicio buscas?">
+                    <input type="text" name="query" id="busqueda-input" placeholder="Buscar servicios...">
                     <button type="submit" id="busqueda-btn">
                         <img src="/img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
                     </button>
@@ -59,8 +59,8 @@
                 </c:when>
 
                 <c:otherwise>
-                    <a href="/login"><button>Iniciar sesión</button></a>
-                    <a href="/registro"><button>Regístrate</button></a>
+                    <a href="/login"><button>Iniciar sesion</button></a>
+                    <a href="/registro"><button>Registrate</button></a>
                 </c:otherwise>
             </c:choose>
         </div>
@@ -79,8 +79,8 @@
                                 <h5 class="card-title text-primary">${servicio.nombre}</h5>
                                 <p class="card-text">${servicio.descripcion}</p>
                                 <p><strong>Precio:</strong> $${servicio.precio}</p>
-                                <p><strong>Ubicación:</strong> ${servicio.ciudad}</p>
-                                <p><strong>Fecha de publicación:</strong> ${servicio.createdAt}</p>
+                                <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
+                                <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
                                 <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
                             </div>
                         </div>
@@ -95,8 +95,8 @@
                                         <h5 class="card-title text-primary">${servicio.nombre}</h5>
                                         <p class="card-text">${servicio.descripcion}</p>
                                         <p><strong>Precio:</strong> $${servicio.precio}</p>
-                                        <p><strong>Ubicación:</strong> ${servicio.ciudad}</p>
-                                        <p><strong>Fecha de publicación:</strong> ${servicio.createdAt}</p>
+                                        <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
+                                        <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
                                     </div>
                                 </div>
                             </div>
@@ -106,7 +106,7 @@
                                         <h5 class="card-title">Enviar Solicitud</h5>
                                         <form action="${pageContext.request.contextPath}/crear-solicitud" method="post">
                                             <div class="form-group">
-                                                <textarea class="form-control" name="mensaje" placeholder="Escribe aquí un mensaje..." required></textarea>
+                                                <textarea class="form-control" name="mensaje" placeholder="Escribe aqui un mensaje..." required></textarea>
                                             </div>
                                             <input type="hidden" name="servicioId" value="<c:out value='${servicio.id}'/>" />
                                             <button type="submit" class="btn btn-primary mt-3">Enviar Solicitud</button>
