@@ -1,0 +1,318 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #464749;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    position:fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #141519;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    display: flex;
+    justify-content: space-between;
+    z-index: 1000;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);;
+}   
+
+.nav-container {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    width: 100%;
+}
+
+.logo img {
+    width: 9em;
+    height: auto;
+    padding-left: 20px;
+    padding-right: 50px;
+}
+
+.nav-links {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-links a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 18px;
+    transition: background-color 0.3s ease;
+}
+
+.nav-links a:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+}
+
+.user-info {
+    display: flex;
+    justify-content: right;
+    align-items: center;
+    padding-right: 20px;
+    gap: 15px;
+}
+
+.user-info img {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+    margin: 0 10px;
+    align-items: center;
+}
+
+.user-info button {
+    background-color: #dc3545;
+    white-space: nowrap;
+    border: none;
+    border-radius: 4px;
+    color: #fff;
+    padding: 10px 15px;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0 5px;
+}
+
+.user-info button:hover {
+    background-color: #c82333;
+}
+
+.circle-busqueda {
+    background-color: #464749;
+    align-items: center;
+    border-radius: 5px;
+    display: flex;
+    height: 43px;
+    width: auto;
+    margin: 0 5px;
+}
+
+.circle-busqueda input {
+    background-color: #464749;
+    border: none;
+    color: #fff;
+    font-size: 16px;
+    width: 200px;
+    margin-left: 10px;
+}
+
+.container {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    width: 100%;
+    height: 65vh;
+    display: flex;
+    align-items: center;
+    margin: -1px auto 0 auto; 
+} 
+
+.content {
+    position: relative;
+    max-width: 500px;
+    z-index: 2;
+}
+
+main h1 {
+    color: white; /* Asegura que se vea en un fondo oscuro */
+    margin-top: 100px; /* Ajusta el margen para que no quede oculto debajo del header */
+    text-align: center;
+    font-size: 2rem;
+}
+
+.btn-publicar {
+    display: inline-block;
+    background-color: orange;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-publicar:hover {
+    background-color: orange;
+}
+
+.content p {
+    font-size: 1.3rem;
+    margin-bottom: 20px;
+    color: white;
+}
+
+.content button {
+    background-color: orange;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    color: white;
+    border-radius: 5px;
+}
+
+/*Fin navbar*/
+
+/* Cards */
+
+.card {
+    background-color: #1E1E1E;
+    width: 270px;
+    height: 450px;
+    color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-left: 40px;
+}
+
+
+.card-body {
+    text-align: left; 
+    margin: 0; 
+    padding: 10px; 
+}
+
+.card h5 {
+    font-size: 18px;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%; 
+    margin: 15px 0;
+    padding: 0;
+}
+
+.card p {
+    font-size: 14px;
+    margin: 10px 0;
+    padding: 0;
+    color: #bbb;
+    font-weight: 300;
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%; 
+}
+
+.card .button-container {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Alinea los botones verticalmente */
+}
+
+.card button, 
+.card a {
+    display: flex;  /* Para alinear el contenido (icono) dentro del botón */
+    justify-content: center; /* Centra el icono horizontalmente */
+    align-items: center; /* Centra el icono verticalmente */
+    background-color: #20d757;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+    width: 45px; /* Tamaño uniforme */
+    height: 45px;
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+}
+
+.card button {
+    background-color: #dc3545; /* Rojo para el botón de eliminar */
+}
+
+.card button i, 
+.card a i {
+    font-size: 1.2rem; /* Ajusta el tamaño del icono */
+}
+
+
+.card img {
+    width: 100%;
+    height: 270px; /* Set a fixed height */
+    border-radius: 10px;
+    object-fit: cover; /* Ensure the image covers the area */
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); 
+}
+
+.card a {
+    text-decoration: none; 
+    color: inherit; 
+}
+
+.card a:hover {
+    text-decoration: none;
+}
+
+/* Footer */
+
+footer {
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(15, 16, 20, 0.95);
+    color: #ddd;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 15px;
+    font-weight: 300;
+    z-index: 2;
+}
+
+footer p {
+    margin: 5px 0;
+    font-size: 14px;
+}
+
+.nav-footer {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    list-style: none;
+    padding: 0;
+    margin-top: 5px;
+}
+
+.nav-footer a {
+    color: #bbb;
+    text-decoration: none;
+    font-size: 14px;
+    transition: color 0.3s ease;
+}
+
+.nav-footer a:hover {
+    color: #fff;
+}
