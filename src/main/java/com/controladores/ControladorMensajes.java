@@ -17,8 +17,8 @@ public class ControladorMensajes {
 
     @PostMapping("/enviar")
     public String enviarMensaje(@RequestParam("chatId") String chatId,
-                                 @RequestParam("contenido") String contenido,
-                                 HttpSession session) {
+            @RequestParam("contenido") String contenido,
+            HttpSession session) {
 
         Usuario usuario = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuario == null) {
