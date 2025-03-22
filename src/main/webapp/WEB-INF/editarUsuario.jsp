@@ -89,7 +89,7 @@
         </div>
     </main>
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <p>Pololitos &copy; 2025. Todos los derechos reservados</p> 
         <ul class="nav-footer">
             <li><a href="/contacto">Contacto</a></li>
             <li><a href="/nosotros">Nosotros</a></li>

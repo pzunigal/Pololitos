@@ -3,6 +3,7 @@ package com.servicios;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import com.modelos.Categoria;
 import com.modelos.Servicio;
@@ -10,6 +11,9 @@ import com.modelos.Usuario;
 import com.repositorios.RepositorioCategorias;
 import com.repositorios.RepositorioServicios;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+
 
 @Service
 public class ServicioServicios {
@@ -80,5 +84,13 @@ public class ServicioServicios {
         }
     }
 
+    // Obtener los últimos servicios registrados
+    public List<Servicio> obtenerUltimosServicios(int cantidad) {
+        Pageable pageable = PageRequest.of(0, cantidad, Sort.by("id").descending());
+        return repositorioServicios.findAll(pageable).getContent();
+    }
 
+    public List<Servicio> obtenerServiciosPorUsuario(Long usuarioId) {
+        return repositorioServicios.findByUsuarioId(usuarioId);
+    }
 }

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 
 import com.modelos.Categoria;
+import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioServicios;
 
@@ -25,6 +26,9 @@ public class ControladorHome {
     public String index(Model model, HttpSession session) {
         List<Categoria> categorias = servicioServicios.obtenerCategoriasConServicios();
         model.addAttribute("categorias", categorias);
+
+        List<Servicio> ultimosServicios = servicioServicios.obtenerUltimosServicios(8);
+        model.addAttribute("ultimosServicios", ultimosServicios);
 
         // Obtener usuario en sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");

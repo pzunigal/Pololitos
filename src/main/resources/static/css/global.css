@@ -8,75 +8,8 @@ body {
     min-height: 100vh;
 }
 
-main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 20px;
-    margin-top: 60px;
-    background-size: cover;
-    background-position: center;
-    background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);
-}
-
-.profile-card {
-    max-width: 400px;
-    width: 100%;
-    text-align: center;
-    align-items: center;
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 30px;
-    border-radius: 12px;
-    background-color: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(5px);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-}
-
-.name {
-    font-size: 28px;
-    margin: 0;
-    color: white;
-}
-
-.input-field {
-    width: 95%;
-    padding: 10px;
-    margin-top: 10px;
-    border-radius: 5px;
-    border: none;
-    font-size: 16px;
-    background-color: rgba(255, 255, 255, 0.8);
-}
-
-label {
-    display: block;
-    margin-top: 15px;
-    font-size: 16px;
-    color: white;
-    text-align: left;
-}
-
-.edit-button {
-    background-color: #005bb5;
-    color: #fff;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s ease;
-    width: 100%;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-}
-
-.edit-button:hover {
-    background-color: #004a99;
-}
-
 header {
-    position: fixed;
+    position:fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -86,7 +19,18 @@ header {
     padding: 10px 0;
     display: flex;
     justify-content: space-between;
-    z-index: 999;
+    z-index: 1000;
+}
+
+main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-size: cover;
+    background-position: center;
+    background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);
+    
 }
 
 .nav-container {
@@ -96,7 +40,7 @@ header {
     width: 100%;
 }
 
-.logo img {
+.nav-container img {
     width: 9em;
     height: auto;
     padding-left: 20px;
@@ -177,22 +121,66 @@ header {
     margin-left: 10px;
 }
 
-.profile.card img {
-    width: 100px;
-    height: 100px;
-    border-radius: 50%;
-    margin: 0 auto;
-    margin-bottom: 20px;
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 100px 0;
+    text-align: left;
+    color: white;
+} 
+
+.container h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
 }
 
-.container {
-    position: relative;
+.container img {
     width: 100%;
-    height: 85vh;
+    height: auto;
+    max-width: 300px;
+    max-height: 300px;
+    object-fit: cover;
+    border-radius: 10px;
+}
+
+/* Card */
+
+.card {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    border-radius: 10px;
+    overflow: hidden;
     display: flex;
     align-items: center;
-    margin: -1px auto 0 auto; 
-} 
+    padding: 20px;
+    transition: transform 0.3s ease;
+}
+
+.card-body {
+    flex: 1;
+    padding: 20px;
+}
+
+.card-body h5 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.card-body p {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+/* row */
+
+.row {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
 
 .content {
     position: relative;
@@ -200,27 +188,79 @@ header {
     z-index: 2;
 }
 
-.content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: white;
+/* Cards */
+
+form {
+    flex: 1;
+    min-width: 300px;
 }
 
-.content p {
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-    color: white;
+form label {
+    display: block;
+    font-size: 1em;
+    margin-bottom: 5px;
+    color: #34495e;
 }
 
-.content button {
-    background-color: orange;
+form input,
+form textarea {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+
+form textarea {
+    resize: vertical;
+}
+
+form button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 12px 20px;
     border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
+    border-radius: 4px;
+    font-size: 1.1em;
     cursor: pointer;
-    color: white;
-    border-radius: 5px;
+    transition: background-color 0.3s;
 }
+
+form button:hover {
+    background-color: #2980b9;
+}
+
+.info-contacto {
+    flex: 1;
+    min-width: 250px;
+}
+
+.info-contacto h2 {
+    font-size: 1.5em;
+    color: #2c3e50;
+    margin-bottom: 15px;
+}
+
+.info-contacto p {
+    font-size: 1em;
+    margin: 10px 0;
+    text-align: left;
+}
+
+@media (max-width: 600px) {
+    .contacto-contenido {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .contacto h1,
+    .contacto p {
+        text-align: left;
+    }
+}
+
 
 /* Footer */
 

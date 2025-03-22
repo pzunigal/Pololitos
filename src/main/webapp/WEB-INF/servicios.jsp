@@ -102,8 +102,8 @@
                                             <h5 class="service-title">${servicio.nombre}</h5>
                                             <p class="service-price"><strong>Precio:</strong> $${servicio.precio}</p>
                                             <p class="service-author"><small>Autor: ${servicio.usuario.nombre}</small></p>
-    
-                                            <c:choose>
+                                            <div>
+                                                <c:choose>
                                                 <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
                                                     <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}"
                                                         class="btn-request-service">
@@ -112,7 +112,7 @@
                                                     <button class="btn-contact-seller" data-bs-toggle="modal"
                                                         data-bs-target="#contactModal"
                                                         onclick="openModal('${servicio.usuario.nombre}', '${servicio.nombre}')">
-                                                        <i class="fas fa-comment-alt"></i> Contactar con el Vendedor
+                                                        Contactar con el Vendedor
                                                     </button>
                                                 </c:when>
                                                 <c:otherwise>
@@ -122,6 +122,7 @@
                                                     </a>
                                                 </c:otherwise>
                                             </c:choose>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>

@@ -26,4 +26,10 @@ public interface RepositorioServicios extends JpaRepository<Servicio, Long> {
     // A futuro se puede personalizar de distintas maneras con lógica
     List<Servicio> findByPrecioLessThanEqual(Double precio);
 
+    // Genera una lista que ordena los servicios por id de forma descendente
+    // Servirá para mostrar los servicios más recientes primero en el home
+    List<Servicio> findByOrderByIdDesc();
+
+    // Servirá para buscar servicios a través de un usuario
+    List<Servicio> findByUsuarioId(Long usuarioId);
 }
