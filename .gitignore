@@ -33,3 +33,4 @@ build/
 .vscode/
 /.metadata/
 .env
+src/main/resources/pololitos-a96fb-firebase-adminsdk-fbsvc-852d366246.json
