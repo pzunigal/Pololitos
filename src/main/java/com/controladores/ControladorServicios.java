@@ -19,7 +19,7 @@ import com.modelos.Resena;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioCategorias;
-import com.servicios.ServicioResenas;
+import com.servicios.ServicioResena;
 import com.servicios.ServicioServicios;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -30,6 +30,7 @@ import jakarta.validation.Valid;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Controller
 public class ControladorServicios {
@@ -39,23 +40,13 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioCategorias servicioCategorias;
-
     @Autowired
-    private ServicioResenas servicioResenas;
+    private ServicioResena servicioResena;
 
-    @GetMapping("/servicio/{id}/resenas")
-    public String verResenas(@PathVariable("id") Long id, Model model) {
-        Servicio servicio = servicioServicios.obtenerPorId(id);
-        if (servicio == null ) {
-            return "redirect:/";
-        }
-
-        List<Resena> resenas = servicioResenas.getResenasByServicio(id);
-        model.addAttribute("servicio", servicio);
-        model.addAttribute("resenas", resenas);
-        return "verResenas.jsp";
-
-    }
+    /*
+     * @Autowired
+     * private ServicioUsuarios servicioUsuarios;
+     */
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
@@ -195,7 +186,7 @@ public class ControladorServicios {
         servicioExistente.setPrecio(servicio.getPrecio());
         servicioExistente.setCategoria(servicio.getCategoria());
         servicioExistente.setImgUrl(imgUrl);
-
+        servicioExistente.setCiudad(servicio.getCiudad());
         servicioServicios.guardar(servicioExistente); // Guardar los cambios
         return "redirect:/mis-servicios";
     }
@@ -218,22 +209,78 @@ public class ControladorServicios {
             return "redirect:/mis-servicios";
         }
     }
-    // Endpoint para ver los detalles completos de un servicio
-    @GetMapping("/servicio/detalles/{id}")
-    public String verDetallesServicio(@PathVariable("id") Long id, Model model) {
-        // Obtener el servicio por su ID
-        Servicio servicio = servicioServicios.obtenerPorId(id);
 
-        // Si el servicio no existe, redirigir a la lista de servicios
-        if (servicio == null) {
+    @GetMapping("/servicio/detalles/{id}")
+    public String verDetallesServicio(@PathVariable("id") Long id, Model model, HttpSession session) {
+        Servicio servicio = servicioServicios.obtenerPorId(id);
+        if (servicio == null)
             return "redirect:/servicios";
+
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+        boolean isAuthorInSesion = usuarioEnSesion != null
+                && usuarioEnSesion.getId().equals(servicio.getUsuario().getId());
+
+        // Obtener reseñas y promedio
+        List<Resena> resenas = servicioResena.obtenerPorServicio(servicio);
+        Double promedio = servicioResena.obtenerPromedioCalificacion(servicio);
+
+        model.addAttribute("servicio", servicio);
+        model.addAttribute("usuarioSesion", usuarioEnSesion);
+        model.addAttribute("isAuthorInSesion", isAuthorInSesion);
+        model.addAttribute("resenas", resenas);
+        model.addAttribute("promedio", promedio);
+
+        return "verServicioCompleto.jsp";
+    }
+
+    @GetMapping("/servicios")
+    public String mostrarServicios(@RequestParam(value = "categoriaId", required = false) Long categoriaId, Model model,
+            HttpSession session) {
+        // Obtener usuario en sesión
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+
+        List<Categoria> categoriasConServicios;
+
+        if (categoriaId != null) {
+            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios()
+                    .stream()
+                    .filter(c -> c.getId().equals(categoriaId))
+                    .collect(Collectors.toList());
+        } else {
+            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
         }
 
-        // Pasar el servicio a la vista
-        model.addAttribute("servicio", servicio);
+        model.addAttribute("categorias", categoriasConServicios);
+        model.addAttribute("usuarioSesion", usuarioEnSesion);
+        return "servicios.jsp";
+    }
 
-        // Devolver la vista con el detalle del servicio
-        return "verServicioCompleto.jsp";
+    @GetMapping("/buscar-servicios")
+    public String buscarServicios(@RequestParam("query") String query, Model model) {
+        System.out.println("Iniciando búsqueda de servicios para el query: " + query);
+
+        List<Servicio> servicios = servicioServicios.buscarPorNombre(query);
+
+        // Imprimir la cantidad de servicios encontrados
+        System.out.println("Servicios encontrados: " + servicios.size());
+
+        // Imprimir los detalles de cada servicio encontrado
+        if (servicios.isEmpty()) {
+            System.out.println("No se encontraron servicios para el query: " + query);
+        } else {
+            for (Servicio servicio : servicios) {
+                System.out.println("Servicio encontrado: "
+                        + servicio.getNombre() + " - Precio: "
+                        + servicio.getPrecio() + " - Ciudad: "
+                        + servicio.getCiudad() + " - Autor: "
+                        + servicio.getUsuario().getNombre());
+            }
+        }
+
+        model.addAttribute("servicios", servicios);
+        model.addAttribute("query", query);
+
+        return "resultadoBusqueda.jsp";
     }
 
 }

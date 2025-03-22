@@ -19,6 +19,7 @@ public class Servicio {
 
 	@NotBlank(message = "La descripción del servicio es obligatoria")
 	@Size(min = 10, message = "La descripción debe tener al menos 10 caracteres")
+	@Column(columnDefinition = "TEXT")
 	private String descripcion;
 
 	@NotNull(message = "Debe especificar un precio")

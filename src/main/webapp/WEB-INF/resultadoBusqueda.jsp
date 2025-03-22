@@ -1,14 +1,18 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Editar Usuario</title>
-<link rel="stylesheet" href="/css/dashboard.css">
+<html lang="es">
 
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resultados de Búsqueda</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <link rel="stylesheet" href="/css/servicios.css">
+    <link rel="stylesheet" href="/css/home.css">
 </head>
+
 <body>
     <header>
         <div class="nav-container">
@@ -20,7 +24,6 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="/servicios">Servicios</a></li>
-                    <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
                     <c:choose>
                         <c:when test="${not empty sessionScope.usuarioEnSesion}">
                             <li><a href="/mis-servicios">Mis Servicios</a></li>
@@ -48,7 +51,6 @@
                     </button>
                 </div>
             </form>
-
             <c:choose>
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
                     <a href="/perfilUsuario">
@@ -58,46 +60,48 @@
                     <a href="/servicios/publicar"><button>Crear Servicio</button></a>
                     <a href="/logout"><button>Cerrar Sesión</button></a>
                 </c:when>
-
-
+                <c:otherwise>
+                    <a href="/login"><button>Iniciar sesión</button></a>
+                    <a href="/registro"><button>Regístrate</button></a>
+                </c:otherwise>
             </c:choose>
         </div>
     </header>
+
     <main>
-        <div class="profile-card">
-            <h1 class="name">Editar Perfil</h1>
-            <form action="/actualizarPerfil" method="post">
-                <label for="name">Nombre:</label>
-                <input type="text" id="name" name="name" class="input-field" placeholder="Ingresa tu nombre" required>
-
-                <label for="name">Apellido:</label>
-                <input type="text" id="name" name="name" class="input-field" placeholder="Ingresa tu apellido" required>
-                
-                <label for="city">Ciudad:</label>
-                <input type="text" id="city" name="city" class="input-field" placeholder="Ingresa tu ciudad" required>
-                
-                <label for="phone">Teléfono:</label>
-                <input type="tel" id="phone" name="phone" class="input-field" placeholder="Ingresa tu numero de telefono: Ej.+(56)9 1414 2424" required>
-                
-                <label for="profile">Perfil:</label>
-                <input type="url" id="profile" name="profile" class="input-field" placeholder="Ingresa la url de una imagen para tu perfil" required>
-                
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" class="input-field" placeholder="Ingresa tu nueva contraseña" required>
-
-                <label for="password">Confirmar Contraseña:</label>
-                <input type="password" id="password" name="password" class="input-field" placeholder="Confirma tu nueva contraseña" required>
-                
-                <button type="submit" class="edit-button">Guardar Cambios</button>
-            </form>
+        <div class="services-container">
+            <h1>Resultados de la búsqueda: "${query}"</h1>
+            <c:choose>
+                <c:when test="${not empty servicios}">
+                    <div class="services-list">
+                        <c:forEach var="servicio" items="${servicios}">
+                            <div class="service-card-wrapper">
+                                <div class="service-card">
+                                    <img src="${servicio.imgUrl}" class="service-image" alt="${servicio.nombre}">
+                                    <div class="service-info">
+                                        <h5 class="service-title">${servicio.nombre}</h5>
+                                        <p class="service-price"><strong>Precio:</strong> $${servicio.precio}</p>
+                                        <p class="service-author"><small>Autor: ${servicio.usuario.nombre}</small></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                </c:when>
+                <c:otherwise>
+                    <p>No se encontraron servicios para la búsqueda: "${query}".</p>
+                </c:otherwise>
+            </c:choose>
         </div>
     </main>
+
     <footer>
-        <p>Pololitos &copy; 2025. Todos los derechos reservados</p> 
+        <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
         <ul class="nav-footer">
             <li><a href="/contacto">Contacto</a></li>
             <li><a href="/nosotros">Nosotros</a></li>
         </ul>
     </footer>
 </body>
+
 </html>
