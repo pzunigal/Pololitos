@@ -1,4 +1,4 @@
-/* package com.servicios;
+package com.servicios;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
@@ -15,16 +15,13 @@ public class FileUploadService {
     @Autowired
     private Cloudinary cloudinary;
 
-    public String uploadFile(MultipartFile file) throws IOException {
-        if (file.isEmpty()) {
-            return null; // Si el archivo está vacío, retorna null
-        }
+    public String uploadFile(MultipartFile file, String carpetaDestino) throws IOException {
+        if (file.isEmpty()) return null;
 
-        // Subir archivo a Cloudinary
-        Map<String, String> uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.emptyMap());
+        Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
+                "folder", carpetaDestino // ahora puedes especificar cualquier carpeta desde el backend
+        ));
 
-        // Devuelve la URL de la imagen subida
-        return uploadResult.get("url");
+        return (String) uploadResult.get("secure_url"); // usa secure_url para HTTPS
     }
 }
- */

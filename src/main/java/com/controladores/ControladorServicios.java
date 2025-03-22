@@ -9,7 +9,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,6 +18,7 @@ import com.modelos.Categoria;
 import com.modelos.Resena;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
+import com.servicios.FileUploadService;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioResena;
 import com.servicios.ServicioServicios;
@@ -41,6 +42,8 @@ public class ControladorServicios {
     private ServicioCategorias servicioCategorias;
     @Autowired
     private ServicioResena servicioResena;
+    @Autowired
+    private FileUploadService fileUploadService;
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
@@ -65,37 +68,52 @@ public class ControladorServicios {
     @PostMapping("/publicar")
     @Transactional
     public String crearServicio(@Valid @ModelAttribute("servicio") Servicio servicio,
-            BindingResult result,
-            @RequestParam("imgUrl") String imgUrl,
-            HttpSession session,
-            Model model) {
-
+                                BindingResult result,
+                                @RequestParam("file") MultipartFile file,
+                                HttpSession session,
+                                Model model) {
+    
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-        if (usuarioEnSesion == null) {
+        if (usuarioEnSesion == null)
             return "redirect:/login";
-        }
-
+    
         if (result.hasErrors()) {
+            System.out.println("Errores en validación del formulario:");
+            result.getFieldErrors().forEach(err ->
+                System.out.println("Campo: " + err.getField() + " - Error: " + err.getDefaultMessage()));
             model.addAttribute("error", "Existen errores en los campos del formulario.");
+            cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
         }
-
-        if (imgUrl.isBlank()) {
-            model.addAttribute("error", "Debe ingresar una URL para la imagen.");
+    
+        if (file.isEmpty()) {
+            System.out.println("Archivo vacío recibido");
+            model.addAttribute("error", "Debe subir una imagen.");
+            cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
         }
-
-        // Validación de la URL
-        if (!esUrlValida(imgUrl)) {
-            model.addAttribute("error", "La URL de la imagen debe terminar en .png, .jpg o .jpeg.");
+    
+        // 🔍 Aquí imprimimos los detalles del archivo recibido
+        System.out.println("Nombre del archivo recibido: " + file.getOriginalFilename());
+        System.out.println("Tamaño del archivo (bytes): " + file.getSize());
+    
+        try {
+            System.out.println("Intentando subir archivo a Cloudinary...");
+            String urlImagen = fileUploadService.uploadFile(file, "servicios");
+            System.out.println("Imagen subida con éxito: " + urlImagen);
+            servicio.setImgUrl(urlImagen);
+        } catch (Exception e) {
+            e.printStackTrace(); // log completo en consola
+            model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
+            cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
         }
-
-        servicio.setImgUrl(imgUrl);
+    
         servicio.setUsuario(usuarioEnSesion);
         servicioServicios.guardar(servicio);
         return "redirect:/mis-servicios";
     }
+    
 
     // Método para validar que la URL termina con .png, .jpg o .jpeg
     private boolean esUrlValida(String url) {
