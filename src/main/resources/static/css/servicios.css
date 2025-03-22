@@ -19,7 +19,6 @@ main {
     /* Header */
 
 header {
-    
     position:fixed;
     top: 0;
     left: 0;
@@ -252,7 +251,6 @@ body {
 
 .service-info h5 {
     display: -webkit-box;
-    -webkit-line-clamp: 1;  /* Número de líneas permitidas */
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;

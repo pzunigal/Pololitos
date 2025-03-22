@@ -19,7 +19,6 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="/servicios">Servicios</a></li>
-                    <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
                     <c:choose>
                         <c:when test="${not empty sessionScope.usuarioEnSesion}">
                             <li><a href="/mis-servicios">Mis Servicios</a></li>
@@ -78,51 +77,6 @@
                     <a href="/editarPerfil" class="edit-button">Editar Perfil</a>
                 </div>
             </div>
-
-    
-            <!-- Carrusel de servicios -->
-            <div class="carousel-container">
-                <h2>Servicios ofrecidos</h2>
-                <div class="carousel-wrapper">
-                    <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
-                    <div class="carousel">
-                        <c:forEach var="servicio" items="${servicios}">
-                            <div class="service-card">
-                                <img src="${servicio.imgUrl}" class="service-image" alt="${servicio.nombre}">
-                                <div class="service-info">
-                                    <h3>${servicio.nombre}</h3>
-                                    <p><strong>Precio:</strong> $${servicio.precio}</p>
-                                    <p><strong>Ubicación:</strong> ${servicio.ciudad}</p>
-                                    <div class="service-actions">
-                                        <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post">
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                    <div class="btn-container">
-                                            <!-- Botón de editar con icono de lápiz -->
-                                        <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post" style="display:inline;">
-                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
-                                                <i class="bi bi-trash"></i>
-                                            </button>
-                                        </form>
-                                        <!-- Botón de ojo para ver detalles con icono de ojo -->
-                                        <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-info">
-                                            <i class="bi bi-eye"></i>
-                                        </a>
-                                        <a href="${pageContext.request.contextPath}/editar-servicio/${servicio.id}" class="btn btn-info">
-                                            <i class="bi bi-pencil"></i>
-                                        </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                    <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
-                </div>
-            </div>
-
-        </div>
     </main>    
     <footer>
         <p>Pololitos &copy; 2025. Todos los derechos reservados</p> 

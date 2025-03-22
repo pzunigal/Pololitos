@@ -1,12 +1,12 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Detalles del Servicio</title>
-    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <link rel="stylesheet" href="/css/global.css">
 </head>
 <body>
@@ -20,7 +20,6 @@
             <nav>
                 <ul class="nav-links">
                     <li><a href="/servicios">Servicios</a></li>
-                    <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
                     <c:choose>
                         <c:when test="${not empty sessionScope.usuarioEnSesion}">
                             <li><a href="/mis-servicios">Mis Servicios</a></li>
@@ -80,7 +79,9 @@
                                 <p class="card-text">${servicio.descripcion}</p>
                                 <p><strong>Precio:</strong> $${servicio.precio}</p>
                                 <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
-                                <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
+                                <p><strong>Fecha de publicación:</strong> 
+                                    <span><fmt:formatDate value="${servicio.createdAt}" pattern="dd-MM-yyyy" /></span>
+                                </p>                                 
                                 <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
                             </div>
                         </div>
@@ -96,7 +97,9 @@
                                         <p class="card-text">${servicio.descripcion}</p>
                                         <p><strong>Precio:</strong> $${servicio.precio}</p>
                                         <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
-                                        <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
+                                        <p><strong>Fecha de publicacion:</strong> 
+                                            <span><fmt:formatDate value="${servicio.createdAt}" pattern="dd-MM-yyyy" /></span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -121,7 +124,7 @@
         </div>
     </main>
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+        <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
             <ul class="nav-footer">
                 <li><a href="/contacto">Contacto</a></li>
                 <li><a href="/nosotros">Nosotros</a></li>
