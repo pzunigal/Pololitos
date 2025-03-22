@@ -138,7 +138,7 @@
 
                         categorias.forEach(categoria => {
                             const count = parseInt(categoria.getAttribute("data-count"), 10);
-                            if (count === 0 || visibles >= 3) {
+                            if (count === 0 || visibles >= 1) {
                                 categoria.style.display = "none"; // Oculta si no tiene servicios o ya hay 2 visibles
                             } else {
                                 visibles++;
