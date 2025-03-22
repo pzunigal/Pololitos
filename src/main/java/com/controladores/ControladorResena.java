@@ -57,4 +57,51 @@ public class ControladorResena {
         redirectAttributes.addFlashAttribute("success", "Reseña publicada.");
         return "redirect:/servicio/detalles/" + servicioId;
     }
+    @PostMapping("/resena/eliminar")
+public String eliminarResena(@RequestParam("resenaId") Long resenaId,
+                             HttpSession session,
+                             RedirectAttributes redirectAttributes) {
+    Usuario usuario = (Usuario) session.getAttribute("usuarioEnSesion");
+    if (usuario == null) {
+        return "redirect:/login";
+    }
+
+    Resena resena = servicioResena.obtenerPorId(resenaId);
+    if (resena == null || !resena.getUsuario().getId().equals(usuario.getId())) {
+        redirectAttributes.addFlashAttribute("error", "No tienes permiso para eliminar esta reseña.");
+        return "redirect:/servicios";
+    }
+
+    Long servicioId = resena.getServicio().getId();
+    servicioResena.eliminar(resenaId);
+    redirectAttributes.addFlashAttribute("success", "Reseña eliminada correctamente.");
+    return "redirect:/servicio/detalles/" + servicioId;
+}
+
+@PostMapping("/resena/editar")
+public String editarResena(@RequestParam("resenaId") Long resenaId,
+                           @RequestParam("calificacion") Integer calificacion,
+                           @RequestParam("comentario") String comentario,
+                           HttpSession session,
+                           RedirectAttributes redirectAttributes) {
+    Usuario usuario = (Usuario) session.getAttribute("usuarioEnSesion");
+    if (usuario == null) {
+        return "redirect:/login";
+    }
+
+    Resena resena = servicioResena.obtenerPorId(resenaId);
+    if (resena == null || !resena.getUsuario().getId().equals(usuario.getId())) {
+        redirectAttributes.addFlashAttribute("error", "No tienes permiso para editar esta reseña.");
+        return "redirect:/servicios";
+    }
+
+    resena.setCalificacion(calificacion);
+    resena.setComentario(comentario);
+    resena.setUpdatedAt(new Date());
+    servicioResena.guardar(resena);
+
+    redirectAttributes.addFlashAttribute("success", "Reseña actualizada correctamente.");
+    return "redirect:/servicio/detalles/" + resena.getServicio().getId();
+}
+
 }

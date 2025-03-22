@@ -26,4 +26,12 @@ public class ServicioResena {
     public Double obtenerPromedioCalificacion(Servicio servicio) {
         return repositorioResena.obtenerPromedioPorServicio(servicio);
     }
+    public Resena obtenerPorId(Long id) {
+        return repositorioResena.findById(id).orElse(null);
+    }
+    
+    public void eliminar(Long id) {
+        repositorioResena.deleteById(id);
+    }
+    
 }
