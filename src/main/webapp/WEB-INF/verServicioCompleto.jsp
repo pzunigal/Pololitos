@@ -1,5 +1,6 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -118,6 +119,52 @@
                     </c:otherwise>
                 </c:choose>
             </c:if>
+            
+<!-- Mostrar promedio de reseñas -->
+<c:if test="${not empty promedio}">
+    <div class="card mt-4">
+        <div class="card-body">
+            <h5>Promedio de calificaciones: <strong><fmt:formatNumber value="${promedio}" maxFractionDigits="1"/></strong> / 5</h5>
+        </div>
+    </div>
+</c:if>
+
+<!-- Mostrar formulario de reseña solo si el usuario NO es el autor -->
+<c:if test="${not isAuthorInSesion}">
+    <div class="card mt-3">
+        <div class="card-body">
+            <h5>Deja tu calificación</h5>
+            <form action="${pageContext.request.contextPath}/publicar-resena" method="post">
+                <input type="hidden" name="servicioId" value="${servicio.id}" />
+                <div class="form-group">
+                    <label for="calificacion">Calificación (1 a 5):</label>
+                    <input type="number" name="calificacion" min="1" max="5" step="1" class="form-control" required>
+                </div>
+                <div class="form-group mt-2">
+                    <label for="comentario">Comentario:</label>
+                    <textarea name="comentario" rows="3" class="form-control" placeholder="Tu opinión sobre este servicio..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success mt-3">Calificar Servicio</button>
+            </form>
+        </div>
+    </div>
+</c:if>
+
+<!-- Lista de reseñas -->
+<div class="mt-4">
+    <h5>Calificaciones:</h5>
+    <c:forEach var="resena" items="${resenas}">
+        <div class="card mt-2">
+            <div class="card-body">
+                <p><strong>${resena.usuario.nombre}:</strong> ${resena.calificacion} / 5</p>
+                <c:if test="${not empty resena.comentario}">
+                    <p>${resena.comentario}</p>
+                </c:if>
+            </div>
+        </div>
+    </c:forEach>
+</div>
+
         </div>
     </main>
     <footer>

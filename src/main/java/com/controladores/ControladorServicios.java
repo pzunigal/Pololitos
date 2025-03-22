@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import com.modelos.Categoria;
+import com.modelos.Resena;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioCategorias;
+import com.servicios.ServicioResena;
 import com.servicios.ServicioServicios;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -25,7 +27,6 @@ import jakarta.servlet.http.HttpSession;
 
 import jakarta.validation.Valid;
 
-import java.security.Principal;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +40,8 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioCategorias servicioCategorias;
+    @Autowired
+    private ServicioResena servicioResena;
 
     /*
      * @Autowired
@@ -208,32 +211,26 @@ public class ControladorServicios {
     }
 
     @GetMapping("/servicio/detalles/{id}")
-    public String verDetallesServicio(@PathVariable("id") Long id, Model model, Principal principal,
-            HttpSession session) {
-        // Obtener el servicio por su ID
+    public String verDetallesServicio(@PathVariable("id") Long id, Model model, HttpSession session) {
         Servicio servicio = servicioServicios.obtenerPorId(id);
+        if (servicio == null)
+            return "redirect:/servicios";
 
-        // Si el servicio no existe, redirigir a la lista de servicios
-        if (servicio == null) {
-            return "redirect:/servicios"; // Redirige si el servicio no se encuentra
-        }
-
-        // Obtener el usuario en sesión (si existe)
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+        boolean isAuthorInSesion = usuarioEnSesion != null
+                && usuarioEnSesion.getId().equals(servicio.getUsuario().getId());
 
-        // Verificar si el usuario en sesión es el autor del servicio
-        boolean isAuthorInSesion = false;
-        if (usuarioEnSesion != null) {
-            isAuthorInSesion = usuarioEnSesion.getId().equals(servicio.getUsuario().getId());
-        }
+        // Obtener reseñas y promedio
+        List<Resena> resenas = servicioResena.obtenerPorServicio(servicio);
+        Double promedio = servicioResena.obtenerPromedioCalificacion(servicio);
 
-        // Pasar el servicio, el usuario y la variable isAuthorInSesion al modelo
         model.addAttribute("servicio", servicio);
         model.addAttribute("usuarioSesion", usuarioEnSesion);
-        model.addAttribute("isAuthorInSesion", isAuthorInSesion); // Esta es la variable que usaremos en el JSP
+        model.addAttribute("isAuthorInSesion", isAuthorInSesion);
+        model.addAttribute("resenas", resenas);
+        model.addAttribute("promedio", promedio);
 
-        // Devolver la vista con el detalle del servicio
-        return "verServicioCompleto.jsp"; // Aquí cargamos la JSP que muestra los detalles
+        return "verServicioCompleto.jsp";
     }
 
     @GetMapping("/servicios")
