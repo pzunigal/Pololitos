@@ -11,8 +11,9 @@
                 <title>Detalles del Servicio</title>
                 <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
                  
-                <link rel="stylesheet" href="/css/global.css">
                 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-jQBtV69pKScA4qFLklG5b4qfJvJ7t88OjIuN+uElIEcI5ZRxojcmNYZTBiEDXqbdz8tYO9ovXtIccPB0ddpl3w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+                <link rel="stylesheet" href="/css/global.css">
+
 
             </head>
 
@@ -48,13 +49,13 @@
                     </div>
                     <div class="user-info">
                         <form action="/buscar-servicios" method="get">
-                            <div class="circle-busqueda" id="busqueda-container">
-                                <input type="text" name="query" id="busqueda-input" placeholder="Buscar servicios...">
-                                <button type="submit" id="busqueda-btn">
-                                    <img src="/img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
-                                </button>
-                            </div>
-                        </form>
+                    <div class="circle-busqueda" id="busqueda-container">
+                        <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
+                        <button type="submit" id="busqueda-btn">
+                            <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
+                        </button>
+                    </div>
+                </form>
                         <c:choose>
                             <c:when test="${not empty sessionScope.usuarioEnSesion}">
                                 <a href="/perfilUsuario">
