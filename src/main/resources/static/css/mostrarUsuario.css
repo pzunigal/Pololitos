@@ -8,6 +8,7 @@ body {
     min-height: 100vh;
 }
 
+/* Navbar */
 header {
     position:sticky;
     top: 0;
@@ -23,13 +24,21 @@ header {
 }
 
 main {
-    flex: 1;
+    flex: 2;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-size: cover;
     background-position: center;
     background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);
+}
+
+/* Contenedor principal */
+.main-container {
+    display: flex;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 20px;
 }
 
 .container div {
@@ -124,53 +133,29 @@ main {
     margin-left: 10px;
 }
 
-.container {
-    position: relative;
-    width: 100%;
-    height: 85vh;
-    display: flex;
-    align-items: center;
-    margin: -1px auto 0 auto; 
-} 
-
-.content {
-    position: relative;
-    max-width: 500px;
-    z-index: 2;
-}
-
-.content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
-    color: white;
-}
-
-.content p {
-    font-size: 1.3rem;
-    margin-bottom: 20px;
-    color: white;
-}
-
-.content button {
-    background-color: orange;
-    border: none;
-    padding: 10px 20px;
-    font-size: 1rem;
-    cursor: pointer;
-    color: white;
-    border-radius: 5px;
-}
-
-/* Tarjeta de perfil */
+/* Tarjeta de perfil*/
 .profile-card {
-    background-color: rgba(255, 255, 255, 0.6);
+    max-width: 400px; 
+    margin: auto; 
     padding: 20px;
-    margin: 40px auto;
-    width: 90%;
-    max-width: 400px;
+    background: #fff;
     border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-    text-align: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center; 
+}
+
+.container-info {
+    display: flex;
+    text-align: left;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+}
+
+.container-info p {
+    text-align: left;
+    width: 100%; 
+    padding-left: 20px;
 }
 
 .profile-card img {
@@ -179,11 +164,13 @@ main {
     border-radius: 50%;
     object-fit: cover;
     margin-bottom: 10px;
+    border: 2px solid #ddd;
 }
 
 .name {
     font-size: 22px;
     margin: 10px 0;
+    text-align: center;
 }
 
 .city, .contact-info {
@@ -209,11 +196,11 @@ main {
 .edit-button:hover {
     background: #0056b3;
 }
+/* Fin Tarjeta de perfil*/
 
 
 
-
-/* Footer */
+/* Footer  */
 
 footer {
     position: relative;
@@ -253,3 +240,77 @@ footer p {
 .nav-footer a:hover {
     color: #fff;
 }
+
+/* Contenedor del carrusel */
+.carousel-container {
+    flex: 1;
+    max-width: 600px;
+    position: relative;
+    background: #f8f8f8;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+}
+
+/* Wrapper del carrusel */
+.carousel-wrapper {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+/* Carrusel deslizante */
+.carousel {
+    display: flex;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+    width: 100%;
+    padding: 10px;
+}
+
+/* Tarjetas de servicio */
+.service-card {
+    flex: 0 0 auto;
+    width: 180px;
+    margin-right: 10px;
+    background: white;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+}
+
+/* Imagen del servicio */
+.service-image {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+    border-radius: 5px;
+    margin-bottom: 8px;
+}
+
+/* Botones del carrusel */
+.carousel-btn {
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 20px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 10;
+    border-radius: 50%;
+}
+
+.prev {
+    left: -15px;
+}
+
+.next {
+    right: -15px;
+}
+
+
+
