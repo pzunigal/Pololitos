@@ -97,11 +97,13 @@
                             <c:forEach var="servicio" items="${categoria.servicios}">
                                 <div class="service-card-wrapper">
                                     <div class="service-card">
-                                        <img src="${servicio.imgUrl}" class="service-image" alt="${servicio.nombre}">
+                                        <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="service-link">
+                                            <img src="${servicio.imgUrl}" class="card-img-top img-card-profile-service" alt="${servicio.nombre}">
+                                        </a>
                                         <div class="service-info">
                                             <h5 class="service-title">${servicio.nombre}</h5>
                                             <p class="service-price"><strong>Precio:</strong> $${servicio.precio}</p>
-                                            <p class="service-author"><small>Autor: ${servicio.usuario.nombre}</small></p>
+                                            <p class="service-author"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
                                             <div>
                                                 <c:choose>
                                                 <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
@@ -134,7 +136,7 @@
         </main>
 
         <footer>
-            <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+            <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
             <ul class="nav-footer">
                 <li><a href="/contacto">Contacto</a></li>
                 <li><a href="/nosotros">Nosotros</a></li>

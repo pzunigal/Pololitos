@@ -97,6 +97,10 @@ main {
     margin: 0 5px;
 }
 
+#busqueda-btn {
+    background-color: rgba(0, 0, 0, 0);
+}
+
 .user-info button:hover {
     background-color: #c82333;
 }
@@ -152,7 +156,7 @@ main h1 {
     padding: 10px 20px;
     border-radius: 5px;
     text-decoration: none;
-    margin-top: 20px;
+    margin: 40px 0;
     transition: background-color 0.3s ease;
 }
 

@@ -21,7 +21,10 @@ main {
   background-size: cover;
   background-position: center;
   background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);
+  background-repeat: no-repeat; /* Evita que la imagen se repita */
+  background-attachment: fixed; /* Fija la imagen mientras se hace scroll */
 }
+
 
 /* Header */
 header {
@@ -36,6 +39,18 @@ header {
   display: flex;
   justify-content: space-between;
   z-index: 1000;
+}
+
+h1 {
+  color: #fff;
+  display: block;
+  font-size: 2em;
+  margin-block-end: 0.67em;
+  margin-inline-start: 0px;
+  margin-inline-end: 0px;
+  font-weight: bold;
+  unicode-bidi: isolate;
+  margin-top: 40px;
 }
 
 .nav-container {
@@ -126,26 +141,67 @@ header {
   margin-left: 10px;
 }
 
-/* Contenedor principal de los servicios */
-.services-container {
-  width: 90%;
-  max-width: 1200px;
-  margin: 20px auto;
-  padding: 20px;
+/* Contenedor de filtro */
+.filter-container {
+  background-color: rgba(255, 255, 255, 0.7); /* Fondo blanco con algo de opacidad */
+  backdrop-filter: blur(20px); /* Efecto de desenfoque */
+  padding: 15px;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin: 20px 0;
+  display: flex;
+  flex-direction: row; /* Cambiado a fila */
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
 }
 
-/* Filtro por categoría */
-.filter-container {
-  margin-top: 30px;
+/* Etiqueta del filtro */
+.filter-container label {
+  padding-left: 25px;
+  font-size: 1rem;
+  font-weight: bold;
+  margin-right: 10px; /* Espacio entre la etiqueta y el select */
+  color: #333;
 }
+
+/* Estilo del select */
+.filter-container select {
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  background-color: #fff;
+  color: #333;
+  transition: border-color 0.3s ease;
+  width: auto; /* Asegura que el select no se expanda completamente */
+}
+
+/* Cambio de borde al hacer focus */
+.filter-container select:focus {
+  border-color: #007bff;
+  outline: none;
+}
+
+/* Estilo de las opciones del select */
+.filter-container option {
+  padding: 10px;
+  font-size: 1rem;
+}
+
+/* Añadir un poco de espacio entre el contenedor y otros elementos */
+body {
+  font-family: Arial, sans-serif;
+  background-color: #f8f9fa;
+  padding: 20px;
+}
+
 
 /* Títulos */
 .category-title {
   margin-top: 20px;
   font-size: 24px;
-  color: #333;
+  color: white;
 }
 
 .no-services-msg {
@@ -170,7 +226,6 @@ header {
 .service-card {
   background-color: #1E1E1E;
   width: 200px;
-  height: 350px;
   color: #fff;
   padding: 20px;
   border-radius: 10px;
@@ -203,6 +258,7 @@ header {
   -webkit-box-orient: vertical;
   overflow: hidden;
   text-overflow: ellipsis;
+  text-align: center;
 }
 
 .service-price,
@@ -241,4 +297,10 @@ header {
   font-size: 15px;
   border: none;
   cursor: pointer;
+}
+.service-card img{
+  width: 100%;
+  height: 205px;
+  border-radius: 10px;
+  object-fit: cover;
 }
