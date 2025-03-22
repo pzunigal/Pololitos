@@ -29,7 +29,7 @@ main {
     align-items: center;
     background-size: cover;
     background-position: center;
-    background-color:#464749 ;
+    background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);;
 }   
 
 .nav-container {
@@ -121,9 +121,11 @@ main {
 }
 
 .container {
+    display: flex;
+    justify-content: center;
     position: relative;
     width: 100%;
-    height: 85vh;
+    height: 65vh;
     display: flex;
     align-items: center;
     margin: -1px auto 0 auto; 
@@ -135,10 +137,27 @@ main {
     z-index: 2;
 }
 
-.content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 10px;
+main h1 {
+    color: white; /* Asegura que se vea en un fondo oscuro */
+    margin-top: 100px; /* Ajusta el margen para que no quede oculto debajo del header */
+    text-align: center;
+    font-size: 2rem;
+}
+
+.btn-publicar {
+    display: inline-block;
+    background-color: orange;
     color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border-radius: 5px;
+    text-decoration: none;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.btn-publicar:hover {
+    background-color: orange;
 }
 
 .content p {
@@ -160,11 +179,6 @@ main {
 /*Fin navbar*/
 
 /* Cards */
-.cards {
-    display: flex;
-    justify-content: left;
-    gap: 20px;
-}
 
 .card {
     background-color: #1E1E1E;
@@ -175,12 +189,12 @@ main {
     border-radius: 10px;
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-left: 40px;
 }
 
 
 .card-body {
     text-align: left; 
-    padding-left: 10px; 
     margin: 0; 
     padding: 10px; 
 }
@@ -191,12 +205,13 @@ main {
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100%; 
-    font-size: bold;
+    margin: 15px 0;
+    padding: 0;
 }
 
 .card p {
     font-size: 14px;
-    margin: 0;
+    margin: 10px 0;
     padding: 0;
     color: #bbb;
     font-weight: 300;
@@ -205,6 +220,40 @@ main {
     text-overflow: ellipsis;
     max-width: 100%; 
 }
+
+.card .button-container {
+    display: flex;
+    gap: 10px; /* Espacio entre los botones */
+    justify-content: center; /* Centra los botones horizontalmente */
+    align-items: center; /* Alinea los botones verticalmente */
+}
+
+.card button, 
+.card a {
+    display: flex;  /* Para alinear el contenido (icono) dentro del botón */
+    justify-content: center; /* Centra el icono horizontalmente */
+    align-items: center; /* Centra el icono verticalmente */
+    background-color: #20d757;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: white;
+    border-radius: 5px;
+    margin-top: 10px;
+    width: 45px; /* Tamaño uniforme */
+    height: 45px;
+    text-decoration: none; /* Elimina el subrayado de los enlaces */
+}
+
+.card button {
+    background-color: #dc3545; /* Rojo para el botón de eliminar */
+}
+
+.card button i, 
+.card a i {
+    font-size: 1.2rem; /* Ajusta el tamaño del icono */
+}
+
 
 .card img {
     width: 100%;
