@@ -39,6 +39,10 @@ main {
     color: white;
 }
 
+#busqueda-btn {
+    background-color: rgba(0, 0, 0, 0);
+}
+
 .input-field {
     width: 95%;
     padding: 10px;

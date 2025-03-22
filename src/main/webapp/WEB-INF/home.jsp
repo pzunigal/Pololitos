@@ -86,7 +86,7 @@
                                     <li>Aumenta tus contrataciones</li>
                                     <li>Invierte poco, gana más</li>
                                 </ul>
-                                <a href="/contacto"><button>Solicitar Publicidad</button></a>
+                                <a href="/contacto"><button class="btn-publicidad">Solicitar Publicidad</button></a>
                             </div>
                         </div>
                     </div>
@@ -130,7 +130,7 @@
         </main>
 
         <footer>
-            <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
+            <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
             <ul class="nav-footer">
                 <li><a href="/contacto">Contacto</a></li>
                 <li><a href="/nosotros">Nosotros</a></li>

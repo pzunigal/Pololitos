@@ -21,6 +21,9 @@ header {
     justify-content: space-between;
     z-index: 1000;
 }
+#busqueda-btn {
+    background-color: rgba(0, 0, 0, 0);
+}
 
 main {
     flex: 1;
@@ -331,6 +334,7 @@ footer p {
 .stars input[type="radio"]:checked ~ .star {
     color: #f1c40f;
 }
+
 /* Reseñas */
 .resenas-section {
     width: 100%;

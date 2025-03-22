@@ -10,16 +10,14 @@
       <meta charset="UTF-8">
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>Mis Solicitudes Enviadas</title>
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-         rel="stylesheet">
-      <link rel="stylesheet" href="/css/solicitar-servicios.css">
+      <link rel="stylesheet" href="/css/mis-solicitudes-enviadas.css">
    </head>
    <body>
       <header>
          <div class="nav-container">
             <a href="/">
-               <div class="logo">
-                  <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+               <div class="logo-pololitos">
+                  <img src="img/pololitosBlanco.png" alt="Logo-pololitos">
                </div>
             </a>
             <nav>
