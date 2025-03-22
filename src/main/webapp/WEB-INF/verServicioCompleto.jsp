@@ -2,7 +2,6 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 <!DOCTYPE html>
-<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -119,54 +118,102 @@
                     </c:otherwise>
                 </c:choose>
             </c:if>
-            
-<!-- Mostrar promedio de reseñas -->
-<c:if test="${not empty promedio}">
-    <div class="card mt-4">
-        <div class="card-body">
-            <h5>Promedio de calificaciones: <strong><fmt:formatNumber value="${promedio}" maxFractionDigits="1"/></strong> / 5</h5>
         </div>
-    </div>
-</c:if>
+        <!-- Sección de Reseñas -->
+<section class="resenas-section mt-5">
 
-<!-- Mostrar formulario de reseña solo si el usuario NO es el autor -->
-<c:if test="${not isAuthorInSesion}">
-    <div class="card mt-3">
-        <div class="card-body">
-            <h5>Deja tu calificación</h5>
-            <form action="${pageContext.request.contextPath}/publicar-resena" method="post">
-                <input type="hidden" name="servicioId" value="${servicio.id}" />
-                <div class="form-group">
-                    <label for="calificacion">Calificación (1 a 5):</label>
-                    <input type="number" name="calificacion" min="1" max="5" step="1" class="form-control" required>
+    <!-- Promedio de calificaciones -->
+    <c:if test="${not empty promedio}">
+        <div class="card mb-4">
+            <div class="card-body text-center">
+                <h5>Promedio de calificaciones</h5>
+                <div class="promedio-star">
+                    <c:forEach begin="1" end="5" var="i">
+                        <c:choose>
+                            <c:when test="${i <= promedio}">
+                                <span class="star filled">&#9733;</span>
+                            </c:when>
+                            <c:otherwise>
+                                <span class="star">&#9733;</span>
+                            </c:otherwise>
+                        </c:choose>
+                    </c:forEach>
+                    <span class="promedio-num">
+                        (<fmt:formatNumber value="${promedio}" maxFractionDigits="1"/> / 5)
+                    </span>
                 </div>
-                <div class="form-group mt-2">
-                    <label for="comentario">Comentario:</label>
-                    <textarea name="comentario" rows="3" class="form-control" placeholder="Tu opinión sobre este servicio..."></textarea>
-                </div>
-                <button type="submit" class="btn btn-success mt-3">Calificar Servicio</button>
-            </form>
-        </div>
-    </div>
-</c:if>
-
-<!-- Lista de reseñas -->
-<div class="mt-4">
-    <h5>Calificaciones:</h5>
-    <c:forEach var="resena" items="${resenas}">
-        <div class="card mt-2">
-            <div class="card-body">
-                <p><strong>${resena.usuario.nombre}:</strong> ${resena.calificacion} / 5</p>
-                <c:if test="${not empty resena.comentario}">
-                    <p>${resena.comentario}</p>
-                </c:if>
             </div>
         </div>
-    </c:forEach>
-</div>
+    </c:if>
 
+    <!-- Formulario de reseña -->
+    <c:if test="${not isAuthorInSesion}">
+        <div class="card mb-4">
+            <div class="card-body">
+                <h5 class="mb-3">Deja tu reseña</h5>
+                <form action="${pageContext.request.contextPath}/publicar-resena" method="post">
+                    <input type="hidden" name="servicioId" value="${servicio.id}" />
+                    
+                    <div class="form-group star-rating mb-3">
+                        <label class="form-label">Calificación:</label>
+                        <div class="stars">
+                            <input type="radio" id="star5" name="calificacion" value="5" required />
+                            <label for="star5" class="star">&#9733;</label>
+                            <input type="radio" id="star4" name="calificacion" value="4" />
+                            <label for="star4" class="star">&#9733;</label>
+                            <input type="radio" id="star3" name="calificacion" value="3" />
+                            <label for="star3" class="star">&#9733;</label>
+                            <input type="radio" id="star2" name="calificacion" value="2" />
+                            <label for="star2" class="star">&#9733;</label>
+                            <input type="radio" id="star1" name="calificacion" value="1" />
+                            <label for="star1" class="star">&#9733;</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="comentario">Comentario:</label>
+                        <textarea name="comentario" rows="3" class="form-control" placeholder="Escribe tu opinión..."></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-success">Enviar reseña</button>
+                </form>
+            </div>
         </div>
+    </c:if>
+
+    <!-- Lista de reseñas -->
+    <div class="card">
+        <div class="card-body">
+            <h5 class="mb-3">Calificaciones recientes</h5>
+            <c:forEach var="resena" items="${resenas}">
+                <div class="resena-item mb-3">
+                    <p class="mb-1">
+                        <strong>${resena.usuario.nombre}</strong>
+                        <span class="estrellas-user">
+                            <c:forEach begin="1" end="5" var="i">
+                                <c:choose>
+                                    <c:when test="${i <= resena.calificacion}">
+                                        <span class="star filled">&#9733;</span>
+                                    </c:when>
+                                    <c:otherwise>
+                                        <span class="star">&#9733;</span>
+                                    </c:otherwise>
+                                </c:choose>
+                            </c:forEach>
+                        </span>
+                    </p>
+                    <c:if test="${not empty resena.comentario}">
+                        <p class="resena-comentario">${resena.comentario}</p>
+                    </c:if>
+                    <hr style="border-color: #777;">
+                </div>
+            </c:forEach>
+        </div>
+    </div>
+</section>
+
     </main>
+ 
     <footer>
         <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
             <ul class="nav-footer">
