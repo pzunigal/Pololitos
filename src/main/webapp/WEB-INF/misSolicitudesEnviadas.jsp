@@ -44,10 +44,14 @@
             </nav>
          </div>
          <div class="user-info">
-            <div class="circle-busqueda">
-               <input type="text" placeholder="¿Qué servicio buscas?">
-               <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
-            </div>
+            <form action="/buscar-servicios" method="get">
+               <div class="circle-busqueda" id="busqueda-container">
+                   <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
+                   <button type="submit" id="busqueda-btn">
+                       <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
+                   </button>
+               </div>
+           </form>
             <c:choose>
                <c:when test="${not empty sessionScope.usuarioEnSesion}">
                   <a href="/perfilUsuario">
@@ -76,7 +80,7 @@
                         <th>Estado</th>
                         <th>Fecha de Solicitud</th>
                         <th>Comentario Adicional</th>
-                        <th>Chat con el usuario</th>
+                        <th>Chat con el provedoor</th>
                         <!-- Nueva columna para el chat -->
                      </tr>
                   </thead>
@@ -103,9 +107,9 @@
                                     </c:when>
                                     <c:otherwise>
                                         <!-- Botón gris deshabilitado con alerta -->
-                                        <button class="btn btn-secondary" onclick="alert('La conversación aún no ha sido iniciada');" disabled>
-                                            <i class="fas fa-comments"></i> Chat
-                                        </button>
+                                        <button class="btn btn-secondary mt-2">
+                                          <i class="fas fa-comments"></i> Chat no disponible
+                                      </button>
                                     </c:otherwise>
                                 </c:choose>
                             </td>
@@ -128,5 +132,17 @@
             <li><a href="/nosotros">Nosotros</a></li>
          </ul>
       </footer>
+      <script>
+         document.addEventListener("DOMContentLoaded", function () {
+             const botones = document.querySelectorAll(".btn-secondary");
+     
+             botones.forEach(boton => {
+                 boton.addEventListener("click", function () {
+                     alert("La conversación aún no ha sido iniciada por el proveedor");
+                 });
+             });
+         });
+     </script>
+     
    </body>
 </html>

@@ -95,10 +95,14 @@
                             </nav>
                         </div>
                         <div class="user-info">
-                            <div class="circle-busqueda">
-                                <input type="text" placeholder="¿Qué servicio buscas?">
-                                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
-                            </div>
+                            <form action="/buscar-servicios" method="get">
+                                <div class="circle-busqueda" id="busqueda-container">
+                                    <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
+                                    <button type="submit" id="busqueda-btn">
+                                        <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
+                                    </button>
+                                </div>
+                            </form>
 
                             <c:choose>
                                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
@@ -118,67 +122,59 @@
                         </div>
                     </header>
 
-                    <div class="container mt-5">
-                        <h2 class="text-center">Mis Solicitudes Recibidas</h2>
-                        <c:if test="${not empty solicitudes}">
-                            <div class="list-group">
-                                <c:forEach var="solicitud" items="${solicitudes}">
-                                    <c:set var="borderColor"
-                                        value="${solicitud.estado == 'Aceptada' ? '#2ecc71' : '#e74c3c'}" />
-                                    <c:set var="estadoColor"
-                                        value="${solicitud.estado == 'Aceptada' ? '#2ecc71' : '#e74c3c'}" />
-
-                                    <div class="solicitud-card" style="border-color: ${borderColor};">
-                                        <h5>Solicitud de: ${solicitud.solicitante.nombre}</h5>
-                                        <p><strong>Servicio:</strong> ${solicitud.servicio.nombre}</p>
-                                        <p><strong>Comentario:</strong> ${solicitud.comentarioAdicional}</p>
-                                        <p class="estado" style="color: ${estadoColor};">
-                                            <strong>Estado:</strong> ${solicitud.estado}
-                                        </p>
-
-                                        <!-- Si la solicitud no ha sido aceptada, mostrar el botón para aceptar -->
-                                        <c:choose>
-                                            <c:when test="${solicitud.estado != 'Aceptada'}">
-                                                <form action="/aceptar-solicitud" method="post">
+                    <main style="margin-top: 120px;">
+                        <section style="max-width: 900px; margin: auto; padding: 20px;">
+                            <h2 class="text-center mb-4">Mis Solicitudes Recibidas</h2>
+                    
+                            <c:if test="${not empty solicitudes}">
+                                <div class="d-flex flex-column gap-4">
+                                    <c:forEach var="solicitud" items="${solicitudes}">
+                                        <c:set var="borderColor"
+                                            value="${solicitud.estado == 'Aceptada' ? '#2ecc71' : '#e74c3c'}" />
+                                        <c:set var="estadoColor"
+                                            value="${solicitud.estado == 'Aceptada' ? '#2ecc71' : '#e74c3c'}" />
+                    
+                                        <div class="solicitud-card" style="border-color: ${borderColor};">
+                                            <h5>Solicitud de: ${solicitud.solicitante.nombre}</h5>
+                                            <p><strong>Servicio:</strong> ${solicitud.servicio.nombre}</p>
+                                            <p class="mensaje"><strong>Comentario:</strong> ${solicitud.comentarioAdicional}</p>
+                                            <p class="estado" style="color: ${estadoColor};">
+                                                <strong>Estado:</strong> ${solicitud.estado}
+                                            </p>
+                    
+                                            <c:if test="${solicitud.estado != 'Aceptada'}">
+                                                <form action="/aceptar-solicitud" method="post" class="mb-2">
                                                     <input type="hidden" name="solicitudId" value="${solicitud.id}">
-                                                    <button type="submit" class="btn btn-success mt-2">Aceptar
-                                                        Solicitud</button>
+                                                    <button type="submit" class="btn btn-success">Aceptar Solicitud</button>
                                                 </form>
-                                            </c:when>
-                                        </c:choose>
-
-                                        <!-- Verificar si ya existe un chat para esta solicitud -->
-                                        <c:choose>
-                                            <c:when test="${chatsCreados[solicitud.id]}">
-                                                <!-- Mostrar botón para continuar la conversación -->
-                                                <form action="/chat/continuar" method="post">
-                                                    <input type="hidden" name="solicitudId" value="${solicitud.id}">
-                                                    <button type="submit" class="btn btn-success mt-2">Continuar
-                                                        Conversación</button>
-                                                </form>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <!-- Mostrar botón para iniciar una conversación -->
-                                                <form action="/chat/crear" method="post">
-                                                    <input type="hidden" name="solicitanteId"
-                                                        value="${solicitud.solicitante.id}">
-                                                    <input type="hidden" name="solicitudId" value="${solicitud.id}">
-                                                    <button type="submit" class="btn btn-primary mt-2">Iniciar
-                                                        Conversación</button>
-                                                </form>
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </div>
-                                </c:forEach>
-
-
-
-                            </div>
-                        </c:if>
-                        <c:if test="${empty solicitudes}">
-                            <p class="text-center">No tienes solicitudes recibidas aún.</p>
-                        </c:if>
-                    </div>
+                                            </c:if>
+                    
+                                            <c:choose>
+                                                <c:when test="${chatsCreados[solicitud.id]}">
+                                                    <form action="/chat/continuar" method="post">
+                                                        <input type="hidden" name="solicitudId" value="${solicitud.id}">
+                                                        <button type="submit" class="btn btn-outline-success">Continuar Conversación</button>
+                                                    </form>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <form action="/chat/crear" method="post">
+                                                        <input type="hidden" name="solicitanteId" value="${solicitud.solicitante.id}">
+                                                        <input type="hidden" name="solicitudId" value="${solicitud.id}">
+                                                        <button type="submit" class="btn btn-primary">Iniciar Conversación</button>
+                                                    </form>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </c:if>
+                    
+                            <c:if test="${empty solicitudes}">
+                                <p class="text-center text-white mt-5">No tienes solicitudes recibidas aún.</p>
+                            </c:if>
+                        </section>
+                    </main>
+                    
 
                     <script
                         src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>

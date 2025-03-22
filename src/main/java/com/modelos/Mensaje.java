@@ -1,28 +1,27 @@
 package com.modelos;
 
 import java.util.Date;
-import jakarta.validation.constraints.NotBlank;
-import org.springframework.format.annotation.DateTimeFormat;
+import java.time.Instant;
 
 public class Mensaje {
-
-    private String id;  // Esto está bien para Firebase
-
-    @NotBlank(message = "El mensaje no puede estar vacío")
+    private String id;
     private String contenido;
-
-    private Chat chat;  // Debe ser serializable por Firebase
-    private Usuario usuario;  // Debe ser serializable por Firebase
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    private Date createdAt;
+    private Long usuarioId;
+    private String nombreUsuario;
+    private String createdAt; // CAMBIO: De Date a String
 
     public Mensaje() {
-        this.createdAt = new Date(); // Valor por defecto
+        this.createdAt = Date.from(Instant.now()).toInstant().toString(); // Guarda en formato ISO-8601
+    }
+
+    public Mensaje(String contenido, Long usuarioId, String nombreUsuario) {
+        this.contenido = contenido;
+        this.usuarioId = usuarioId;
+        this.nombreUsuario = nombreUsuario;
+        this.createdAt = Date.from(Instant.now()).toInstant().toString();
     }
 
     // Getters y Setters
-
     public String getId() {
         return id;
     }
@@ -39,25 +38,36 @@ public class Mensaje {
         this.contenido = contenido;
     }
 
-    public Chat getChat() {
-        return chat;
+    public Long getUsuarioId() {
+        return usuarioId;
     }
 
-    public void setChat(Chat chat) {
-        this.chat = chat;
+    public void setUsuarioId(Long usuarioId) {
+        this.usuarioId = usuarioId;
     }
 
-    public Usuario getUsuario() {
-        return usuario;
+    public String getNombreUsuario() {
+        return nombreUsuario;
     }
 
-    public void setUsuario(Usuario usuario) {
-        this.usuario = usuario;
+    public void setNombreUsuario(String nombreUsuario) {
+        this.nombreUsuario = nombreUsuario;
     }
 
-    public Date getCreatedAt() {
+    public String getCreatedAt() {
         return createdAt;
     }
-    
-   
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    // Utilidad: Convertir createdAt en String a Date (si lo necesitas)
+    public Date getCreatedAtAsDate() {
+        try {
+            return Date.from(Instant.parse(createdAt));
+        } catch (Exception e) {
+            return null;
+        }
+    }
 }

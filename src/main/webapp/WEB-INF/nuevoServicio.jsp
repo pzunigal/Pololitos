@@ -8,7 +8,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Publicar Servicio</title>
-    <link rel="stylesheet" href="/css/servicios.css">
+    <link rel="stylesheet" href="/css/navbar.css">
     <!-- Bootstrap 5 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <!-- FontAwesome para iconos -->
@@ -57,10 +57,14 @@
             </nav>
         </div>
         <div class="user-info">
-            <div class="circle-busqueda">
-                <input type="text" placeholder="¿Qué servicio buscas?">
-                <a href=""><img src="/img/busqueda.png" alt="lupa de busqueda"></a>
-            </div>
+            <form action="/buscar-servicios" method="get">
+                <div class="circle-busqueda" id="busqueda-container">
+                    <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
+                    <button type="submit" id="busqueda-btn">
+                        <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
+                    </button>
+                </div>
+            </form>
 
             <c:choose>
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">

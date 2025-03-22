@@ -301,3 +301,130 @@ footer p {
 .nav-footer a:hover {
     color: #fff;
 }
+/* Estrellas de calificación */
+.star-rating {
+    margin-top: 15px;
+}
+
+.stars {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-start;
+}
+
+.stars input[type="radio"] {
+    display: none;
+}
+
+.stars .star {
+    font-size: 2rem;
+    color: #ccc;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.stars .star:hover,
+.stars .star:hover ~ .star {
+    color: #f1c40f;
+}
+
+.stars input[type="radio"]:checked ~ .star {
+    color: #f1c40f;
+}
+/* Reseñas */
+.resenas-section {
+    width: 100%;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+.promedio-star {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #f1c40f;
+}
+
+.promedio-num {
+    font-size: 2.5rem;
+    vertical-align: middle;
+}
+
+.resena-item {
+    color: #eaeaea;
+}
+
+.resena-comentario {
+    font-style: italic;
+    color: #ccc;
+}
+/* Estrellas visuales para promedio y reseñas */
+.star {
+    font-size: 1.5rem;
+    color: #888;
+}
+
+.star.filled {
+    color: #f1c40f;
+}
+
+.promedio-star {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    font-size: 1.3rem;
+}
+
+.promedio-num {
+    margin-left: 8px;
+    font-weight: bold;
+    color: #eee;
+}
+
+.estrellas-user {
+    margin-left: 8px;
+}
+
+.resenas-section {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 50px;
+    margin-bottom: 80px;
+}
+
+.resenas-section .card {
+    margin-bottom: 40px;
+}
+
+.resenas-section .card:last-child {
+    margin-bottom: 0;
+}
+
+.resenas-section h5 {
+    margin-bottom: 15px;
+}
+
+.resenas-section .resena-item {
+    margin-bottom: 25px;
+}
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right:0;
+    bottom:0;
+    background-color: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+}
+
+.modal-content {
+    background-color: #fff;
+    color: black;
+    padding: 20px;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+}
