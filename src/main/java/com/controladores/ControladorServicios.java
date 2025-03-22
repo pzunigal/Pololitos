@@ -186,7 +186,7 @@ public class ControladorServicios {
         servicioExistente.setPrecio(servicio.getPrecio());
         servicioExistente.setCategoria(servicio.getCategoria());
         servicioExistente.setImgUrl(imgUrl);
-
+        servicioExistente.setCiudad(servicio.getCiudad());
         servicioServicios.guardar(servicioExistente); // Guardar los cambios
         return "redirect:/mis-servicios";
     }
