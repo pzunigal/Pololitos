@@ -62,23 +62,68 @@
         </div>
     </header>
     <main>
-        <div class="profile-card">
-            <img src="${usuario.fotoPerfil}" alt="Foto de perfil">
-            <h1 class="name">${usuario.nombre} ${usuario.apellido}</h1>
-            <p class="city">Ciudad: ${usuario.ciudad}</p>
-            <p class="contact-info">
-                Teléfono: <a href="tel:${usuario.telefono}" class="link">${usuario.telefono}</a>
-            </p>
-            <p class="contact-info">
-                Correo: <a href="mailto:${usuario.email}" class="link">${usuario.email}</a>
-            </p>
-            <a href="/editarPerfil" class="edit-button">Editar Perfil</a>
+        <div class="main-container">
+            <!-- Tarjeta de perfil -->
+            <div class="profile-card">
+                <img src="${usuario.fotoPerfil}" alt="Foto de perfil">
+                <div class="container-info">
+                    <h1 class="name">${usuario.nombre} ${usuario.apellido}</h1>
+                    <p class="city">Ciudad: ${usuario.ciudad}</p>
+                    <p class="contact-info">
+                        Teléfono: <a href="tel:${usuario.telefono}" class="link">${usuario.telefono}</a>
+                    </p>
+                    <p class="contact-info">
+                        Correo: <a href="mailto:${usuario.email}" class="link">${usuario.email}</a>
+                    </p>
+                    <a href="/editarPerfil" class="edit-button">Editar Perfil</a>
+                </div>
+            </div>
+    
+            <!-- Carrusel de servicios -->
+            <div class="carousel-container">
+                <h2>Servicios ofrecidos</h2>
+                <div class="carousel-wrapper">
+                    <button class="carousel-btn prev" onclick="moveCarousel(-1)">&#10094;</button>
+                    <div class="carousel">
+                        <c:forEach var="servicio" items="${servicios}">
+                            <div class="service-card">
+                                <img src="${servicio.imgUrl}" class="service-image" alt="${servicio.nombre}">
+                                <div class="service-info">
+                                    <h3>${servicio.nombre}</h3>
+                                    <p><strong>Precio:</strong> $${servicio.precio}</p>
+                                    <p><strong>Ubicación:</strong> ${servicio.ciudad}</p>
+                                    <div class="service-actions">
+                                        <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post">
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                     <div class="btn-container">
+                                            <!-- Botón de editar con icono de lápiz -->
+                                        <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post" style="display:inline;">
+                                            <button type="submit" class="btn btn-danger" onclick="return confirm('¿Estás seguro de que quieres eliminar este servicio?');">
+                                                <i class="bi bi-trash"></i>
+                                            </button>
+                                        </form>
+                                        <!-- Botón de ojo para ver detalles con icono de ojo -->
+                                        <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-info">
+                                            <i class="bi bi-eye"></i>
+                                        </a>
+                                        <a href="${pageContext.request.contextPath}/editar-servicio/${servicio.id}" class="btn btn-info">
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </c:forEach>
+                    </div>
+                    <button class="carousel-btn next" onclick="moveCarousel(1)">&#10095;</button>
+                </div>
+            </div>
         </div>
-        <!-- Añadir la lista de servicios que ofrece visible para el propio usuario y otros,
-        Añadir la lista de servicios que ha solicitado visible solo para el propio usuario-->
-    </main>
+    </main>    
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <p>Pololitos &copy; 2025. Todos los derechos reservados</p> 
         <ul class="nav-footer">
             <li><a href="/contacto">Contacto</a></li>
             <li><a href="/nosotros">Nosotros</a></li>

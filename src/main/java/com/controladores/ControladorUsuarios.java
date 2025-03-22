@@ -1,5 +1,7 @@
 package com.controladores;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -9,7 +11,9 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import com.modelos.LoginUsuario;
+import com.modelos.Servicio;
 import com.modelos.Usuario;
+import com.servicios.ServicioServicios;
 import com.servicios.ServicioUsuarios;
 
 import jakarta.servlet.http.HttpSession;
@@ -20,6 +24,9 @@ public class ControladorUsuarios {
 
 	@Autowired
 	private ServicioUsuarios servicioUsuarios;
+
+	@Autowired
+	private ServicioServicios servicioServicios;
 
 	@GetMapping("/registro")
 	public String mostrarRegistro(Model model) {
@@ -92,8 +99,12 @@ public class ControladorUsuarios {
 			return "redirect:/login";
 		}
 
-		model.addAttribute("usuario", usuarioEnSesion);
+		// Obtener la lista de servicios creados por el usuario
+		List<Servicio> serviciosUsuario = servicioServicios.obtenerServiciosPorUsuario(usuarioEnSesion.getId());
 
+		// Agregar datos al modelo
+		model.addAttribute("usuario", usuarioEnSesion);
+		model.addAttribute("servicios", serviciosUsuario);
 		return "mostrarUsuario.jsp";
 	}
 
