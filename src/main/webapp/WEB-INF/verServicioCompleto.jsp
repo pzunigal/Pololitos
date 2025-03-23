@@ -81,14 +81,7 @@
                   <!-- Si el usuario es el mismo que el autor -->
                   <div class="card">
                      <img src="${servicio.imgUrl}" class="card-img-top" alt="${servicio.nombre}">
-                     <div class="card-body">
-                        <h5 class="card-title text-primary">${servicio.nombre}</h5>
-                        <p class="card-text">${servicio.descripcion}</p>
-                        <p><strong>Precio:</strong> $${servicio.precio}</p>
-                        <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
-                        <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
-
-                        <section class="resenas-section mt-5">
+                     <section class="resenas-section mt-5">
                            <!-- Promedio de calificaciones -->
                            <c:if test="${not empty promedio}">
                               <div class="card mb-4">
@@ -114,6 +107,14 @@
                                  </div>
                               </div>
                            </c:if>
+                     <div class="card-body">
+                        <h5 class="card-title text-primary">${servicio.nombre}</h5>
+                        <p class="card-text">${servicio.descripcion}</p>
+                        <p><strong>Precio:</strong> $${servicio.precio}</p>
+                        <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
+                        <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
+
+                        
                      </div>
                      <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
                   </div>
