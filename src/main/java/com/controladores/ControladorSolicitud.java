@@ -74,31 +74,30 @@ public class ControladorSolicitud {
     }
 
     @GetMapping("/mis-solicitudes-enviadas")
-public ModelAndView verMisSolicitudesEnviadas(HttpSession session) {
-    Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-    if (usuarioEnSesion == null) {
-        return new ModelAndView("redirect:/login");
+    public ModelAndView verMisSolicitudesEnviadas(HttpSession session) {
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+        if (usuarioEnSesion == null) {
+            return new ModelAndView("redirect:/login");
+        }
+
+        List<Solicitud> solicitudesEnviadas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion);
+
+        ModelAndView mav = new ModelAndView("misSolicitudesEnviadas.jsp");
+
+        // Map para almacenar si cada solicitud tiene un chat existente
+        Map<Long, Boolean> chatsCreados = new HashMap<>();
+
+        for (Solicitud solicitud : solicitudesEnviadas) {
+            // Verificar si ya existe un chat para la solicitud
+            boolean isChatCreated = repositorioChat.findBySolicitudId(solicitud.getId()) != null;
+            chatsCreados.put(solicitud.getId(), isChatCreated);
+        }
+
+        mav.addObject("solicitudes", solicitudesEnviadas);
+        mav.addObject("chatsCreados", chatsCreados);
+
+        return mav;
     }
-
-    List<Solicitud> solicitudesEnviadas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion);
-
-    ModelAndView mav = new ModelAndView("misSolicitudesEnviadas.jsp");
-
-    // Map para almacenar si cada solicitud tiene un chat existente
-    Map<Long, Boolean> chatsCreados = new HashMap<>();
-
-    for (Solicitud solicitud : solicitudesEnviadas) {
-        // Verificar si ya existe un chat para la solicitud
-        boolean isChatCreated = repositorioChat.findBySolicitudId(solicitud.getId()) != null;
-        chatsCreados.put(solicitud.getId(), isChatCreated);
-    }
-
-    mav.addObject("solicitudes", solicitudesEnviadas);
-    mav.addObject("chatsCreados", chatsCreados);
-
-    return mav;
-}
-
 
     @GetMapping("/mis-solicitudes-recibidas")
     public ModelAndView verMisSolicitudesRecibidas(HttpSession session) {
