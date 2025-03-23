@@ -48,7 +48,6 @@
                                 <form:errors path="email" class="text-danger" />
                             </div>
                             <div class="input-group">
-                                <label for="fotoPerfil">Foto de Perfil:</label>
                                 <form:label path="fotoPerfilArchivo">Foto de Perfil:</form:label>
                                 <form:input path="fotoPerfilArchivo" type="file" accept="image/*" />
                                 <form:errors path="fotoPerfilArchivo" class="text-danger" />
