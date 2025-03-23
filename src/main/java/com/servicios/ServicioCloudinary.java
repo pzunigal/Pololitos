@@ -20,6 +20,7 @@ public class ServicioCloudinary {
      * Sube un archivo a Cloudinary, mantiene el formato original si es válido (jpg/jpeg/png),
      * y convierte a jpg si es de otro tipo (heic, webp, etc).
      */
+    @SuppressWarnings("unchecked")
     public String subirArchivo(MultipartFile archivo, String carpeta) throws IOException {
         String originalFilename = archivo.getOriginalFilename();
         String extension = obtenerExtension(originalFilename).toLowerCase(Locale.ROOT);

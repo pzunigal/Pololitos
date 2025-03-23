@@ -151,6 +151,17 @@
 
     mensajeForm.addEventListener("submit", function(e) {
         e.preventDefault();
+        enviarMensaje();
+    });
+
+    mensajeInput.addEventListener("keydown", function(e) {
+        if (e.key === "Enter" && !e.shiftKey) {
+            e.preventDefault(); // Evita el salto de línea
+            enviarMensaje();
+        }
+    });
+
+    function enviarMensaje() {
         const contenido = mensajeInput.value.trim();
         if (contenido !== "") {
             const nuevoMensaje = {
@@ -162,7 +173,7 @@
             mensajesRef.push(nuevoMensaje);
             mensajeInput.value = "";
         }
-    });
+    }
 </script>
 </body>
 </html>
