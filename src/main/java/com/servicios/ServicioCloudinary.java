@@ -1,63 +1,46 @@
-/* package com.servicios;
+package com.servicios; // Asegúrate que este sea el paquete correcto
+
+import com.cloudinary.Cloudinary;
+import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import com.cloudinary.Cloudinary;
-import com.cloudinary.utils.ObjectUtils;
 
 @Service
 public class ServicioCloudinary {
 
-    private final Cloudinary cloudinary;
+    @Autowired
+    private Cloudinary cloudinary;
 
-    public ServicioCloudinary(@Value("${cloudinary.cloud_name}") String cloudName,
-                              @Value("${cloudinary.api_key}") String apiKey,
-                              @Value("${cloudinary.api_secret}") String apiSecret) {
-        this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", cloudName,
-            "api_key", apiKey,
-            "api_secret", apiSecret,
-            "secure", true));
+    public String subirArchivo(MultipartFile archivo, String carpeta) throws IOException {
+        Map<String, Object> params = ObjectUtils.asMap("folder", carpeta);
+        Map<?, ?> resultado = cloudinary.uploader().upload(archivo.getBytes(), params);
+        return resultado.get("secure_url").toString();
     }
 
-    public String uploadFile(MultipartFile file) {
+    public void eliminarArchivo(String urlImagen) {
+        String publicId = extraerPublicId(urlImagen);
         try {
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("El archivo está vacío");
-            }
-            
-            // Verificar si el tipo de archivo es una imagen
-            String contentType = file.getContentType();
-            if (contentType == null || !contentType.startsWith("image/")) {
-                throw new IllegalArgumentException("El archivo debe ser una imagen");
-            }
-
-            // Verificar las extensiones de la imagen
-            String fileName = file.getOriginalFilename().toLowerCase();
-            if (!(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png"))) {
-                throw new IllegalArgumentException("El archivo debe ser JPG, JPEG o PNG");
-            }
-
-            // Parametros para subir el archivo a Cloudinary
-            Map<String, Object> uploadParams = ObjectUtils.asMap(
-                "folder", "servicios",
-                "resource_type", "image",
-                "use_filename", true,
-                "unique_filename", false
-            );
-
-            // Subir el archivo a Cloudinary
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), uploadParams);
-            return (String) uploadResult.get("secure_url");
-
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
         } catch (IOException e) {
-            throw new RuntimeException("Error al subir la imagen a Cloudinary", e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Error en los parámetros de la imagen: " + e.getMessage(), e);
+            e.printStackTrace();
+        }
+    }
+
+    private String extraerPublicId(String url) {
+        // Extrae el public_id de una URL como: https://res.cloudinary.com/tu_cloud/image/upload/v1234567890/servicios/archivo.jpg
+        try {
+            String sinExtension = url.substring(0, url.lastIndexOf('.')); // quita .jpg o .png
+            int indexFolder = sinExtension.indexOf("/servicios/");
+            if (indexFolder == -1) {
+                throw new IllegalArgumentException("URL no contiene el path esperado /servicios/");
+            }
+            return sinExtension.substring(indexFolder + 1); // devuelve "servicios/archivo"
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudo extraer el public_id desde la URL: " + url, e);
         }
     }
 }
- */

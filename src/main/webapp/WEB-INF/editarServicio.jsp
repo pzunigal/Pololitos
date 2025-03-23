@@ -24,7 +24,7 @@
       <main>
          <div class="form-container">
             <h1>Editar Servicio</h1>
-            <form action="/actualizar-servicio/${servicio.id}" method="post">
+            <form action="/actualizar-servicio/${servicio.id}" method="post" enctype="multipart/form-data">
                <input type="hidden" name="_method" value="PATCH">
 
                <label for="nombre">Nombre</label>
@@ -51,8 +51,11 @@
                      </option>
                   </c:forEach>
                </select>
-               <label for="imgUrl">URL de la imagen</label>
-               <input type="text" id="imgUrl" name="imgUrl" value="${servicio.imgUrl}" required>
+               <label for="imagen">Imagen actual</label>
+               <img src="${servicio.imgUrl}" alt="Imagen actual" style="max-width: 200px; display:block; margin-bottom: 10px;">
+            
+               <label for="imagen">Nueva imagen (opcional)</label>
+               <input type="file" id="imagen" name="imagen" accept="image/png, image/jpeg, image/jpg">
                <div class="button-group">
                   <button type="submit" class="btn">Actualizar Servicio</button>
                   <a href="/mis-servicios" class="btn-secondary">Volver</a>
