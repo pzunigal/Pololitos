@@ -10,7 +10,7 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
-public class FileUploadService {
+public class ServicioSubirArchivo {
 
     @Autowired
     private Cloudinary cloudinary;
@@ -18,6 +18,7 @@ public class FileUploadService {
     public String uploadFile(MultipartFile file, String carpetaDestino) throws IOException {
         if (file.isEmpty()) return null;
 
+        @SuppressWarnings("rawtypes")
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
                 "folder", carpetaDestino // ahora puedes especificar cualquier carpeta desde el backend
         ));
