@@ -1,5 +1,6 @@
 package com.controladores;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,10 +10,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.modelos.LoginUsuario;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
+import com.servicios.ServicioCloudinary;
 import com.servicios.ServicioServicios;
 import com.servicios.ServicioUsuarios;
 
@@ -28,6 +32,9 @@ public class ControladorUsuarios {
 	@Autowired
 	private ServicioServicios servicioServicios;
 
+	@Autowired
+	private ServicioCloudinary servicioCloudinary;
+
 	@GetMapping("/registro")
 	public String mostrarRegistro(Model model) {
 		model.addAttribute("nuevoUsuario", new Usuario()); // Agregar el atributo al modelo
@@ -35,20 +42,33 @@ public class ControladorUsuarios {
 	}
 
 	@PostMapping("/registro")
-	public String registro(@Valid @ModelAttribute("nuevoUsuario") Usuario nuevoUsuario,
-			BindingResult result,
-			HttpSession session) {
-		servicioUsuarios.registrarUsuario(nuevoUsuario, result);
+public String registro(@Valid @ModelAttribute("nuevoUsuario") Usuario nuevoUsuario,
+                       BindingResult result,
+                       HttpSession session) {
+    System.out.println("===> Iniciando registro con MultipartFile dentro del modelo Usuario");
 
-		if (result.hasErrors()) {
-			return "registro.jsp";
-		} else {
-			// Guardo al nuevo usuario en sesión
-			session.setAttribute("usuarioEnSesion", nuevoUsuario);
-			return "redirect:/";
-		}
+    if (nuevoUsuario.getFotoPerfilArchivo() != null && !nuevoUsuario.getFotoPerfilArchivo().isEmpty()) {
+        try {
+            String url = servicioCloudinary.subirArchivo(nuevoUsuario.getFotoPerfilArchivo(), "profile-images");
+            nuevoUsuario.setFotoPerfil(url);
+            System.out.println("✅ Imagen subida: " + url);
+        } catch (IOException e) {
+            result.rejectValue("fotoPerfilArchivo", "error", "Error al subir la imagen de perfil.");
+        }
+    } else {
+        System.out.println("⚠️ No se subió imagen de perfil.");
+    }
 
-	}
+    Usuario usuarioGuardado = servicioUsuarios.registrarUsuario(nuevoUsuario, result);
+
+    if (result.hasErrors()) {
+        return "registro.jsp";
+    }
+
+    session.setAttribute("usuarioEnSesion", usuarioGuardado);
+    return "redirect:/";
+}
+
 
 	@GetMapping("/login")
 	public String login(Model model) {

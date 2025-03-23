@@ -4,64 +4,66 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
 @Entity
-@Table(name="usuarios")
+@Table(name = "usuarios")
 public class Usuario {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @NotBlank(message="Por favor, proporciona tu nombre")
-    @Size(min=3, message="El nombre debe tener al menos 3 caracteres")
+
+    @NotBlank(message = "Por favor, proporciona tu nombre")
+    @Size(min = 3, message = "El nombre debe tener al menos 3 caracteres")
     private String nombre;
-    
-    @NotBlank(message="Por favor, proporciona tu apellido")
-    @Size(min=3, message="El apellido debe tener al menos 3 caracteres")
+
+    @NotBlank(message = "Por favor, proporciona tu apellido")
+    @Size(min = 3, message = "El apellido debe tener al menos 3 caracteres")
     private String apellido;
-    
-    @NotBlank(message="Por favor, ingresa un correo válido")
+
+    @NotBlank(message = "Por favor, ingresa un correo válido")
     @Email()
     private String email;
-    
-    @NotBlank(message="Por favor, ingresa una contraseña")
-    @Size(min=8, message="La contraseña debe tener al menos 8 caracteres")
-    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", 
-             message = "La contraseña necesita incluir al menos una letra mayúscula, una letra minúscula y un número")
+
+    @NotBlank(message = "Por favor, ingresa una contraseña")
+    @Size(min = 8, message = "La contraseña debe tener al menos 8 caracteres")
+    @Pattern(regexp = "^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z]).{8,}$", message = "La contraseña necesita incluir al menos una letra mayúscula, una letra minúscula y un número")
     private String password;
-    
-    @Transient 
+
+    @Transient
     private String confirmacion;
-    
-    @Pattern(regexp = "^(https?|ftp)://.*\\.(jpg|jpeg|png)$", 
-             message = "La imagen debe ser un enlace válido y en formato JPG, JPEG o PNG")
-    @NotBlank(message="Por favor, ingresa una foto de perfil")
-    private String fotoPerfil;
-    
-    @NotBlank(message="Por favor, ingresa un teléfono válido")
-    @Pattern(regexp = "\\d{9,15}", message="El número de teléfono debe contener entre 9 y 15 dígitos")
+
+    @Column(name = "foto_perfil")
+    private String fotoPerfil; // URL de la imagen subida
+
+    @Transient
+    private MultipartFile fotoPerfilArchivo; // archivo subido en el formulario
+
+    @NotBlank(message = "Por favor, ingresa un teléfono válido")
+    @Pattern(regexp = "\\d{9,15}", message = "El número de teléfono debe contener entre 9 y 15 dígitos")
     private String telefono;
 
-    @NotBlank(message="Por favor, ingresa una ciudad")
-    @Size(min=3, message="La ciudad debe tener al menos 3 caracteres")
+    @NotBlank(message = "Por favor, ingresa una ciudad")
+    @Size(min = 3, message = "La ciudad debe tener al menos 3 caracteres")
     private String ciudad;
 
     // Relación con servicios ofrecidos
     @OneToMany(mappedBy = "usuario", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Servicio> serviciosOfrecidos;
-    
-    @Column(updatable=false)
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+
+    @Column(updatable = false)
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date createdAt;
-    
-    @DateTimeFormat(pattern="yyyy-MM-dd")
+
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date updatedAt;
 
-    public Usuario() {}
+    public Usuario() {
+    }
 
     public Long getId() {
         return id;
@@ -158,4 +160,12 @@ public class Usuario {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
+    public MultipartFile getFotoPerfilArchivo() {
+        return fotoPerfilArchivo;
+    }
+    
+    public void setFotoPerfilArchivo(MultipartFile fotoPerfilArchivo) {
+        this.fotoPerfilArchivo = fotoPerfilArchivo;
+    }
+    
 }
