@@ -1,13 +1,11 @@
 package com.controladores;
 
-
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-
 
 import com.modelos.Categoria;
 import com.modelos.Servicio;
@@ -32,12 +30,11 @@ public class ControladorHome {
 
         // Obtener usuario en sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-    
+
         // Pasar datos al modelo
         model.addAttribute("usuarioSesion", usuarioEnSesion); // Se envía el usuario en sesión
         return "home.jsp";
     }
-
 
     @GetMapping("/contacto")
     public String contacto() {

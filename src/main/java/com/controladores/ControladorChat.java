@@ -1,13 +1,12 @@
 package com.controladores;
 
 import com.modelos.Chat;
-import com.modelos.Mensaje;
 import com.modelos.Solicitud;
+import com.modelos.Usuario;
 import com.servicios.ServicioChat;
 import com.servicios.ServicioSolicitud;
 
 import jakarta.servlet.http.HttpSession;
-import com.modelos.Usuario;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,117 +22,98 @@ import java.util.concurrent.CompletableFuture;
 public class ControladorChat {
 
     @Autowired
-    private ServicioChat servicioChat;
+    private ServicioChat servicioChat; // Inyección del servicio para gestionar chats
 
     @Autowired
-    private ServicioSolicitud servicioSolicitud;
+    private ServicioSolicitud servicioSolicitud; // Inyección del servicio para gestionar solicitudes
 
+    // Maneja la continuación de una conversación existente
     @PostMapping("/continuar")
     public String continuarConversacion(@RequestParam("solicitudId") Long solicitudId, HttpSession session) {
-        // Obtener usuario en sesión
+        // Obtener el usuario autenticado desde la sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuarioEnSesion == null) {
-            return "redirect:/login"; // Redirigir si no hay usuario en sesión
+            // Si no hay usuario en sesión, redirigir al login
+            return "redirect:/login";
         }
-    
-        // Verificar si la conversación existe
+
+        // Verificar si ya existe un chat relacionado con la solicitud
         if (!servicioChat.existeConversacion(solicitudId)) {
-            return "redirect:/mis-solicitudes-recibidas"; // Redirigir si la conversación no existe
+            // Si no existe, redirigir a la lista de solicitudes recibidas
+            return "redirect:/mis-solicitudes-recibidas";
         }
-    
-        // Obtener el chat asociado a la solicitud
+
+        // Recuperar el chat existente desde el servicio
         Chat chatExistente = servicioChat.getChatBySolicitudId(solicitudId);
         if (chatExistente == null) {
+            // Si no se encuentra el chat, redirigir a la página de error
             return "redirect:/error?mensaje=Chat no encontrado";
         }
-    
-        // Redirigir a la vista del chat usando el chatId correcto
+
+        // Redirigir a la vista del chat correspondiente
         return "redirect:/chat/ver/" + chatExistente.getId();
     }
-    
 
-    // Método para crear una nueva conversación
+    // Crea una nueva conversación de chat
     @PostMapping("/crear")
     public String crearChat(@RequestParam Long solicitanteId, @RequestParam Long solicitudId, HttpSession session) {
         try {
-            // Crear un objeto de tipo Chat
+            // Crear un nuevo objeto Chat y establecer atributos clave
             Chat chat = new Chat();
             chat.setSolicitanteId(solicitanteId);
             chat.setSolicitudId(solicitudId);
-            chat.setFechaCreacion(new Date().getTime()); // Establecer la fecha de creación como timestamp
+            chat.setFechaCreacion(new Date().getTime()); // Guardar timestamp actual como fecha de creación
 
-            // Guardar el chat usando el servicio
-            Chat createdChat = servicioChat.createChat(chat); // Usar el servicio para crear el chat
+            // Persistir el nuevo chat en Firebase o base de datos
+            Chat createdChat = servicioChat.createChat(chat);
 
-            // Actualizar el estado de la solicitud a "Leído"
+            // Actualizar el estado de la solicitud relacionada a "Leído"
             Solicitud solicitud = servicioSolicitud.getSolicitudById(solicitudId);
             if (solicitud != null) {
                 solicitud.setEstado("Leído");
-                servicioSolicitud.guardarSolicitud(solicitud); // Guardar la solicitud con el nuevo estado
+                servicioSolicitud.guardarSolicitud(solicitud); // Guardar cambios en la solicitud
             }
 
-            // Agregar la variable que indica que el chat fue creado
+            // Marcar en sesión que el chat fue creado para esa solicitud (bandera para lógica futura)
             session.setAttribute("isChatCreated_" + solicitudId, true);
 
-            // Redirigir a la vista del chat con el ID creado
+            // Redirigir al usuario a la vista del nuevo chat
             return "redirect:/chat/ver/" + createdChat.getId();
         } catch (Exception e) {
+            // En caso de error, redirigir a la vista de error con el mensaje correspondiente
             return "redirect:/error?mensaje=" + e.getMessage();
         }
     }
 
+    // Carga la vista del chat con sus mensajes y metadatos
     @GetMapping("/ver/{chatId}")
-public String verChat(@PathVariable String chatId, Model model) {
-    try {
-        // Esperar a que el CompletableFuture se resuelva y obtener el Chat
-        CompletableFuture<Chat> chatFuture = servicioChat.getChat(chatId);
-        Chat chat = chatFuture.join(); // Bloquea hasta que obtenga el resultado
+    public String verChat(@PathVariable String chatId, Model model) {
+        try {
+            // Obtener el chat desde el servicio de forma asíncrona y esperar resultado
+            CompletableFuture<Chat> chatFuture = servicioChat.getChat(chatId);
+            Chat chat = chatFuture.join(); // Bloquea hasta que se reciba la respuesta
 
-        if (chat == null) {
-            System.out.println("❌ Chat no encontrado para ID: " + chatId);
-            return "redirect:/error?mensaje=Chat no encontrado";
-        }
-
-        // 🛠️ LOG: Mostrar información general del chat
-        System.out.println("📨 Accediendo al chat con ID: " + chatId);
-        System.out.println("👥 Solicitante ID: " + chat.getSolicitanteId());
-        System.out.println("📅 Fecha de creación (timestamp): " + chat.getFechaCreacion());
-        System.out.println("🧵 Nombre del chat: " + chat.getNombre());
-
-        // 🛠️ LOG: Mostrar mensajes del chat (si hay)
-        if (chat.getMensajes() != null && !chat.getMensajes().isEmpty()) {
-            System.out.println("💬 Mensajes del chat:");
-            for (Mensaje m : chat.getMensajes()) {
-                String contenido = m.getContenido() != null ? m.getContenido() : "[sin contenido]";
-                String autor = m.getNombreUsuario() != null ? m.getNombreUsuario() : "[desconocido]";
-                String fecha = (m.getCreatedAt() != null) ? m.getCreatedAt().toString() : "[fecha nula]";
-                System.out.println("   🗨️ " + autor + ": " + contenido + " (" + fecha + ")");
-                if (m.getCreatedAt() != null) {
-                    System.out.println("   🕒 Tipo de createdAt: " + m.getCreatedAt().getClass().getName());
-                }
+            // Validar si el chat fue encontrado
+            if (chat == null) {
+                return "redirect:/error?mensaje=Chat no encontrado";
             }
-        } else {
-            System.out.println("📭 No hay mensajes en este chat.");
+
+            // Formatear la fecha de creación del chat para mostrarla en la vista
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
+            String formattedDate = dateFormat.format(new Date(chat.getFechaCreacion()));
+
+            // Cargar atributos necesarios al modelo para ser utilizados en la vista JSP
+            model.addAttribute("chat", chat); // Objeto Chat completo
+            model.addAttribute("fechaCreacionFormateada", formattedDate); // Fecha formateada
+            model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>()); // Lista de mensajes
+            model.addAttribute("chatId", chatId); // ID del chat
+            model.addAttribute("solicitanteId", chat.getSolicitanteId()); // ID del usuario solicitante
+
+            // Retornar nombre de la vista JSP que se renderizará
+            return "chat.jsp";
+        } catch (Exception e) {
+            // En caso de excepción, redirigir a la página de error
+            return "redirect:/error?mensaje=No se pudo cargar el chat";
         }
-
-        // Formatear la fecha para mostrar en la vista
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
-        String formattedDate = dateFormat.format(new Date(chat.getFechaCreacion()));
-
-        // Cargar datos al modelo para JSP
-        model.addAttribute("chat", chat);
-        model.addAttribute("fechaCreacionFormateada", formattedDate);
-        model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
-        model.addAttribute("chatId", chatId);
-        model.addAttribute("solicitanteId", chat.getSolicitanteId());
-
-        return "chat.jsp"; // Renderiza la vista
-    } catch (Exception e) {
-        System.out.println("🚨 Error al cargar el chat: " + e.getMessage());
-        e.printStackTrace();
-        return "redirect:/error?mensaje=No se pudo cargar el chat";
     }
-}
-
-
 }

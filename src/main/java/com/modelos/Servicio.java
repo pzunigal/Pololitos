@@ -34,7 +34,6 @@ public class Servicio {
 	@Column(nullable = false)
 	private Date fechaPublicacion = new Date();
 
-	@NotBlank(message = "Por favor, suba una imagen del servicio")
 	private String imgUrl;
 
 	@ManyToOne
