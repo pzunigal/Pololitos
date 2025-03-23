@@ -159,7 +159,7 @@ public class ControladorUsuarios {
 			return "editarUsuario.jsp";
 		}
 
-		// 🔄 Si hay nueva imagen, procesarla
+		//  Si hay nueva imagen, procesarla
 		if (nuevaImagen != null && !nuevaImagen.isEmpty()) {
 			try {
 				// 🧹 Eliminar anterior solo si era de Cloudinary
@@ -176,7 +176,7 @@ public class ControladorUsuarios {
 			}
 		}
 
-		// ✏️ Actualizar otros datos
+		//  Actualizar otros datos
 		usuarioEnSesion.setNombre(usuario.getNombre());
 		usuarioEnSesion.setApellido(usuario.getApellido());
 		usuarioEnSesion.setTelefono(usuario.getTelefono());
