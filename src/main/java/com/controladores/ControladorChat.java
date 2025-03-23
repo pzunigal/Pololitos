@@ -74,13 +74,15 @@ public class ControladorChat {
                 servicioSolicitud.guardarSolicitud(solicitud); // Guardar cambios en la solicitud
             }
 
-            // Marcar en sesión que el chat fue creado para esa solicitud (bandera para lógica futura)
+            // Marcar en sesión que el chat fue creado para esa solicitud (bandera para
+            // lógica futura)
             session.setAttribute("isChatCreated_" + solicitudId, true);
 
             // Redirigir al usuario a la vista del nuevo chat
             return "redirect:/chat/ver/" + createdChat.getId();
         } catch (Exception e) {
-            // En caso de error, redirigir a la vista de error con el mensaje correspondiente
+            // En caso de error, redirigir a la vista de error con el mensaje
+            // correspondiente
             return "redirect:/error?mensaje=" + e.getMessage();
         }
     }
@@ -105,7 +107,9 @@ public class ControladorChat {
             // Cargar atributos necesarios al modelo para ser utilizados en la vista JSP
             model.addAttribute("chat", chat); // Objeto Chat completo
             model.addAttribute("fechaCreacionFormateada", formattedDate); // Fecha formateada
-            model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>()); // Lista de mensajes
+            model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>()); // Lista
+                                                                                                                 // de
+                                                                                                                 // mensajes
             model.addAttribute("chatId", chatId); // ID del chat
             model.addAttribute("solicitanteId", chat.getSolicitanteId()); // ID del usuario solicitante
 

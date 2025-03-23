@@ -52,12 +52,12 @@ public class ControladorUsuarios {
 			try {
 				String url = servicioCloudinary.subirArchivo(nuevoUsuario.getFotoPerfilArchivo(), "profile-images");
 				nuevoUsuario.setFotoPerfil(url);
-				System.out.println("✅ Imagen subida: " + url);
+				System.out.println(" Imagen subida: " + url);
 			} catch (IOException e) {
 				result.rejectValue("fotoPerfilArchivo", "error", "Error al subir la imagen de perfil.");
 			}
 		} else {
-			System.out.println("⚠️ No se subió imagen de perfil.");
+			System.out.println("No se subió imagen de perfil.");
 		}
 
 		Usuario usuarioGuardado = servicioUsuarios.registrarUsuario(nuevoUsuario, result);
@@ -159,15 +159,15 @@ public class ControladorUsuarios {
 			return "editarUsuario.jsp";
 		}
 
-		//  Si hay nueva imagen, procesarla
+		// Si hay nueva imagen, procesarla
 		if (nuevaImagen != null && !nuevaImagen.isEmpty()) {
 			try {
-				// 🧹 Eliminar anterior solo si era de Cloudinary
+				// Eliminar anterior solo si era de Cloudinary
 				if (usuarioEnSesion.getFotoPerfil() != null) {
 					servicioCloudinary.eliminarArchivo(usuarioEnSesion.getFotoPerfil());
 				}
 
-				// 📤 Subir nueva imagen
+				// Subir nueva imagen
 				String nuevaUrl = servicioCloudinary.subirArchivo(nuevaImagen, "profile-images");
 				usuarioEnSesion.setFotoPerfil(nuevaUrl);
 			} catch (IOException e) {
@@ -176,7 +176,7 @@ public class ControladorUsuarios {
 			}
 		}
 
-		//  Actualizar otros datos
+		// Actualizar otros datos
 		usuarioEnSesion.setNombre(usuario.getNombre());
 		usuarioEnSesion.setApellido(usuario.getApellido());
 		usuarioEnSesion.setTelefono(usuario.getTelefono());

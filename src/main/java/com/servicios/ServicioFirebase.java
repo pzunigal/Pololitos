@@ -6,12 +6,12 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.springframework.stereotype.Service;
 
 @Service
-public class FirebaseService {
+public class ServicioFirebase {
 
     private final DatabaseReference databaseReference;
 
     // Inyectamos FirebaseApp para asegurarnos de que esté inicializada
-    public FirebaseService(FirebaseApp firebaseApp) {
+    public ServicioFirebase(FirebaseApp firebaseApp) {
         this.databaseReference = FirebaseDatabase.getInstance(firebaseApp).getReference();
     }
 

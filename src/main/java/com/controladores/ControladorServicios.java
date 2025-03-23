@@ -18,7 +18,7 @@ import com.modelos.Categoria;
 import com.modelos.Resena;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
-import com.servicios.FileUploadService;
+import com.servicios.ServicioSubirArchivo;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioCloudinary;
 import com.servicios.ServicioResena;
@@ -43,7 +43,7 @@ public class ControladorServicios {
     @Autowired
     private ServicioResena servicioResena;
     @Autowired
-    private FileUploadService fileUploadService;
+    private ServicioSubirArchivo fileUploadService;
 
     @Autowired
     private ServicioCloudinary servicioCloudinary;
@@ -96,7 +96,7 @@ public class ControladorServicios {
             return "nuevoServicio.jsp";
         }
 
-        // 🔍 Aquí imprimimos los detalles del archivo recibido
+        //Aquí imprimimos los detalles del archivo recibido
         System.out.println("Nombre del archivo recibido: " + file.getOriginalFilename());
         System.out.println("Tamaño del archivo (bytes): " + file.getSize());
 
