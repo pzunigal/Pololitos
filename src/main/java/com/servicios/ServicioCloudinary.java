@@ -46,15 +46,14 @@ public class ServicioCloudinary {
     public void eliminarArchivo(String urlImagen) {
         try {
             if (!urlImagen.contains("/profile-images/") && !urlImagen.contains("/servicios/")) {
-                System.out.println("⚠️ Imagen externa detectada. No se elimina: " + urlImagen);
+                System.out.println("Imagen externa detectada. No se elimina: " + urlImagen);
                 return;
             }
-
             String publicId = extraerPublicId(urlImagen);
             cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-            System.out.println("🗑️ Imagen eliminada de Cloudinary: " + publicId);
+            System.out.println(" Imagen eliminada de Cloudinary: " + publicId);
         } catch (Exception e) {
-            System.out.println("❌ Error al eliminar imagen: " + e.getMessage());
+            System.out.println(" Error al eliminar imagen: " + e.getMessage());
             // No lanzamos excepción para evitar caída
         }
     }
