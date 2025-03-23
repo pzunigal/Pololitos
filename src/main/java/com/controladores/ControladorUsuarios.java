@@ -9,6 +9,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -42,33 +43,32 @@ public class ControladorUsuarios {
 	}
 
 	@PostMapping("/registro")
-public String registro(@Valid @ModelAttribute("nuevoUsuario") Usuario nuevoUsuario,
-                       BindingResult result,
-                       HttpSession session) {
-    System.out.println("===> Iniciando registro con MultipartFile dentro del modelo Usuario");
+	public String registro(@Valid @ModelAttribute("nuevoUsuario") Usuario nuevoUsuario,
+			BindingResult result,
+			HttpSession session) {
+		System.out.println("===> Iniciando registro con MultipartFile dentro del modelo Usuario");
 
-    if (nuevoUsuario.getFotoPerfilArchivo() != null && !nuevoUsuario.getFotoPerfilArchivo().isEmpty()) {
-        try {
-            String url = servicioCloudinary.subirArchivo(nuevoUsuario.getFotoPerfilArchivo(), "profile-images");
-            nuevoUsuario.setFotoPerfil(url);
-            System.out.println("✅ Imagen subida: " + url);
-        } catch (IOException e) {
-            result.rejectValue("fotoPerfilArchivo", "error", "Error al subir la imagen de perfil.");
-        }
-    } else {
-        System.out.println("⚠️ No se subió imagen de perfil.");
-    }
+		if (nuevoUsuario.getFotoPerfilArchivo() != null && !nuevoUsuario.getFotoPerfilArchivo().isEmpty()) {
+			try {
+				String url = servicioCloudinary.subirArchivo(nuevoUsuario.getFotoPerfilArchivo(), "profile-images");
+				nuevoUsuario.setFotoPerfil(url);
+				System.out.println("✅ Imagen subida: " + url);
+			} catch (IOException e) {
+				result.rejectValue("fotoPerfilArchivo", "error", "Error al subir la imagen de perfil.");
+			}
+		} else {
+			System.out.println("⚠️ No se subió imagen de perfil.");
+		}
 
-    Usuario usuarioGuardado = servicioUsuarios.registrarUsuario(nuevoUsuario, result);
+		Usuario usuarioGuardado = servicioUsuarios.registrarUsuario(nuevoUsuario, result);
 
-    if (result.hasErrors()) {
-        return "registro.jsp";
-    }
+		if (result.hasErrors()) {
+			return "registro.jsp";
+		}
 
-    session.setAttribute("usuarioEnSesion", usuarioGuardado);
-    return "redirect:/";
-}
-
+		session.setAttribute("usuarioEnSesion", usuarioGuardado);
+		return "redirect:/";
+	}
 
 	@GetMapping("/login")
 	public String login(Model model) {
@@ -129,42 +129,64 @@ public String registro(@Valid @ModelAttribute("nuevoUsuario") Usuario nuevoUsuar
 	}
 
 	@GetMapping("/editarPerfil")
-	public String editarPerfil(HttpSession session, @ModelAttribute("usuario") Usuario usuario) {
+	public String editarPerfil(HttpSession session, Model model) {
 		Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 
 		if (usuarioEnSesion == null) {
 			return "redirect:/login";
 		}
 
-		usuario.setNombre(usuarioEnSesion.getNombre());
-		usuario.setEmail(usuarioEnSesion.getEmail());
-		usuario.setTelefono(usuarioEnSesion.getTelefono());
+		// Pasamos el usuario actual a la vista como modelo completo
+		model.addAttribute("usuario", usuarioEnSesion);
 
 		return "editarUsuario.jsp";
 	}
 
-	@PostMapping("/actualizarPerfil")
-	public String actualizarPerfil(@Valid @ModelAttribute("usuario") Usuario usuario,
+	@PatchMapping("/actualizarPerfil")
+	@jakarta.transaction.Transactional
+	public String actualizarPerfil(
+			@ModelAttribute("usuario") Usuario usuario,
 			BindingResult result,
+			@RequestParam(value = "fotoPerfilArchivo", required = false) MultipartFile nuevaImagen,
 			HttpSession session) {
-		if (result.hasErrors()) {
-			return "editarUsuario.jsp";
-		}
 
 		Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 		if (usuarioEnSesion == null) {
 			return "redirect:/login";
 		}
 
-		// Actualizar los datos del usuario en sesión
+		if (result.hasErrors()) {
+			return "editarUsuario.jsp";
+		}
+
+		// 🔄 Si hay nueva imagen, procesarla
+		if (nuevaImagen != null && !nuevaImagen.isEmpty()) {
+			try {
+				// 🧹 Eliminar anterior solo si era de Cloudinary
+				if (usuarioEnSesion.getFotoPerfil() != null) {
+					servicioCloudinary.eliminarArchivo(usuarioEnSesion.getFotoPerfil());
+				}
+
+				// 📤 Subir nueva imagen
+				String nuevaUrl = servicioCloudinary.subirArchivo(nuevaImagen, "profile-images");
+				usuarioEnSesion.setFotoPerfil(nuevaUrl);
+			} catch (IOException e) {
+				result.rejectValue("fotoPerfilArchivo", "error", "Error al actualizar imagen de perfil.");
+				return "editarUsuario.jsp";
+			}
+		}
+
+		// ✏️ Actualizar otros datos
 		usuarioEnSesion.setNombre(usuario.getNombre());
-		usuarioEnSesion.setEmail(usuario.getEmail());
+		usuarioEnSesion.setApellido(usuario.getApellido());
 		usuarioEnSesion.setTelefono(usuario.getTelefono());
+		usuarioEnSesion.setCiudad(usuario.getCiudad());
 
+		// (Opcional: manejar password si agregas esa lógica)
 		servicioUsuarios.actualizarUsuario(usuarioEnSesion);
+		session.setAttribute("usuarioEnSesion", usuarioEnSesion);
 
-		session.setAttribute("usuarioEnSession", usuarioEnSesion);
-
-		return "redirect:/perfil";
+		return "redirect:/perfilUsuario";
 	}
+
 }

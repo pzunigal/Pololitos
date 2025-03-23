@@ -27,10 +27,8 @@ public class ServicioCloudinary {
         Map<String, Object> params;
 
         if (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png")) {
-            // Mantener el formato original
             params = ObjectUtils.asMap("folder", carpeta);
         } else {
-            // Convertir a JPG si el formato no es compatible
             params = ObjectUtils.asMap(
                 "folder", carpeta,
                 "format", "jpg"
@@ -42,14 +40,22 @@ public class ServicioCloudinary {
     }
 
     /**
-     * Elimina una imagen de Cloudinary dado su URL completa.
+     * Elimina una imagen de Cloudinary si pertenece a /profile-images/ o /servicios/.
+     * Ignora las imágenes externas o no gestionadas por Cloudinary.
      */
     public void eliminarArchivo(String urlImagen) {
-        String publicId = extraerPublicId(urlImagen);
         try {
+            if (!urlImagen.contains("/profile-images/") && !urlImagen.contains("/servicios/")) {
+                System.out.println("⚠️ Imagen externa detectada. No se elimina: " + urlImagen);
+                return;
+            }
+
+            String publicId = extraerPublicId(urlImagen);
             cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
-        } catch (IOException e) {
-            e.printStackTrace(); // Puedes usar un logger si prefieres
+            System.out.println("🗑️ Imagen eliminada de Cloudinary: " + publicId);
+        } catch (Exception e) {
+            System.out.println("❌ Error al eliminar imagen: " + e.getMessage());
+            // No lanzamos excepción para evitar caída
         }
     }
 
@@ -63,7 +69,7 @@ public class ServicioCloudinary {
             if (index == -1) index = sinExtension.indexOf("/servicios/");
             if (index == -1) throw new IllegalArgumentException("URL no válida: no contiene carpetas conocidas");
 
-            return sinExtension.substring(index + 1); // Ej: profile-images/abc123
+            return sinExtension.substring(index + 1);
         } catch (Exception e) {
             throw new RuntimeException("No se pudo extraer el public_id desde la URL: " + url, e);
         }
@@ -74,7 +80,7 @@ public class ServicioCloudinary {
      */
     private String obtenerExtension(String nombreArchivo) {
         if (nombreArchivo == null || !nombreArchivo.contains(".")) {
-            return ""; // extensión vacía si no hay punto
+            return "";
         }
         return nombreArchivo.substring(nombreArchivo.lastIndexOf('.') + 1);
     }
