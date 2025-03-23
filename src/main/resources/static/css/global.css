@@ -175,9 +175,6 @@ main {
     margin-right: 20px;
 }
 
-.card-body {
-}
-
 .card-body h5 {
     font-size: 1.5rem;
 }
@@ -186,6 +183,54 @@ main {
     font-size: 1rem;
 }
 
+.CardEnviarSolicitud {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    height: 400px;
+    max-height: 400px;
+    max-width: 900px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    transition: transform 0.3s ease;
+}
+
+.CardEnviarSolicitud form {
+    flex: 1;
+    min-width: 300px;
+}
+
+.CardEnviarSolicitud h5 {
+    font-size: 1.5rem;
+}
+
+.cardResena {
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    height: 400px;
+    width: 1050px;
+    max-height: 400px;
+    max-width: 1100px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    transition: transform 0.3s ease;
+}
+
+.cardResena h5 {
+    font-size: 1.5rem;
+}
+
+.cardResena form {
+    flex: 1;
+    min-width: 1000px;
+}
 
 /* row */
 
@@ -204,16 +249,9 @@ main {
 
 /* Cards */
 
-form {
-    flex: 1;
-    min-width: 300px;
-}
-
 form label {
-    display: block;
-    font-size: 1em;
-    margin-bottom: 5px;
-    color: #34495e;
+    color: #fff;
+    font-size: 1.2em;
 }
 
 form input,
@@ -228,7 +266,7 @@ form textarea {
 }
 
 form textarea {
-    resize: vertical;
+    /* resize: vertical; */
 }
 
 form button {
@@ -421,7 +459,6 @@ footer p {
 }
 
 .resenas-section .resena-item {
-    margin-bottom: 25px;
 }
 .modal {
     position: fixed;
@@ -434,6 +471,59 @@ footer p {
     justify-content: center;
     align-items: center;
     z-index: 9999;
+}
+
+.cardListaResenas {
+    margin: 20px 0px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    height: 400px;
+    width: 1050px;
+    max-height: 400px;
+    max-width: 1100px;
+    border-radius: 10px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 0 20px;
+    transition: transform 0.3s ease;
+}
+
+.cardListaResenas h5 {
+    font-size: 1.5rem;
+}
+
+.cardListaResenas p {
+    flex: 1;
+    min-width: 1000px;
+}
+
+.cardListaResenas form {
+    flex: 1;
+    min-width: 1000px;
+}
+
+.cardListaResenas form label {
+    color: #fff;
+    font-size: 1.2em;
+}
+
+.filaBotones button {
+    background-color: #3498db;
+    color: #fff;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.filaBotones {
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .modal-content {

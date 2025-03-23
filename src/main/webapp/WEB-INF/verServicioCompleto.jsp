@@ -167,22 +167,17 @@
                   </div>
                </div>
             </div>
-            <div class="col-md-6">
-               <div class="card">
-                  <div class="card-body">
-                     <h5 class="card-title">Enviar Solicitud</h5>
+               <div class="CardEnviarSolicitud">
+                     <h5>Enviar Solicitud</h5>
                      <form action="${pageContext.request.contextPath}/crear-solicitud" method="post">
-                        <div class="form-group">
-                           <textarea class="form-control" name="mensaje"
+                        <div>
+                           <textarea name="mensaje"
                               placeholder="Escribe aqui un mensaje..." required></textarea>
                         </div>
                         <input type="hidden" name="servicioId" value="<c:out value='${servicio.id}'/>" />
-                        <button type="submit" class="btn btn-primary mt-3">Enviar
-                           Solicitud</button>
+                        <button type="submit">Enviar Solicitud</button>
                      </form>
-                  </div>
                </div>
-            </div>
          </div>
       </c:otherwise>
       </c:choose>
@@ -190,77 +185,72 @@
       </div>
       <!-- Formulario de reseña -->
       <c:if test="${not isAuthorInSesion}">
-         <div class="card mb-4">
-            <div class="card-body">
-               <h5 class="mb-3">Deja tu reseña</h5>
-               <form action="${pageContext.request.contextPath}/publicar-resena" method="post">
-                  <input type="hidden" name="servicioId" value="${servicio.id}" />
-                  <div class="form-group star-rating mb-3">
-                     <label class="form-label">Calificación:</label>
-                     <div class="stars">
-                        <input type="radio" id="star5" name="calificacion" value="5" required />
-                        <label for="star5" class="star">&#9733;</label>
-                        <input type="radio" id="star4" name="calificacion" value="4" />
-                        <label for="star4" class="star">&#9733;</label>
-                        <input type="radio" id="star3" name="calificacion" value="3" />
-                        <label for="star3" class="star">&#9733;</label>
-                        <input type="radio" id="star2" name="calificacion" value="2" />
-                        <label for="star2" class="star">&#9733;</label>
-                        <input type="radio" id="star1" name="calificacion" value="1" />
-                        <label for="star1" class="star">&#9733;</label>
-                     </div>
+         <div class="cardResena">
+            <h5>Deja tu Comentario del Servicio</h5>
+            <form action="${pageContext.request.contextPath}/publicar-resena" method="post">
+               <input type="hidden" name="servicioId" value="${servicio.id}" />
+               <div class="form-group star-rating mb-3">
+                  <label class="form-label">Calificacion:</label>
+                  <div class="stars">
+                     <input type="radio" id="star5" name="calificacion" value="5" required />
+                     <label for="star5" class="star">&#9733;</label>
+                     <input type="radio" id="star4" name="calificacion" value="4" />
+                     <label for="star4" class="star">&#9733;</label>
+                     <input type="radio" id="star3" name="calificacion" value="3" />
+                     <label for="star3" class="star">&#9733;</label>
+                     <input type="radio" id="star2" name="calificacion" value="2" />
+                     <label for="star2" class="star">&#9733;</label>
+                     <input type="radio" id="star1" name="calificacion" value="1" />
+                     <label for="star1" class="star">&#9733;</label>
                   </div>
-                  <div class="form-group mb-3">
-                     <label for="comentario">Comentario:</label>
-                     <textarea name="comentario" rows="3" class="form-control"
-                        placeholder="Escribe tu opinión..."></textarea>
-                  </div>
-                  <button type="submit" class="btn btn-success">Enviar reseña</button>
-               </form>
-            </div>
+               </div>
+               <div class="form-group mb-3">
+                  <label for="comentario">Comentario:</label>
+                  <textarea name="comentario" rows="3" class="form-control"
+                     placeholder="Escribe tu comentario..."></textarea>
+               </div>
+               <button type="submit" class="btn btn-success">Enviar Comentario</button>
+            </form>
          </div>
       </c:if>
       <!-- Lista de reseñas -->
-      <div class="card">
-         <div class="card-body">
-            <h5 class="mb-3">Calificaciones recientes</h5>
-            <c:forEach var="resena" items="${resenas}">
-               <div class="resena-item mb-3">
-                  <p class="mb-1">
-                     <strong>${resena.usuario.nombre}</strong>
-                     <span class="estrellas-user">
-                        <c:forEach begin="1" end="5" var="i">
-                           <c:choose>
-                              <c:when test="${i <= resena.calificacion}">
-                                 <span class="star filled">&#9733;</span>
-                              </c:when>
-                              <c:otherwise>
-                                 <span class="star">&#9733;</span>
-                              </c:otherwise>
-                           </c:choose>
-                        </c:forEach>
-                     </span>
-                  </p>
-                  <c:if test="${not empty resena.comentario}">
-                     <p class="resena-comentario">${resena.comentario}</p>
-                     <c:if test="${sessionScope.usuarioEnSesion.id == resena.usuario.id}">
+      <div class="cardListaResenas">
+         <h5 >Calificaciones recientes</h5>
+         <c:forEach var="resena" items="${resenas}">
+               <p class="mb-1">
+                  <strong>${resena.usuario.nombre}</strong>
+                  <span class="estrellas-user">
+                     <c:forEach begin="1" end="5" var="i">
+                        <c:choose>
+                           <c:when test="${i <= resena.calificacion}">
+                              <span class="star filled">&#9733;</span>
+                           </c:when>
+                           <c:otherwise>
+                              <span class="star">&#9733;</span>
+                           </c:otherwise>
+                        </c:choose>
+                     </c:forEach>
+                  </span>
+               </p>
+               <c:if test="${not empty resena.comentario}">
+                  <p class="resena-comentario">${resena.comentario}</p>
+                  <c:if test="${sessionScope.usuarioEnSesion.id == resena.usuario.id}">
+                     <div class="filaBotones">
                         <form action="${pageContext.request.contextPath}/resena/eliminar" method="post"
-                           style="display:inline;">
-                           <input type="hidden" name="resenaId" value="${resena.id}" />
-                           <button type="submit" class="btn btn-danger btn-sm" title="Eliminar">
-                              <i class="fas fa-trash"></i>Eliminar
-                           </button>
+                        style="display:inline;">
+                        <input type="hidden" name="resenaId" value="${resena.id}" />
+                        <button type="submit" title="Eliminar">Eliminar</button>
                         </form>
-                        <button type="button" class="btn btn-warning btn-sm" title="Editar"
+                        <button type="button" title="Editar"
                            onclick="mostrarModalEditar(${resena.id}, ${resena.calificacion}, \'${fn:escapeXml(resena.comentario)}\')">
                            <i class="fas fa-edit"></i>Editar
                         </button>
-                     </c:if>
+                     </div>
                   </c:if>
-                  <hr style="border-color: #777;">
-               </div>
-            </c:forEach>
-         </div>
+               </c:if>
+               <hr style="border-color: #777;">
+            
+         </c:forEach>
       </div>
       </section>
    </main>
