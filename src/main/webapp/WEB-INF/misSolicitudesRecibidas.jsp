@@ -102,7 +102,7 @@
                                  <c:when test="${chatsCreados[solicitud.id]}">
                                     <form action="/chat/continuar" method="post">
                                        <input type="hidden" name="solicitudId" value="${solicitud.id}">
-                                       <button type="submit">Continuar Chat</button>
+                                       <button type="submit" class="ContinuarChatButton">Continuar Chat</button>
                                     </form>
                                  </c:when>
                                  <c:otherwise>
