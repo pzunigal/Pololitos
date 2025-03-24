@@ -81,32 +81,21 @@ public class ControladorServicios {
             return "redirect:/login";
 
         if (result.hasErrors()) {
-            System.out.println("Errores en validación del formulario:");
-            result.getFieldErrors().forEach(
-                    err -> System.out.println("Campo: " + err.getField() + " - Error: " + err.getDefaultMessage()));
             model.addAttribute("error", "Existen errores en los campos del formulario.");
             cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
         }
 
         if (file.isEmpty()) {
-            System.out.println("Archivo vacío recibido");
             model.addAttribute("error", "Debe subir una imagen.");
             cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
         }
 
-        // Aquí imprimimos los detalles del archivo recibido
-        System.out.println("Nombre del archivo recibido: " + file.getOriginalFilename());
-        System.out.println("Tamaño del archivo (bytes): " + file.getSize());
-
         try {
-            System.out.println("Intentando subir archivo a Cloudinary...");
             String urlImagen = fileUploadService.uploadFile(file, "servicios");
-            System.out.println("Imagen subida con éxito: " + urlImagen);
             servicio.setImgUrl(urlImagen);
         } catch (Exception e) {
-            e.printStackTrace(); // log completo en consola
             model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
             cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
