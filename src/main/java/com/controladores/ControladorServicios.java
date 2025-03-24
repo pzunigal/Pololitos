@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.modelos.Categoria;
 import com.modelos.Resena;
 import com.modelos.Servicio;
+import com.modelos.Solicitud;
 import com.modelos.Usuario;
 import com.servicios.ServicioSubirArchivo;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioCloudinary;
 import com.servicios.ServicioResena;
 import com.servicios.ServicioServicios;
+import com.servicios.ServicioSolicitud;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
@@ -47,6 +50,8 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioCloudinary servicioCloudinary;
+    @Autowired
+    private ServicioSolicitud servicioSolicitud;
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
@@ -195,19 +200,29 @@ public class ControladorServicios {
 
     @PostMapping("/eliminar-servicio/{id}")
     @Transactional
-    public String eliminarServicio(@PathVariable("id") Long id, Model model) {
+    public String eliminarServicio(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             Servicio servicio = servicioServicios.obtenerPorId(id);
             if (servicio != null) {
+                // Verificar si hay solicitudes asociadas al servicio
+                List<Solicitud> solicitudes = servicioSolicitud.obtenerSolicitudesPorServicio(servicio);
+                if (solicitudes != null && !solicitudes.isEmpty()) {
+                    // Agregar mensaje de error si hay solicitudes asociadas
+                    redirectAttributes.addFlashAttribute("error",
+                            "No puedes eliminar este servicio porque tiene solicitudes registradas.");
+                    return "redirect:/mis-servicios";
+                }
+
                 // Eliminar imagen de Cloudinary
                 servicioCloudinary.eliminarArchivo(servicio.getImgUrl());
 
                 // Eliminar servicio
                 servicioServicios.eliminar(id);
             }
+
             return "redirect:/mis-servicios";
         } catch (Exception e) {
-            model.addAttribute("error", true);
+            redirectAttributes.addFlashAttribute("error", "Hubo un error al intentar eliminar el servicio.");
             return "redirect:/mis-servicios";
         }
     }

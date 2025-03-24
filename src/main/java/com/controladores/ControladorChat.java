@@ -66,14 +66,6 @@ public class ControladorChat {
 
             // Persistir el nuevo chat en Firebase o base de datos
             Chat createdChat = servicioChat.createChat(chat);
-
-            // Actualizar el estado de la solicitud relacionada a "Leído"
-            Solicitud solicitud = servicioSolicitud.getSolicitudById(solicitudId);
-            if (solicitud != null) {
-                solicitud.setEstado("Leído");
-                servicioSolicitud.guardarSolicitud(solicitud); // Guardar cambios en la solicitud
-            }
-
             // Marcar en sesión que el chat fue creado para esa solicitud (bandera para
             // lógica futura)
             session.setAttribute("isChatCreated_" + solicitudId, true);

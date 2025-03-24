@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.modelos.Servicio;
 import com.modelos.Solicitud;
 import com.modelos.Usuario;
 import com.repositorios.RepositorioSolicitud;
@@ -41,4 +42,8 @@ public class ServicioSolicitud {
         Optional<Solicitud> solicitudOpt = solicitudRepositorio.findById(id);
         return solicitudOpt.orElse(null); // O puedes lanzar una excepción si prefieres
     }
+    public List<Solicitud> obtenerSolicitudesPorServicio(Servicio servicio) {
+    return solicitudRepositorio.findByServicio(servicio);
+}
+
 }
