@@ -11,8 +11,6 @@ import com.modelos.Categoria;
 public interface RepositorioCategorias extends CrudRepository<Categoria, Long> {
     Categoria findByNombre(String nombre);
 
-
-    //metodo para obtener todas las categorias:
-    @SuppressWarnings("null")
+    // metodo para obtener todas las categorias:
     List<Categoria> findAll();
 }

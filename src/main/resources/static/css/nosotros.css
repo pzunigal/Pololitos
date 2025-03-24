@@ -112,6 +112,8 @@ main::before {
     margin: 0 5px;
 }
 
+
+
 .user-info button:hover {
     background-color: #c82333;
 }
@@ -288,4 +290,8 @@ footer p {
 
 .nav-footer a:hover {
     color: #fff;
+}
+
+#busqueda-btn {
+    background-color: rgba(0, 0, 0, 0);
 }

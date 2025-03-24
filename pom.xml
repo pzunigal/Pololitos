@@ -32,9 +32,10 @@
 	<dependencies>
 	<dependency>
     <groupId>com.cloudinary</groupId>
-    <artifactId>cloudinary-http5</artifactId>
-    <version>2.0.0</version>
+    <artifactId>cloudinary-http44</artifactId>
+    <version>1.29.0</version>
 </dependency>
+
 <dependency>
     <groupId>com.cloudinary</groupId>
     <artifactId>cloudinary-taglib</artifactId>
@@ -97,6 +98,28 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>com.google.firebase</groupId>
+    <artifactId>firebase-admin</artifactId>
+    <version>9.1.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>com.google.auth</groupId>
+    <artifactId>google-auth-library-oauth2-http</artifactId>
+    <version>1.24.1</version> <!-- Última versión estable -->
+</dependency>
+
+
+
+
+
 	</dependencies>
 
 	<build>
@@ -105,6 +128,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			
 		</plugins>
 	</build>
 
