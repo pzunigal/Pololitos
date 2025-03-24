@@ -140,7 +140,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
-                <mainClass>com.proyecto.Peguitas.PeguitasApplication</mainClass> <!-- Reemplaza según tu package real -->
+                <mainClass>com.PeguitasApplication</mainClass>
             </configuration>
         </plugin>
         <plugin>
