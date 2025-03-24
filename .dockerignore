@@ -1,0 +1,12 @@
+target/
+logs/
+*.log
+*.iml
+.DS_Store
+.env
+.vscode/
+.idea/
+.git/
+.gitignore
+mvnw
+mvnw.cmd
