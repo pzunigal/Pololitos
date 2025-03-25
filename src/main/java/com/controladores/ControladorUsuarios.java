@@ -46,26 +46,25 @@ public class ControladorUsuarios {
 	public String registro(@Valid @ModelAttribute("nuevoUsuario") Usuario nuevoUsuario,
 			BindingResult result,
 			HttpSession session) {
-		System.out.println("===> Iniciando registro con MultipartFile dentro del modelo Usuario");
-
+		// Subir imagen de perfil si viene adjunta
 		if (nuevoUsuario.getFotoPerfilArchivo() != null && !nuevoUsuario.getFotoPerfilArchivo().isEmpty()) {
 			try {
 				String url = servicioCloudinary.subirArchivo(nuevoUsuario.getFotoPerfilArchivo(), "profile-images");
 				nuevoUsuario.setFotoPerfil(url);
-				System.out.println(" Imagen subida: " + url);
 			} catch (IOException e) {
 				result.rejectValue("fotoPerfilArchivo", "error", "Error al subir la imagen de perfil.");
 			}
-		} else {
-			System.out.println("No se subió imagen de perfil.");
 		}
 
+		// Validar y registrar usuario
 		Usuario usuarioGuardado = servicioUsuarios.registrarUsuario(nuevoUsuario, result);
 
+		// Si hay errores, retornar a la vista de registro
 		if (result.hasErrors()) {
 			return "registro.jsp";
 		}
 
+		// Guardar en sesión y redirigir al home
 		session.setAttribute("usuarioEnSesion", usuarioGuardado);
 		return "redirect:/";
 	}

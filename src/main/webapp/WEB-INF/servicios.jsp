@@ -30,6 +30,77 @@
          flex-direction: column;
          color: white;
       }
+   
+      .servicio-carrusel {
+         overflow-x: auto;
+         padding: 10px 10px 20px 10px;
+         white-space: nowrap;
+         -webkit-overflow-scrolling: touch;
+         scroll-behavior: smooth;
+      }
+   
+      .servicio-carrusel-inner {
+         display: inline-flex;
+         gap: 16px;
+      }
+      .scroll-hint {
+   position: absolute;
+   top: 50%;
+   transform: translateY(-50%);
+   background-color: rgba(0, 0, 0, 0.7);
+   color: white;
+   padding: 8px 12px;
+   border-radius: 20px;
+   font-size: 0.85rem;
+   display: flex;
+   align-items: center;
+   gap: 6px;
+   z-index: 10;
+   pointer-events: none;
+   opacity: 0;
+   transition: opacity 0.3s ease;
+}
+
+.scroll-hint-left {
+   left: 10px;
+}
+
+.scroll-hint-right {
+   right: 10px;
+}
+
+.scroll-hint.visible {
+   opacity: 1;
+}
+
+   
+      .servicio-card {
+         flex: 0 0 auto;
+         width: 300px;
+      }
+   
+      .skeleton {
+         background-color: rgba(255,255,255,0.1);
+         border-radius: 8px;
+         animation: pulse 1.5s infinite;
+         height: 300px;
+         width: 300px;
+      }
+   
+      @keyframes pulse {
+         0% { opacity: 1; }
+         50% { opacity: 0.4; }
+         100% { opacity: 1; }
+      }
+   
+      /* Scrollbar (opcional) */
+      .servicio-carrusel::-webkit-scrollbar {
+         height: 8px;
+      }
+      .servicio-carrusel::-webkit-scrollbar-thumb {
+         background-color: rgba(255,255,255,0.2);
+         border-radius: 4px;
+      }
    </style>
 </head>
 
@@ -72,9 +143,7 @@
    </div>
 </nav>
 
-<!-- Contenido -->
 <main class="container py-5">
-
    <!-- Botón para abrir filtros -->
    <div class="d-flex justify-content-start mb-4">
       <button class="btn btn-outline-light" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasFiltro">
@@ -110,7 +179,6 @@
                <input type="range" class="form-range" id="precioMinSlider" name="precioMin" min="0" max="500000" step="500" value="${param.precioMin != null ? param.precioMin : 0}" oninput="updateSliderLabels()">
                <input type="range" class="form-range mt-2" id="precioMaxSlider" name="precioMax" min="0" max="500000" step="500" value="${param.precioMax != null ? param.precioMax : 500000}" oninput="updateSliderLabels()">
             </div>
-            
             <button type="submit" class="btn btn-warning w-100">
                <i class="bi bi-search"></i> Aplicar Filtro
             </button>
@@ -126,43 +194,57 @@
          <c:if test="${empty categoria.servicios}">
             <p class="text-white-50">No hay servicios disponibles en esta categoría.</p>
          </c:if>
-         <div class="row">
-            <c:forEach var="servicio" items="${categoria.servicios}">
-               <div class="col-md-4 mb-4">
-                  <div class="card bg-dark text-white h-100">
-                     <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}">
-                        <img src="${servicio.imgUrl}" class="card-img-top" style="height: 220px; object-fit: cover;" alt="${servicio.nombre}">
-                     </a>
-                     <div class="card-body d-flex flex-column">
-                        <h5 class="card-title text-truncate">${servicio.nombre}</h5>
-                        <p class="card-text mb-1"><strong>Precio:</strong> $<fmt:formatNumber value="${servicio.precio}" type="number" groupingUsed="true" /></p>
-                        <p class="card-text"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
-                        <div class="mt-auto">
-                           <c:choose>
-                              <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
-                                 <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-primary btn-sm me-2 mb-2">
-                                    <i class="bi bi-hand-index-thumb"></i> Solicitar Servicio
-                                 </a>
-                                 <button class="btn btn-outline-light btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#contactModal"
-                                    onclick="openModal('${servicio.usuario.nombre}', '${servicio.nombre}')">
-                                    <i class="bi bi-chat-dots"></i> Contactar
-                                 </button>
-                              </c:when>
-                              <c:otherwise>
-                                 <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-outline-info btn-sm">
-                                    <i class="bi bi-eye"></i> Ver
-                                 </a>
-                              </c:otherwise>
-                           </c:choose>
+
+         <div class="position-relative">
+            <!-- Hints laterales -->
+            <div class="scroll-hint scroll-hint-left" id="hint-left-${categoria.id}">
+               <i class="bi bi-arrow-left-short"></i> Scrollea
+            </div>
+            <div class="scroll-hint scroll-hint-right" id="hint-right-${categoria.id}">
+               Scrollea <i class="bi bi-arrow-right-short"></i>
+            </div>
+
+            <!-- Carrusel -->
+            <div class="servicio-carrusel" id="carrusel-${categoria.id}">
+               <div class="servicio-carrusel-inner" id="inner-${categoria.id}">
+                  <c:forEach var="servicio" items="${categoria.servicios}">
+                     <div class="servicio-card">
+                        <div class="card bg-dark text-white h-100">
+                           <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}">
+                              <img src="${servicio.imgUrl}" class="card-img-top" style="height: 220px; object-fit: cover;" alt="${servicio.nombre}">
+                           </a>
+                           <div class="card-body d-flex flex-column">
+                              <h5 class="card-title text-truncate">${servicio.nombre}</h5>
+                              <p class="card-text mb-1"><strong>Precio:</strong> $<fmt:formatNumber value="${servicio.precio}" type="number" groupingUsed="true" /></p>
+                              <p class="card-text"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
+                              <div class="mt-auto">
+                                 <c:choose>
+                                    <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
+                                       <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-primary btn-sm me-2 mb-2">
+                                          <i class="bi bi-hand-index-thumb"></i> Solicitar Servicio
+                                       </a>
+                                       <button class="btn btn-outline-light btn-sm mb-2" onclick="openModal('${servicio.usuario.nombre}', '${servicio.nombre}')">
+                                          <i class="bi bi-chat-dots"></i> Contactar
+                                       </button>
+                                    </c:when>
+                                    <c:otherwise>
+                                       <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-outline-info btn-sm">
+                                          <i class="bi bi-eye"></i> Ver
+                                       </a>
+                                    </c:otherwise>
+                                 </c:choose>
+                              </div>
+                           </div>
                         </div>
                      </div>
-                  </div>
+                  </c:forEach>
                </div>
-            </c:forEach>
+            </div>
          </div>
       </c:if>
    </c:forEach>
 </main>
+
 
 <!-- Footer -->
 <footer class="bg-dark text-white text-center py-3 mt-auto">
@@ -179,20 +261,41 @@
    function openModal(nombreVendedor, nombreServicio) {
       alert(`Simulación de contacto con ${nombreVendedor} para el servicio: ${nombreServicio}`);
    }
+
    function updateSliderLabels() {
       const min = document.getElementById('precioMinSlider').value;
       const max = document.getElementById('precioMaxSlider').value;
-
       document.getElementById('minValueLabel').textContent = formatCLP(min);
       document.getElementById('maxValueLabel').textContent = formatCLP(max);
    }
 
    function formatCLP(value) {
-      return Number(value).toLocaleString('es-CL'); // miles con punto, sin decimales
+      return Number(value).toLocaleString('es-CL');
    }
 
-   // Iniciar los labels con los valores actuales
    updateSliderLabels();
+
+   // Scroll horizontal solo si no estamos en los extremos
+   document.querySelectorAll('.servicio-carrusel').forEach(carrusel => {
+      carrusel.addEventListener('wheel', function(e) {
+         const delta = e.deltaY;
+         const atStart = carrusel.scrollLeft === 0;
+         const atEnd = carrusel.scrollLeft + carrusel.clientWidth >= carrusel.scrollWidth - 1;
+
+         // Si NO estamos en el inicio o fin, prevenir scroll vertical
+         if ((delta < 0 && !atStart) || (delta > 0 && !atEnd)) {
+            e.preventDefault();
+            carrusel.scrollBy({
+               left: delta < 0 ? -300 : 300,
+               behavior: 'smooth'
+            });
+         }
+         // Si estamos al inicio o al final, dejamos pasar el scroll vertical
+         // automáticamente (no hacemos nada).
+      }, { passive: false });
+   });
 </script>
+
+
 </body>
 </html>
