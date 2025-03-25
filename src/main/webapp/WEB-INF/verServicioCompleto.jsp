@@ -8,6 +8,7 @@
 <html lang="es">
 <head>
    <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Detalles del Servicio</title>
 
    <!-- Bootstrap & Icons -->
@@ -105,7 +106,7 @@
 
 <body>
    <!-- Navbar -->
-   <%@ include file="/WEB-INF/componentes/nav.jsp" %>
+   <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 
    <!-- Contenido principal -->
    <main class="container py-4">
@@ -210,13 +211,7 @@
    </main>
 
 
-   <footer class="bg-dark text-white text-center py-3 mt-auto">
-      <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
-      <ul class="nav justify-content-center">
-         <li class="nav-item"><a class="nav-link text-white" href="/contacto">Contacto</a></li>
-         <li class="nav-item"><a class="nav-link text-white" href="/nosotros">Nosotros</a></li>
-      </ul>
-   </footer>
+   <%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
 
 
    <!-- Modal Bootstrap para editar reseña -->

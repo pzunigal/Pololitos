@@ -46,7 +46,7 @@
     </style>
 </head>
 <body>
-    <%@ include file="/WEB-INF/componentes/nav.jsp" %>
+    <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 
 <div class="container mt-5">
     <div class="chat-container">

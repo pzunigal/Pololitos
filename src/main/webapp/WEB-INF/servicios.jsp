@@ -107,7 +107,7 @@
 <body class="d-flex flex-column">
 
 <!-- Navbar -->
-<%@ include file="/WEB-INF/componentes/nav.jsp" %>
+<%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 
 <main class="container py-5">
    <!-- Botón para abrir filtros -->
@@ -213,13 +213,7 @@
 
 
 <!-- Footer -->
-<footer class="bg-dark text-white text-center py-3 mt-auto">
-   <p class="mb-1">Pololitos &copy; 2025. Todos los derechos reservados</p>
-   <ul class="nav justify-content-center">
-      <li class="nav-item"><a class="nav-link text-white" href="/contacto">Contacto</a></li>
-      <li class="nav-item"><a class="nav-link text-white" href="/nosotros">Nosotros</a></li>
-   </ul>
-</footer>
+<%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
 
 <!-- Scripts -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

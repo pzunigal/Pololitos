@@ -115,7 +115,7 @@
 <body>
 
 <!-- Navbar Bootstrap -->
-<%@ include file="/WEB-INF/componentes/nav.jsp" %>
+<%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 <!-- Login Form -->
 <div class="login-wrapper container">
    <div class="row w-100">
@@ -149,13 +149,7 @@
 </div>
 
 <!-- Footer -->
-<footer class="mt-auto">
-   <p class="mb-1">Pololitos &copy; 2025, Todos los derechos reservados</p> 
-   <ul class="nav-footer">
-      <li><a href="/contacto">Contacto</a></li>
-      <li><a href="/nosotros">Nosotros</a></li>
-   </ul>
-</footer>
+<%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
