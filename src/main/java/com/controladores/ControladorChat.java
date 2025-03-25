@@ -89,35 +89,53 @@ public class ControladorChat {
 
     // Carga la vista del chat con sus mensajes y metadatos
     @GetMapping("/ver/{chatId}")
-    public String verChat(@PathVariable String chatId, Model model) {
+    public String verChat(@PathVariable String chatId, Model model, HttpSession session) {
         try {
-            // Obtener el chat desde el servicio de forma asíncrona y esperar resultado
-            CompletableFuture<Chat> chatFuture = servicioChat.getChat(chatId);
-            Chat chat = chatFuture.join(); // Bloquea hasta que se reciba la respuesta
-
-            // Validar si el chat fue encontrado
-            if (chat == null) {
-                return "redirect:/error?mensaje=Chat no encontrado";
+            // Verificar que el usuario esté logueado
+            Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+            if (usuarioEnSesion == null) {
+                return "redirect:/";
             }
 
-            // Formatear la fecha de creación del chat para mostrarla en la vista
+            // Obtener el chat de forma asíncrona
+            CompletableFuture<Chat> chatFuture = servicioChat.getChat(chatId);
+            Chat chat = chatFuture.join();
+
+            // Si no se encuentra el chat, redirigir a home
+            if (chat == null) {
+                return "redirect:/";
+            }
+
+            // Obtener la solicitud asociada
+            Solicitud solicitud = servicioSolicitud.getSolicitudById(chat.getSolicitudId());
+            if (solicitud == null) {
+                return "redirect:/";
+            }
+
+            // Validar si el usuario actual es el solicitante o el proveedor del servicio
+            boolean esSolicitante = solicitud.getSolicitante().getId().equals(usuarioEnSesion.getId());
+            boolean esProveedor = solicitud.getServicio().getUsuario().getId().equals(usuarioEnSesion.getId());
+
+            if (!esSolicitante && !esProveedor) {
+                return "redirect:/";
+            }
+
+            // Formatear fecha
             SimpleDateFormat dateFormat = new SimpleDateFormat("dd MMMM yyyy");
             String formattedDate = dateFormat.format(new Date(chat.getFechaCreacion()));
 
-            // Cargar atributos necesarios al modelo para ser utilizados en la vista JSP
-            model.addAttribute("chat", chat); // Objeto Chat completo
-            model.addAttribute("fechaCreacionFormateada", formattedDate); // Fecha formateada
-            model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>()); // Lista
-                                                                                                                 // de
-                                                                                                                 // mensajes
-            model.addAttribute("chatId", chatId); // ID del chat
-            model.addAttribute("solicitanteId", chat.getSolicitanteId()); // ID del usuario solicitante
+            // Cargar datos al modelo
+            model.addAttribute("chat", chat);
+            model.addAttribute("fechaCreacionFormateada", formattedDate);
+            model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
+            model.addAttribute("chatId", chatId);
+            model.addAttribute("solicitanteId", chat.getSolicitanteId());
 
-            // Retornar nombre de la vista JSP que se renderizará
             return "chat.jsp";
         } catch (Exception e) {
-            // En caso de excepción, redirigir a la página de error
-            return "redirect:/error?mensaje=No se pudo cargar el chat";
+            // Si ocurre cualquier error inesperado, redirigir a home
+            return "redirect:/";
         }
     }
+
 }

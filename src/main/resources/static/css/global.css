@@ -534,3 +534,44 @@ footer p {
     width: 90%;
     max-width: 500px;
 }
+.cardListaResenas {
+    margin: 20px 0px;
+    background-color: rgba(0, 0, 0, 0.7);
+    color: #fff;
+    height: 400px;
+    width: 1050px;
+    max-height: 400px;
+    max-width: 1100px;
+    border-radius: 10px;
+    overflow-y: auto; /* Habilita scroll vertical */
+    overflow-x: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* para que los textos queden alineados a la izquierda */
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+/* Espaciado y organización para cada reseña individual */
+.cardListaResenas p {
+    width: 100%;
+    margin: 5px 0;
+}
+
+.cardListaResenas .resena-comentario {
+    margin: 5px 0 15px 0;
+    font-style: italic;
+    color: #ccc;
+}
+
+.cardListaResenas hr {
+    width: 100%;
+    border-color: #777;
+    margin: 10px 0;
+}
+
+.filaBotones {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
