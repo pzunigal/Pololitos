@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -100,6 +101,16 @@
                   </c:forEach>
                </select>
             </div>
+            <div class="mb-3">
+               <label for="rangeSlider" class="form-label">Rango de Precio</label>
+               <div class="d-flex justify-content-between">
+                  <span>$<span id="minValueLabel">0</span></span>
+                  <span>$<span id="maxValueLabel">500000</span></span>
+               </div>
+               <input type="range" class="form-range" id="precioMinSlider" name="precioMin" min="0" max="500000" step="500" value="${param.precioMin != null ? param.precioMin : 0}" oninput="updateSliderLabels()">
+               <input type="range" class="form-range mt-2" id="precioMaxSlider" name="precioMax" min="0" max="500000" step="500" value="${param.precioMax != null ? param.precioMax : 500000}" oninput="updateSliderLabels()">
+            </div>
+            
             <button type="submit" class="btn btn-warning w-100">
                <i class="bi bi-search"></i> Aplicar Filtro
             </button>
@@ -124,7 +135,7 @@
                      </a>
                      <div class="card-body d-flex flex-column">
                         <h5 class="card-title text-truncate">${servicio.nombre}</h5>
-                        <p class="card-text mb-1"><strong>Precio:</strong> $${servicio.precio}</p>
+                        <p class="card-text mb-1"><strong>Precio:</strong> $<fmt:formatNumber value="${servicio.precio}" type="number" groupingUsed="true" /></p>
                         <p class="card-text"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
                         <div class="mt-auto">
                            <c:choose>
@@ -168,6 +179,20 @@
    function openModal(nombreVendedor, nombreServicio) {
       alert(`Simulación de contacto con ${nombreVendedor} para el servicio: ${nombreServicio}`);
    }
+   function updateSliderLabels() {
+      const min = document.getElementById('precioMinSlider').value;
+      const max = document.getElementById('precioMaxSlider').value;
+
+      document.getElementById('minValueLabel').textContent = formatCLP(min);
+      document.getElementById('maxValueLabel').textContent = formatCLP(max);
+   }
+
+   function formatCLP(value) {
+      return Number(value).toLocaleString('es-CL'); // miles con punto, sin decimales
+   }
+
+   // Iniciar los labels con los valores actuales
+   updateSliderLabels();
 </script>
 </body>
 </html>

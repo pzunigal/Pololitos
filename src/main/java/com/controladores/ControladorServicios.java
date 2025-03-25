@@ -250,26 +250,40 @@ public class ControladorServicios {
     }
 
     @GetMapping("/servicios")
-    public String mostrarServicios(@RequestParam(value = "categoriaId", required = false) Long categoriaId, Model model,
-            HttpSession session) {
-        // Obtener usuario en sesión
-        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+public String mostrarServicios(
+        @RequestParam(value = "categoriaId", required = false) Long categoriaId,
+        @RequestParam(value = "precioMin", required = false) Double precioMin,
+        @RequestParam(value = "precioMax", required = false) Double precioMax,
+        Model model, HttpSession session) {
 
-        List<Categoria> categoriasConServicios;
+    Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 
-        if (categoriaId != null) {
-            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios()
-                    .stream()
-                    .filter(c -> c.getId().equals(categoriaId))
-                    .collect(Collectors.toList());
-        } else {
-            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
-        }
+    List<Categoria> categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
 
-        model.addAttribute("categorias", categoriasConServicios);
-        model.addAttribute("usuarioSesion", usuarioEnSesion);
-        return "servicios.jsp";
+    if (categoriaId != null) {
+        categoriasConServicios = categoriasConServicios.stream()
+                .filter(c -> c.getId().equals(categoriaId))
+                .collect(Collectors.toList());
     }
+
+    if (precioMin != null || precioMax != null) {
+        for (Categoria categoria : categoriasConServicios) {
+            List<Servicio> filtrados = categoria.getServicios().stream()
+                .filter(s -> (precioMin == null || s.getPrecio() >= precioMin) &&
+                             (precioMax == null || s.getPrecio() <= precioMax))
+                .collect(Collectors.toList());
+            categoria.setServicios(filtrados);
+        }
+    }
+
+    model.addAttribute("categorias", categoriasConServicios);
+    model.addAttribute("usuarioSesion", usuarioEnSesion);
+    model.addAttribute("precioMin", precioMin);
+    model.addAttribute("precioMax", precioMax);
+    model.addAttribute("categoriaId", categoriaId);
+    return "servicios.jsp";
+}
+
 
     @GetMapping("/buscar-servicios")
     public String buscarServicios(@RequestParam("query") String query, Model model) {
