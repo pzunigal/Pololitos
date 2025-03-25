@@ -4,6 +4,7 @@
 @import url(views/index.css);
 @import url(views/login.css);
 @import url(views/requests-sent.css);
+@import url(views/requests-received.css);
 .body-with-bg {
     font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
     min-height: 100vh;

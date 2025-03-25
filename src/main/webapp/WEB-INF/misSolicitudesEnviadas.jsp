@@ -25,7 +25,6 @@ prefix="fn" %> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
     />
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
-
   </head>
 
   <body class="body-without-bg">
@@ -37,26 +36,10 @@ prefix="fn" %> <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
       <h2 class="mb-4 text-center">Mis Solicitudes Enviadas</h2>
 
       <!-- ACTIVAS -->
-      <c:if test="${not empty error}">
-        <div class="alert alert-danger text-center" role="alert">${error}</div>
-      </c:if>
-
-      <c:if test="${not empty solicitudesActivas}">
-        <%@ include file="/WEB-INF/componentes/grids/activeRequestsSent.jsp"
-        %>
-      </c:if>
+      <%@ include file="/WEB-INF/componentes/grids/activeRequestsSent.jsp" %>
 
       <!-- INACTIVAS -->
-
-      <c:if test="${not empty solicitudesInactivas}">
-        <%@ include
-        file="/WEB-INF/componentes/grids/inactiveRequestsSent.jsp" %>
-      </c:if>
-      <c:if test="${empty solicitudesActivas and empty solicitudesInactivas}">
-        <div class="alert alert-info text-center">
-          Aún no has enviado ninguna solicitud.
-        </div>
-      </c:if>
+      <%@ include file="/WEB-INF/componentes/grids/inactiveRequestsSent.jsp" %>
     </main>
 
     <!-- Footer -->
