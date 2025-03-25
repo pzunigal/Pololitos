@@ -8,6 +8,7 @@
 @import url(views/view-profile.css);
 @import url(views/register.css);
 @import url(views/services.css);
+@import url(views/service-profile.css);
 .body-with-bg {
     font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
     min-height: 100vh;
