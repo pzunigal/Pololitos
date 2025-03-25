@@ -66,7 +66,7 @@
     </div>
     <div class="user-info">
         <div class="circle-busqueda">
-            <input type="text" placeholder="¿Qué servicio buscas?">
+            <input type="text" placeholder="Buscar">
             <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
         </div>
         <c:choose>

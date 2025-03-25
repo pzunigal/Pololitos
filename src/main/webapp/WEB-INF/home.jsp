@@ -100,7 +100,7 @@
                 </c:if>
             </ul>
             <form class="d-flex me-3" action="/buscar-servicios" method="get">
-                <input class="form-control me-2" type="search" name="query" placeholder="¿Qué servicio buscas?">
+                <input class="form-control me-2" type="search" name="query" placeholder="Buscar">
                 <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
             </form>
             <c:choose>
