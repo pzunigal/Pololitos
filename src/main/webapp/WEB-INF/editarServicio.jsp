@@ -27,22 +27,9 @@ prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
       rel="stylesheet"
     />
     <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
-    <style>
-      body {
-        font-family: "Quicksand", "Roboto", "Noto Sans", "Winky Sans",
-          sans-serif;
-        min-height: 100vh;
-        background-image: url("https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg");
-        background-size: cover;
-        background-position: center;
-        display: flex;
-        flex-direction: column;
-        color: white;
-      }
-    </style>
   </head>
 
-  <body class="d-flex flex-column">
+  <body class="d-flex flex-column body-with-bg">
     <!-- Navbar -->
     <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 

@@ -17,71 +17,11 @@
     <!-- Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
 
-    <style>
-        body {
-            font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
-            min-height: 100vh;
-            background-image: url('https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg');
-            background-size: cover;
-            background-position: center;
-            display: flex;
-            flex-direction: column;
-            color: white;
-        }
-
-        .card img {
-            height: 200px;
-            object-fit: cover;
-        }
-
-        .carousel-container {
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        .cards-wrapper {
-            display: flex;
-            overflow-x: auto;
-            scroll-behavior: smooth;
-        }
-
-        .cards {
-            display: flex;
-            gap: 1rem;
-            padding: 1rem;
-        }
-
-        .card {
-            min-width: 250px;
-            background-color: #1e1e1e;
-            color: white;
-        }
-
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            z-index: 2;
-            background-color: rgba(0, 0, 0, 0.6);
-            border: none;
-            color: white;
-            font-size: 2rem;
-            padding: 0 10px;
-            cursor: pointer;
-        }
-
-        .carousel-btn.prev {
-            left: 0;
-        }
-
-        .carousel-btn.next {
-            right: 0;
-        }
-    </style>
 </head>
 
-<body class="d-flex flex-column">
+<body class="d-flex flex-column body-with-bg">
 
     <!-- Navbar -->
     <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>

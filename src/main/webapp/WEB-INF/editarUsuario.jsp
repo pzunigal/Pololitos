@@ -25,7 +25,7 @@ prefix="c" %>
     <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
   </head>
 
-  <body>
+  <body class="body-without-bg">
     <!-- Navbar -->
     <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 

@@ -1,3 +1,24 @@
 @import url(components/forms/contact-form.css);
 @import url(views/edit-user.css);
 @import url(components/forms/edit-service.css);
+@import url(views/index.css);
+@import url(views/login.css);
+@import url(views/requests-sent.css);
+.body-with-bg {
+    font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
+    min-height: 100vh;
+    background-image: url('https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+.body-without-bg {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #1e1e1e;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+ }

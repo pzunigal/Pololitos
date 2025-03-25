@@ -1,0 +1,48 @@
+.card img {
+    height: 200px;
+    object-fit: cover;
+}
+
+.carousel-container {
+    position: relative;
+    overflow-x: hidden;
+}
+
+.cards-wrapper {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+}
+
+.cards {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem;
+}
+
+.card {
+    min-width: 250px;
+    background-color: #1e1e1e;
+    color: white;
+}
+
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
+    background-color: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    font-size: 2rem;
+    padding: 0 10px;
+    cursor: pointer;
+}
+
+.carousel-btn.prev {
+    left: 0;
+}
+
+.carousel-btn.next {
+    right: 0;
+}
