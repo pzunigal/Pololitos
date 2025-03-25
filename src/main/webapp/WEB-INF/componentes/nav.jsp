@@ -12,25 +12,32 @@
   <div class="collapse navbar-collapse" id="navbarNav">
     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
       <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
-      <c:if test="${not empty sessionScope.usuarioEnSesion}">
+      <c:if test="${not empty usuarioEnSesion}">
         <li class="nav-item"><a class="nav-link" href="/mis-servicios">Mis Servicios</a></li>
         <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-enviadas">Enviadas</a></li>
         <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-recibidas">Recibidas</a></li>
       </c:if>
     </ul>
 
-    <c:if test="${not empty sessionScope.usuarioEnSesion}">
-      <div class="dropdown me-3">
-        <button class="btn btn-outline-light position-relative" id="notificacionesDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-          <i class="bi bi-bell-fill"></i>
-          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="notificacionBadge" style="display:none;">
-            0
-          </span>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end text-light bg-dark" aria-labelledby="notificacionesDropdown" style="width: 300px; max-height: 400px; overflow-y: auto;" id="notificacionesLista">
-          <li class="dropdown-item text-muted">Cargando notificaciones...</li>
-        </ul>
-      </div>
+    <!-- Notificaciones solo si hay sesión -->
+    <c:if test="${not empty usuarioEnSesion}">
+        <div class="dropdown me-3">
+            <button class="btn btn-outline-light position-relative dropdown-toggle"
+                    id="notificacionesDropdown"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false">
+              <i class="bi bi-bell-fill"></i>
+              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                    id="notificacionBadge" style="display:none;">0</span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end bg-dark text-light"
+                aria-labelledby="notificacionesDropdown"
+                id="notificacionesLista"
+                style="width: 300px; max-height: 400px; overflow-y: auto;">
+              <li class="dropdown-item text-muted">Cargando notificaciones...</li>
+            </ul>
+          </div>
+          
     </c:if>
 
     <form class="d-flex me-3" action="/buscar-servicios" method="get">
@@ -39,9 +46,9 @@
     </form>
 
     <c:choose>
-      <c:when test="${not empty sessionScope.usuarioEnSesion}">
+      <c:when test="${not empty usuarioEnSesion}">
         <a href="/perfilUsuario" class="me-3">
-          <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
+          <img src="${usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
         </a>
         <a href="/servicios/publicar" class="btn btn-success me-2">Crear Servicio</a>
         <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
@@ -54,9 +61,11 @@
   </div>
 </nav>
 
-<!-- Firebase + Notificaciones -->
+<!-- Scripts Firebase + Bootstrap -->
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
   const firebaseConfig = {
     apiKey: "",
@@ -70,7 +79,7 @@
   firebase.initializeApp(firebaseConfig);
   const db = firebase.database();
 
-  const usuarioId = "${sessionScope.usuarioEnSesion.id}";
+  const usuarioId = "${usuarioEnSesion.id}";
   const badge = document.getElementById("notificacionBadge");
   const lista = document.getElementById("notificacionesLista");
 
@@ -79,21 +88,22 @@
     let contador = 0;
 
     for (const id in data) {
-  const n = data[id];
-  if (!n.leida) contador++;
+      const n = data[id];
+      if (n.receptorId != usuarioId) continue; // ✅ seguridad adicional
 
-  const li = document.createElement("li");
-  li.className = "dropdown-item text-white" + (!n.leida ? " fw-bold" : "");
-  li.style.cursor = "pointer";
-  li.textContent = n.mensaje;
-  li.onclick = () => {
-    db.ref(`notificaciones/${usuarioId}/${id}/leida`).set(true).then(() => {
-      window.location.href = n.urlDestino;
-    });
-  };
-  lista.appendChild(li);
-}
+      if (!n.leida) contador++;
 
+      const li = document.createElement("li");
+      li.className = "dropdown-item text-white" + (!n.leida ? " fw-bold" : "");
+      li.style.cursor = "pointer";
+      li.textContent = n.mensaje;
+      li.onclick = () => {
+        db.ref(`notificaciones/${usuarioId}/${id}/leida`).set(true).then(() => {
+          window.location.href = n.urlDestino;
+        });
+      };
+      lista.appendChild(li);
+    }
 
     if (contador > 0) {
       badge.style.display = "inline-block";
