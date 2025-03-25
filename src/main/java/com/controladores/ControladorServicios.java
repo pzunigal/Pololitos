@@ -152,51 +152,52 @@ public class ControladorServicios {
     public String actualizarServicio(@PathVariable("id") Long id,
             @Valid @ModelAttribute("servicio") Servicio servicio,
             BindingResult result,
-            @RequestParam("imagen") MultipartFile imagen, // Cambiado a MultipartFile
-            HttpSession session, Model model) {
-
+            @RequestParam("imagen") MultipartFile imagen,
+            HttpSession session, Model model,
+            RedirectAttributes redirectAttributes) { // 👈 Agregado RedirectAttributes
+    
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuarioEnSesion == null) {
             return "redirect:/login";
         }
-
+    
         Servicio servicioExistente = servicioServicios.obtenerPorId(id);
         if (servicioExistente == null || !servicioExistente.getUsuario().getId().equals(usuarioEnSesion.getId())) {
             return "redirect:/mis-servicios";
         }
-
+    
         if (result.hasErrors()) {
             model.addAttribute("error", "Existen errores en los campos del formulario.");
             model.addAttribute("servicio", servicioExistente);
             return "editarServicio.jsp";
         }
-
+    
         try {
-            // Si se subió una nueva imagen
             if (!imagen.isEmpty()) {
-                // Eliminar imagen anterior en Cloudinary
                 servicioCloudinary.eliminarArchivo(servicioExistente.getImgUrl());
-
-                // Subir nueva imagen a Cloudinary
                 String nuevaUrl = servicioCloudinary.subirArchivo(imagen, "servicios");
                 servicioExistente.setImgUrl(nuevaUrl);
             }
-
-            // Actualizar los demás campos
+    
             servicioExistente.setNombre(servicio.getNombre());
             servicioExistente.setDescripcion(servicio.getDescripcion());
             servicioExistente.setPrecio(servicio.getPrecio());
             servicioExistente.setCategoria(servicio.getCategoria());
             servicioExistente.setCiudad(servicio.getCiudad());
-
+    
             servicioServicios.guardar(servicioExistente);
+    
+            // Mensaje flash de éxito
+            redirectAttributes.addFlashAttribute("exito", "¡Servicio actualizado correctamente!");
+    
             return "redirect:/mis-servicios";
-
+    
         } catch (Exception e) {
             model.addAttribute("error", "Hubo un error actualizando el servicio.");
             return "editarServicio.jsp";
         }
     }
+    
 
     @PostMapping("/eliminar-servicio/{id}")
     @Transactional
@@ -204,10 +205,9 @@ public class ControladorServicios {
         try {
             Servicio servicio = servicioServicios.obtenerPorId(id);
             if (servicio != null) {
-                // Verificar si hay solicitudes asociadas al servicio
+                // Verificar si hay solicitudes asociadas
                 List<Solicitud> solicitudes = servicioSolicitud.obtenerSolicitudesPorServicio(servicio);
                 if (solicitudes != null && !solicitudes.isEmpty()) {
-                    // Agregar mensaje de error si hay solicitudes asociadas
                     redirectAttributes.addFlashAttribute("error",
                             "No puedes eliminar este servicio porque tiene solicitudes registradas.");
                     return "redirect:/mis-servicios";
@@ -219,10 +219,10 @@ public class ControladorServicios {
                 // Eliminar servicio
                 servicioServicios.eliminar(id);
             }
-
             return "redirect:/mis-servicios";
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Hubo un error al intentar eliminar el servicio.");
+            redirectAttributes.addFlashAttribute("error",
+                    "Hubo un error inesperado al intentar eliminar el servicio: " + e.getMessage());
             return "redirect:/mis-servicios";
         }
     }

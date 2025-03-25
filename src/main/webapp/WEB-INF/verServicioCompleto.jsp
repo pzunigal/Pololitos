@@ -1,305 +1,362 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://www.springframework.org/tags" prefix="form" %>
-   <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-      <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
-         <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-            <!DOCTYPE html>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
-            <head>
-               <meta charset="UTF-8">
-               <meta name="viewport" content="width=device-width, initial-scale=1.0">
-               <title>Detalles del Servicio</title>
-               <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"> -->
-               <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
-                  integrity="sha512-jQBtV69pKScA4qFLklG5b4qfJvJ7t88OjIuN+uElIEcI5ZRxojcmNYZTBiEDXqbdz8tYO9ovXtIccPB0ddpl3w=="
-                  crossorigin="anonymous" referrerpolicy="no-referrer" />
-               <link rel="stylesheet" href="/css/global.css">
-               <link rel="icon" href="data:," />
-            </head>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <title>Detalles del Servicio</title>
 
-            <body>
-               <header>
-                  <div class="nav-container">
-                     <a href="/">
-                        <div class="logoPololitos">
-                           <img src="/img/pololitosBlanco.png" alt="Logo pololitos">
-                        </div>
-                     </a>
-                     <nav>
-                        <ul class="nav-links">
-                           <li><a href="/servicios">Servicios</a></li>
-                           <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
-                           <c:choose>
-                              <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                                 <li><a href="/mis-servicios">Mis Servicios</a></li>
-                              </c:when>
-                           </c:choose>
-                           <c:choose>
-                              <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                                 <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                              </c:when>
-                           </c:choose>
-                           <c:choose>
-                              <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                                 <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                              </c:when>
-                           </c:choose>
-                        </ul>
-                     </nav>
+   <!-- Bootstrap & Icons -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   <style>
+      body {
+         font-family: 'Quicksand', sans-serif;
+         background-color: #1e1e1e;
+         color: white;
+         min-height: 100vh;
+      }
+
+      .star-rating {
+         margin-top: 15px;
+      }
+
+      .stars {
+         display: flex;
+         flex-direction: row-reverse;
+         justify-content: flex-start;
+      }
+
+      .stars input[type="radio"] {
+         display: none;
+      }
+
+      .stars .star {
+         font-size: 2rem;
+         color: #ccc;
+         cursor: pointer;
+         transition: color 0.2s;
+      }
+
+      .stars .star:hover,
+      .stars .star:hover ~ .star {
+         color: #f1c40f;
+      }
+
+      .stars input[type="radio"]:checked ~ .star {
+         color: #f1c40f;
+      }
+
+      .star.filled {
+         color: #f1c40f;
+      }
+
+      .modal .modal-header,
+      .modal .modal-footer {
+         background-color: #f8f9fa;
+         color: black;
+      }
+
+      .cardListaResenas {
+         background-color: rgba(0, 0, 0, 0.75);
+         border-radius: 10px;
+         padding: 20px;
+         max-height: 400px;
+         overflow-y: auto;
+         margin-top: 2rem;
+      }
+
+      .resena-comentario {
+         font-style: italic;
+         color: #ccc;
+      }
+
+      .filaBotones {
+         display: flex;
+         gap: 10px;
+      }
+
+      .star {
+         font-size: 1.5rem;
+         color: #888;
+      }
+
+      .star.filled {
+         color: #f1c40f;
+      }
+
+      .promedio-star {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         gap: 5px;
+         font-size: 1.3rem;
+         color: #f1c40f;
+      }
+   </style>
+</head>
+
+<body>
+   <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+      <a class="navbar-brand" href="/">
+         <img src="<c:url value='/img/pololitosBlanco.png' />" alt="Logo" height="40">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav me-auto">
+            <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
+            <c:if test="${not empty sessionScope.usuarioEnSesion}">
+               <li class="nav-item"><a class="nav-link" href="/mis-servicios">Mis Servicios</a></li>
+               <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-enviadas">Enviadas</a></li>
+               <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-recibidas">Recibidas</a></li>
+            </c:if>
+         </ul>
+         <form class="d-flex me-3" action="/buscar-servicios" method="get">
+            <input class="form-control me-2" type="search" name="query" placeholder="¿Qué servicio buscas?">
+            <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+         </form>
+         <c:choose>
+            <c:when test="${not empty sessionScope.usuarioEnSesion}">
+               <a href="/perfilUsuario" class="me-3">
+                  <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
+               </a>
+               <a href="/servicios/publicar" class="btn btn-success me-2">Crear Servicio</a>
+               <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+            </c:when>
+            <c:otherwise>
+               <a href="/login" class="btn btn-outline-light me-2">Iniciar sesión</a>
+               <a href="/registro" class="btn btn-outline-info">Regístrate</a>
+            </c:otherwise>
+         </c:choose>
+      </div>
+   </nav>
+
+   <!-- Contenido principal -->
+   <main class="container py-4">
+      <c:if test="${not empty servicio}">
+         <div class="card mb-4 bg-dark text-white">
+            <div class="row g-0">
+               <div class="col-md-5">
+                  <img src="${servicio.imgUrl}" class="img-fluid rounded-start" alt="${servicio.nombre}">
+               </div>
+               <div class="col-md-7">
+                  <div class="card-body">
+                     <h3 class="card-title">${servicio.nombre}</h3>
+                     <p class="card-text">${servicio.descripcion}</p>
+                     <p><strong>Precio:</strong> $${servicio.precio}</p>
+                     <p><strong>Ciudad:</strong> ${servicio.ciudad}</p>
+                     <p><strong>Fecha publicación:</strong> <fmt:formatDate value="${servicio.createdAt}" pattern="dd/MM/yyyy" /></p>
                   </div>
-                  <div class="user-info">
-                     <form action="/buscar-servicios" method="get">
-                        <div class="circle-busqueda" id="busqueda-container">
-                           <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
-                           <button type="submit" id="busqueda-btn">
-                              <img src="${pageContext.request.contextPath}/img/busqueda.png" alt="lupa de búsqueda"
-                                 id="busqueda-icon">
-                           </button>
-                        </div>
-                     </form>
-                     <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                           <a href="/perfilUsuario">
-                              <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40"
-                                 height="40" style="border-radius: 50%;">
-                           </a>
-                           <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                           <a href="/logout"><button>Cerrar Sesion</button></a>
-                        </c:when>
-                        <c:otherwise>
-                           <a href="/login"><button>Iniciar sesion</button></a>
-                           <a href="/registro"><button>Registrate</button></a>
-                        </c:otherwise>
-                     </c:choose>
-                  </div>
-               </header>
-               <main>
-                  <div class="container">
-                     <h1 class="text-center my-4">Detalles del Servicio</h1>
-                     <c:if test="${not empty servicio}">
-                        <c:choose>
-                           <c:when test="${isAuthorInSesion}">
-                              <!-- Si el usuario es el mismo que el autor -->
-                              <div class="card">
-                                 <img src="${servicio.imgUrl}" class="card-img-top" alt="${servicio.nombre}">
-                                 <section class="resenas-section mt-5">
-                                    <!-- Promedio de calificaciones -->
-                                    <c:if test="${not empty promedio}">
-                                       <div class="card mb-4">
-                                          <div class="card-body text-center">
-                                             <h5>Promedio de calificaciones</h5>
-                                             <div class="promedio-star">
-                                                <c:forEach begin="1" end="5" var="i">
-                                                   <c:choose>
-                                                      <c:when test="${i <= promedio}">
-                                                         <span class="star filled">&#9733;</span>
-                                                      </c:when>
-                                                      <c:otherwise>
-                                                         <span class="star">&#9733;</span>
-                                                      </c:otherwise>
-                                                   </c:choose>
-                                                </c:forEach>
-                                                <span class="promedio-num">
-                                                   (
-                                                   <fmt:formatNumber value="${promedio}" maxFractionDigits="1" />
-                                                   / 5)
-                                                </span>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </c:if>
-                                    <div class="card-body">
-                                       <h5 class="card-title text-primary">${servicio.nombre}</h5>
-                                       <p class="card-text">${servicio.descripcion}</p>
-                                       <p><strong>Precio:</strong> $${servicio.precio}</p>
-                                       <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
-                                       <p><strong>Fecha de publicacion:</strong> ${servicio.createdAt}</p>
+               </div>
+            </div>
+         </div>
 
+         <!-- Promedio de calificaciones -->
+         <c:if test="${not empty promedio}">
+            <div class="text-center mb-4">
+               <h5>Promedio de calificaciones</h5>
+               <div class="promedio-star">
+                  <c:forEach var="i" begin="1" end="5">
+                     <span class="star ${i <= promedio ? 'filled' : ''}">&#9733;</span>
+                  </c:forEach>
+                  <span class="promedio-num">
+                     (<fmt:formatNumber value="${promedio}" maxFractionDigits="1" /> / 5)
+                  </span>
+               </div>
+            </div>
+         </c:if>
+         
 
-                                    </div>
-                                    <a href="javascript:history.back()" class="btn btn-secondary">Volver</a>
-                              </div>
-                  </div>
-                  </c:when>
-                  <c:otherwise>
-                     <!-- Si el usuario no es el mismo que el autor -->
-                     <div class="row">
-                        <div class="col-md-6">
-                           <div class="card">
-                              <img src="${servicio.imgUrl}" alt="${servicio.nombre}">
-                              <div class="card-body">
-                                 <h5 class="card-title text-primary">${servicio.nombre}</h5>
-                                 <p class="card-text">${servicio.descripcion}</p>
-                                 <p><strong>Precio:</strong> $${servicio.precio}</p>
-                                 <p><strong>Ubicacion:</strong> ${servicio.ciudad}</p>
-                                 <p>
-                                    <strong>Fecha de publicacion:</strong>
-                                    <span>
-                                       <fmt:formatDate value="${servicio.createdAt}" pattern="dd-MM-yyyy" />
-                                    </span>
-                                 </p>
-                                 <!-- Sección de Reseñas -->
-                                 <section class="resenas-section mt-5">
-                                    <!-- Promedio de calificaciones -->
-                                    <c:if test="${not empty promedio}">
-                                       <div>
-                                          <div class="card-body text-center">
-                                             <h5>Promedio de calificaciones</h5>
-                                             <div class="promedio-star">
-                                                <c:forEach begin="1" end="5" var="i">
-                                                   <c:choose>
-                                                      <c:when test="${i <= promedio}">
-                                                         <span class="star filled">&#9733;</span>
-                                                      </c:when>
-                                                      <c:otherwise>
-                                                         <span class="star">&#9733;</span>
-                                                      </c:otherwise>
-                                                   </c:choose>
-                                                </c:forEach>
-                                                <span class="promedio-num">
-                                                   (
-                                                   <fmt:formatNumber value="${promedio}" maxFractionDigits="1" />
-                                                   / 5)
-                                                </span>
-                                             </div>
-                                          </div>
-                                       </div>
-                                    </c:if>
-                              </div>
-                           </div>
-                        </div>
-                        <div class="CardEnviarSolicitud">
-                           <h5>Enviar Solicitud</h5>
-                           <form action="${pageContext.request.contextPath}/crear-solicitud" method="post">
-                              <div>
-                                 <textarea name="mensaje" placeholder="Escribe aqui un mensaje..." required></textarea>
-                              </div>
-                              <input type="hidden" name="servicioId" value="<c:out value='${servicio.id}'/>" />
-                              <button type="submit">Enviar Solicitud</button>
-                           </form>
-                        </div>
+         <!-- Solicitar Servicio -->
+         <c:if test="${not isAuthorInSesion}">
+            <div class="card bg-dark text-white mb-4 p-4">
+               <h5>Enviar Solicitud</h5>
+               <form action="${pageContext.request.contextPath}/crear-solicitud" method="post">
+                  <textarea name="mensaje" class="form-control mb-3" placeholder="Mensaje para el proveedor..." required></textarea>
+                  <input type="hidden" name="servicioId" value="${servicio.id}" />
+                  <button class="btn btn-success" type="submit">Enviar Solicitud</button>
+               </form>
+            </div>
+         </c:if>
+
+         <!-- Formulario de reseña -->
+         <c:if test="${not isAuthorInSesion}">
+            <div class="card bg-dark text-white mb-4 p-4">
+               <h5>Deja tu Reseña</h5>
+               <form id="formNuevaResena" action="${pageContext.request.contextPath}/publicar-resena" method="post">
+                  <input type="hidden" name="servicioId" value="${servicio.id}" />
+                  <div class="star-rating mb-3">
+                     <div class="stars">
+                        <c:forEach var="i" begin="1" end="5">
+                           <c:set var="rev" value="${6 - i}" />
+                           <input type="radio" id="star${rev}" name="calificacion" value="${rev}">
+                           <label for="star${rev}" class="star">&#9733;</label>
+                        </c:forEach>
+                        
                      </div>
-                  </c:otherwise>
-                  </c:choose>
-                  </c:if>
                   </div>
-                  <!-- Formulario de reseña -->
-                  <c:if test="${not isAuthorInSesion}">
-                     <div class="cardResena">
-                        <h5>Deja tu Comentario del Servicio</h5>
-                        <form action="${pageContext.request.contextPath}/publicar-resena" method="post">
-                           <input type="hidden" name="servicioId" value="${servicio.id}" />
-                           <div class="form-group star-rating mb-3">
-                              <label class="form-label">Calificacion:</label>
-                              <div class="stars">
-                                 <input type="radio" id="star5" name="calificacion" value="5" required />
-                                 <label for="star5" class="star">&#9733;</label>
-                                 <input type="radio" id="star4" name="calificacion" value="4" />
-                                 <label for="star4" class="star">&#9733;</label>
-                                 <input type="radio" id="star3" name="calificacion" value="3" />
-                                 <label for="star3" class="star">&#9733;</label>
-                                 <input type="radio" id="star2" name="calificacion" value="2" />
-                                 <label for="star2" class="star">&#9733;</label>
-                                 <input type="radio" id="star1" name="calificacion" value="1" />
-                                 <label for="star1" class="star">&#9733;</label>
-                              </div>
-                           </div>
-                           <div class="form-group mb-3">
-                              <label for="comentario">Comentario:</label>
-                              <textarea name="comentario" rows="3" class="form-control"
-                                 placeholder="Escribe tu comentario..."></textarea>
-                           </div>
-                           <button type="submit" class="btn btn-success">Enviar Comentario</button>
+                  <textarea name="comentario" rows="3" class="form-control mb-3" placeholder="Escribe tu comentario..."></textarea>
+                  <button class="btn btn-primary">Enviar Reseña</button>
+               </form>
+            </div>
+         </c:if>
+
+         <!-- Lista de reseñas -->
+         <div class="cardListaResenas">
+            <h5>Calificaciones recientes</h5>
+            <c:forEach var="resena" items="${resenas}">
+               <p><strong>${resena.usuario.nombre}</strong>
+                  <span class="estrellas-user">
+                     <c:forEach var="i" begin="1" end="5">
+                        <span class="star ${i <= resena.calificacion ? 'filled' : ''}">&#9733;</span>
+                     </c:forEach>
+                  </span>
+               </p>
+               <c:if test="${not empty resena.comentario}">
+                  <p class="resena-comentario">${resena.comentario}</p>
+                  <c:if test="${sessionScope.usuarioEnSesion.id == resena.usuario.id}">
+                     <div class="filaBotones">
+                        <form action="${pageContext.request.contextPath}/resena/eliminar" method="post" onsubmit="return confirmDelete(event)">
+                           <input type="hidden" name="resenaId" value="${resena.id}" />
+                           <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                           <button type="button" class="btn btn-warning btn-sm"
+                              onclick="mostrarModalEditar('${resena.id}', '${resena.calificacion}', '${fn:escapeXml(resena.comentario)}')">
+                              Editar
+                           </button>
                         </form>
                      </div>
                   </c:if>
-                  <!-- Lista de reseñas -->
-                  <div class="cardListaResenas">
-                     <h5>Calificaciones recientes</h5>
-                     <c:forEach var="resena" items="${resenas}">
-                        <p class="mb-1">
-                           <strong>${resena.usuario.nombre}</strong>
-                           <span class="estrellas-user">
-                              <c:forEach begin="1" end="5" var="i">
-                                 <c:choose>
-                                    <c:when test="${i <= resena.calificacion}">
-                                       <span class="star filled">&#9733;</span>
-                                    </c:when>
-                                    <c:otherwise>
-                                       <span class="star">&#9733;</span>
-                                    </c:otherwise>
-                                 </c:choose>
-                              </c:forEach>
-                           </span>
-                        </p>
-                        <c:if test="${not empty resena.comentario}">
-                           <p class="resena-comentario">${resena.comentario}</p>
-                           <c:if test="${sessionScope.usuarioEnSesion.id == resena.usuario.id}">
-                              <div class="filaBotones">
-                                 <!-- Formulario para eliminar -->
-                                 <form action="${pageContext.request.contextPath}/resena/eliminar" method="post"
-                                    style="display:inline;">
-                                    <input type="hidden" name="resenaId" value="${resena.id}" />
-                                    <button type="submit" title="Eliminar">Eliminar</button>
-                                    <!-- Botón para editar -->
-                                    <button type="button" title="Editar"
-                                       onclick="mostrarModalEditar('${resena.id}', '${resena.calificacion}', '${fn:escapeXml(resena.comentario)}')">
-                                       Editar
-                                    </button>
-                                 </form>
+               </c:if>
+               <hr />
+            </c:forEach>
+         </div>
+      </c:if>
+   </main>
 
 
-                              </div>
-                           </c:if>
+   <footer class="bg-dark text-white text-center py-3 mt-auto">
+      <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
+      <ul class="nav justify-content-center">
+         <li class="nav-item"><a class="nav-link text-white" href="/contacto">Contacto</a></li>
+         <li class="nav-item"><a class="nav-link text-white" href="/nosotros">Nosotros</a></li>
+      </ul>
+   </footer>
 
-                        </c:if>
-                        <hr style="border-color: #777;">
 
-                     </c:forEach>
-                  </div>
-                  </section>
-               </main>
-               <footer>
-                  <p>Pololitos &copy; 2025, Todos los derechos reservados</p>
-                  <ul class="nav-footer">
-                     <li><a href="/contacto">Contacto</a></li>
-                     <li><a href="/nosotros">Nosotros</a></li>
-                  </ul>
-               </footer>
-               <!-- Modal para editar reseña -->
-               <!-- Modal para editar reseña -->
-               <div id="modalEditar" class="modal" style="display:none;">
-                  <div class="modal-content">
-                     <h5>Editar Reseña</h5>
-                     <form id="formEditarResena" method="post"
-                        action="${pageContext.request.contextPath}/resena/editar">
-                        <input type="hidden" name="resenaId" id="editarResenaId">
-                        <label for="calificacionEditar">Calificación:</label>
-                        <input type="number" id="calificacionEditar" name="calificacion" min="1" max="5" required
-                           class="form-control">
-                        <label for="comentarioEditar">Comentario:</label>
-                        <textarea id="comentarioEditar" name="comentario" class="form-control" rows="3"></textarea>
-                        <div class="mt-2 d-flex gap-2">
-                           <button type="submit" class="btn btn-primary">Guardar cambios</button>
-                           <button type="button" class="btn btn-secondary"
-                              onclick="cerrarModalEditar()">Cancelar</button>
-                        </div>
-                     </form>
-                  </div>
-               </div>
+   <!-- Modal Bootstrap para editar reseña -->
+<div class="modal fade" id="modalEditar" tabindex="-1">
+   <div class="modal-dialog">
+      <form id="formEditarResena" method="post" action="${pageContext.request.contextPath}/resena/editar" class="modal-content text-dark" onsubmit="return validarEstrellasEdit()">
+         <div class="modal-header">
+            <h5 class="modal-title">Editar Reseña</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+         </div>
+         <div class="modal-body">
+            <input type="hidden" name="resenaId" id="editarResenaId">
+            <label class="form-label">Calificación:</label>
+            <div class="stars" id="editarStars">
+               <c:forEach var="i" begin="1" end="5">
+                  <c:set var="rev" value="${6 - i}" />
+                  <input type="radio" id="editarStar${rev}" name="calificacion" value="${rev}" />
+                  <label for="editarStar${rev}" class="star">&#9733;</label>
+               </c:forEach>
+            </div>
+            <label for="comentarioEditar" class="mt-2">Comentario:</label>
+            <textarea id="comentarioEditar" name="comentario" class="form-control" rows="3"></textarea>
+         </div>
+         <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar cambios</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+         </div>
+      </form>
+   </div>
+</div>
 
-               <script>
-                  function mostrarModalEditar(id, calificacion, comentario) {
-                     document.getElementById('editarResenaId').value = id;
-                     document.getElementById('calificacionEditar').value = calificacion;
-                     document.getElementById('comentarioEditar').value = comentario;
-                     document.getElementById('modalEditar').style.display = 'block';
-                  }
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   function mostrarModalEditar(id, calificacion, comentario) {
+      document.getElementById('editarResenaId').value = id;
+      document.getElementById('comentarioEditar').value = comentario;
 
-                  function cerrarModalEditar() {
-                     document.getElementById('modalEditar').style.display = 'none';
-                  }
-               </script>
+      const radios = document.querySelectorAll('#editarStars input[name="calificacion"]');
+      radios.forEach(r => r.checked = false);
 
-            </body>
+      const selected = document.getElementById('editarStar' + calificacion);
+      if (selected) selected.checked = true;
 
-            </html>
+      new bootstrap.Modal(document.getElementById('modalEditar')).show();
+   }
+
+   function confirmDelete(e) {
+      e.preventDefault();
+      Swal.fire({
+         title: '¿Eliminar reseña?',
+         text: 'Esta acción no se puede deshacer',
+         icon: 'warning',
+         showCancelButton: true,
+         confirmButtonColor: '#d33',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'Sí, eliminar',
+         cancelButtonText: 'Cancelar'
+      }).then((result) => {
+         if (result.isConfirmed) e.target.submit();
+      });
+   }
+
+   function validarEstrellasEdit() {
+      const seleccion = document.querySelector('#editarStars input[name="calificacion"]:checked');
+      if (!seleccion) {
+         Swal.fire({
+            icon: 'warning',
+            title: 'Selecciona una calificación',
+            text: 'Debes seleccionar una cantidad de estrellas para continuar',
+            confirmButtonColor: '#f39c12'
+         });
+         return false;
+      }
+      return true;
+   }
+
+   document.addEventListener("DOMContentLoaded", () => {
+      const formNuevaResena = document.getElementById("formNuevaResena");
+      if (formNuevaResena) {
+         formNuevaResena.addEventListener("submit", function (e) {
+            const comentario = this.querySelector('textarea[name="comentario"]').value.trim();
+            if (!comentario) {
+               e.preventDefault();
+               Swal.fire({
+                  icon: 'warning',
+                  title: 'Escribe tu reseña',
+                  text: 'No puedes dejar una reseña vacía',
+                  confirmButtonColor: '#f39c12'
+               });
+               return;
+            }
+
+            const estrellasSeleccionadas = this.querySelector('input[name="calificacion"]:checked');
+            if (!estrellasSeleccionadas) {
+               e.preventDefault();
+               Swal.fire({
+                  icon: 'warning',
+                  title: 'Selecciona una calificación',
+                  text: 'Debes seleccionar una cantidad de estrellas para dejar tu reseña',
+                  confirmButtonColor: '#f39c12'
+               });
+            }
+         });
+      }
+   });
+</script>
+
+</body>
+</html>

@@ -5,158 +5,163 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publicar Servicio</title>
-    <link rel="stylesheet" href="/css/nuevoServicio.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <style>
-        .preview-container {
-            margin-top: 10px;
-        }
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Publicar Servicio</title>
 
-        .preview-image {
-            max-width: 300px;
-            max-height: 300px;
-            display: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-    </style>
+   <!-- Fuentes personalizadas -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+   <!-- Bootstrap & Icons -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   <style>
+      body {
+         font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
+         min-height: 100vh;
+         background-image: url('https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg');
+         background-size: cover;
+         background-position: center;
+         display: flex;
+         flex-direction: column;
+         color: white;
+      }
+   </style>
 </head>
-<body>
-    <header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="/img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
-            </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                    <c:if test="${not empty sessionScope.usuarioEnSesion}">
-                        <li><a href="/mis-servicios">Mis Servicios</a></li>
-                        <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                        <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                    </c:if>
-                </ul>
-            </nav>
-        </div>
-        <div class="user-info">
-            <form action="/buscar-servicios" method="get">
-                <div class="circle-busqueda" id="busqueda-container">
-                    <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
-                    <button type="submit" id="busqueda-btn">
-                        <img src="${pageContext.request.contextPath}/img/busqueda.png" alt="Buscar" id="busqueda-icon">
-                    </button>
-                </div>
-            </form>
-            <c:choose>
-                <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <a href="/perfilUsuario">
-                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" style="border-radius: 50%;">
-                    </a>
-                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                    <a href="/logout"><button>Cerrar Sesión</button></a>
-                </c:when>
-                <c:otherwise>
-                    <a href="/login"><button>Iniciar sesión</button></a>
-                    <a href="/registro"><button>Regístrate</button></a>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </header>
 
-    <main>
-        <div class="form-container">
-            <h1>Publicar nuevo servicio</h1>
+<body class="d-flex flex-column">
 
-            <c:if test="${not empty error}">
-                <div class="alert alert-danger" role="alert">
-                    ${error}
-                </div>
+   <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+      <a class="navbar-brand" href="/">
+         <img src="<c:url value='/img/pololitosBlanco.png' />" alt="Logo pololitos" height="40">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
+            <c:if test="${not empty sessionScope.usuarioEnSesion}">
+               <li class="nav-item"><a class="nav-link" href="/mis-servicios">Mis Servicios</a></li>
+               <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-enviadas">Enviadas</a></li>
+               <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-recibidas">Recibidas</a></li>
             </c:if>
+         </ul>
+         <form class="d-flex me-3" action="/buscar-servicios" method="get">
+            <input class="form-control me-2" type="search" name="query" placeholder="Busca Aquí">
+            <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+         </form>
+         <c:choose>
+            <c:when test="${not empty sessionScope.usuarioEnSesion}">
+               <a href="/perfilUsuario" class="me-3">
+                  <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" class="rounded-circle">
+               </a>
+               <a href="/servicios/publicar" class="btn btn-success me-2">Crear Servicio</a>
+               <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+            </c:when>
+            <c:otherwise>
+               <a href="/login" class="btn btn-outline-light me-2">Iniciar sesión</a>
+               <a href="/registro" class="btn btn-outline-info">Regístrate</a>
+            </c:otherwise>
+         </c:choose>
+      </div>
+   </nav>
 
-            <form:form modelAttribute="servicio" action="/publicar" method="POST" enctype="multipart/form-data">
-                <div class="mb-3">
-                    <label for="nombre" class="form-label">Nombre del Servicio:</label>
-                    <form:input path="nombre" class="form-control" required="true"/>
-                    <form:errors path="nombre" class="text-danger"/>
-                </div>
+   <!-- Contenido principal -->
+   <main class="container my-5">
+      <div class="bg-dark text-white p-5 rounded shadow">
+         <h1 class="mb-4 text-center">Publicar nuevo servicio</h1>
 
-                <div class="mb-3">
-                    <label for="descripcion" class="form-label">Descripción:</label>
-                    <form:textarea path="descripcion" class="form-control" rows="4" required="true"/>
-                    <form:errors path="descripcion" class="text-danger"/>
-                </div>
+         <c:if test="${not empty error}">
+            <div class="alert alert-danger text-center">${error}</div>
+         </c:if>
 
-                <div class="mb-3">
-                    <label for="precio" class="form-label">Precio:</label>
-                    <form:input path="precio" type="number" step="0.01" class="form-control" required="true"/>
-                    <form:errors path="precio" class="text-danger"/>
-                </div>
+         <form:form modelAttribute="servicio" action="/publicar" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+               <label for="nombre" class="form-label">Nombre del Servicio:</label>
+               <form:input path="nombre" class="form-control" required="true"/>
+               <form:errors path="nombre" class="text-danger"/>
+            </div>
 
-                <div class="mb-3">
-                    <label for="ciudad" class="form-label">Ciudad:</label>
-                    <form:input path="ciudad" class="form-control"/>
-                    <form:errors path="ciudad" class="text-danger"/>
-                </div>
+            <div class="mb-3">
+               <label for="descripcion" class="form-label">Descripción:</label>
+               <form:textarea path="descripcion" class="form-control" rows="4" required="true"/>
+               <form:errors path="descripcion" class="text-danger"/>
+            </div>
 
-                <div class="mb-3">
-                    <label for="file" class="form-label">Foto del Servicio:</label>
-                    <input type="file" name="file" id="fileInput" class="form-control" accept="image/*" required />
-                    <div class="preview-container">
-                        <img id="previewImage" class="preview-image" alt="Vista previa de imagen" />
-                    </div>
-                </div>
+            <div class="mb-3">
+               <label for="precio" class="form-label">Precio:</label>
+               <form:input path="precio" type="number" step="0.01" class="form-control" required="true"/>
+               <form:errors path="precio" class="text-danger"/>
+            </div>
 
-                <div class="mb-3">
-                    <label for="categoria" class="form-label">Categoría:</label>
-                    <form:select path="categoria.id" class="form-control" required="true">
-                        <form:option value="" label="Seleccione una categoría"/>
-                        <c:forEach var="categoria" items="${categorias}">
-                            <form:option value="${categoria.id}" label="${categoria.nombre}"/>
-                        </c:forEach>
-                    </form:select>
-                    <form:errors path="categoria" class="text-danger"/>
-                </div>
+            <div class="mb-3">
+               <label for="ciudad" class="form-label">Ciudad:</label>
+               <form:input path="ciudad" class="form-control"/>
+               <form:errors path="ciudad" class="text-danger"/>
+            </div>
 
-                <div class="d-grid">
-                    <button type="submit" class="btn btn-success">
-                        <i class="fas fa-upload"></i> Publicar Servicio
-                    </button>
-                </div>
-            </form:form>
-        </div>
-    </main>
+            <div class="mb-3">
+               <label for="file" class="form-label">Foto del Servicio:</label>
+               <input type="file" name="file" id="fileInput" class="form-control" accept="image/*" required />
+               <div class="mt-3 text-center">
+                  <img id="previewImage" class="img-thumbnail" style="max-width: 300px; display: none;" alt="Vista previa" />
+               </div>
+            </div>
 
-    <footer>
-        <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
-        <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-        </ul>
-    </footer>
+            <div class="mb-4">
+               <label for="categoria" class="form-label">Categoría:</label>
+               <form:select path="categoria.id" class="form-control" required="true">
+                  <form:option value="" label="Seleccione una categoría"/>
+                  <c:forEach var="categoria" items="${categorias}">
+                     <form:option value="${categoria.id}" label="${categoria.nombre}"/>
+                  </c:forEach>
+               </form:select>
+               <form:errors path="categoria" class="text-danger"/>
+            </div>
 
-    <script>
-        const fileInput = document.getElementById("fileInput");
-        const previewImage = document.getElementById("previewImage");
+            <div class="text-center">
+               <button type="submit" class="btn btn-success btn-lg px-5">
+                  <i class="bi bi-cloud-upload"></i> Publicar Servicio
+               </button>
+            </div>
+         </form:form>
+      </div>
+   </main>
 
-        fileInput.addEventListener("change", function () {
-            const file = this.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    previewImage.src = e.target.result;
-                    previewImage.style.display = "block";
-                }
-                reader.readAsDataURL(file);
-            } else {
-                previewImage.style.display = "none";
-                previewImage.src = "";
+   <!-- Footer -->
+   <footer class="bg-dark text-white text-center py-3 mt-auto">
+      <p class="mb-1">Pololitos &copy; 2025. Todos los derechos reservados</p>
+      <ul class="nav justify-content-center">
+         <li class="nav-item"><a class="nav-link text-white" href="/contacto">Contacto</a></li>
+         <li class="nav-item"><a class="nav-link text-white" href="/nosotros">Nosotros</a></li>
+      </ul>
+   </footer>
+
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   <script>
+      const fileInput = document.getElementById("fileInput");
+      const previewImage = document.getElementById("previewImage");
+
+      fileInput.addEventListener("change", function () {
+         const file = this.files[0];
+         if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+               previewImage.src = e.target.result;
+               previewImage.style.display = "block";
             }
-        });
-    </script>
+            reader.readAsDataURL(file);
+         } else {
+            previewImage.style.display = "none";
+            previewImage.src = "";
+         }
+      });
+   </script>
 </body>
 </html>

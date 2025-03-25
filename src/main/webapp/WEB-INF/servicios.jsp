@@ -1,158 +1,160 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Servicios</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="/css/servicios.css">
-    <link rel="stylesheet" href="/css/home.css">
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Servicios</title>
 
+   <!-- Fuentes personalizadas -->
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
+
+   <!-- Bootstrap & Icons -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+   <style>
+      body {
+         font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
+         min-height: 100vh;
+         background-image: url('https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg');
+         background-size: cover;
+         background-position: center;
+         display: flex;
+         flex-direction: column;
+         color: white;
+      }
+   </style>
 </head>
-    
-    <body>
-        <header>
-            <div class="nav-container">
-                <a href="/">
-                    <div class="logo">
-                        <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                    </div>
-                </a>
-                <nav>
-                    <ul class="nav-links">
-                        <li><a href="/servicios">Servicios</a></li>
-                        <!-- Agregar la opción Mis Servicios solo si el usuario está logueado -->
-                        <c:choose>
-                            <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                                <li><a href="/mis-servicios">Mis Servicios</a></li>
-                            </c:when>
-                        </c:choose>
-                        <c:choose>
-                            <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                                <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                            </c:when>
-                        </c:choose>
-                        <c:choose>
-                            <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                                <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                            </c:when>
-                        </c:choose>
-                    </ul>
-                </nav>
-            </div>
-            <div class="user-info">
-                <form action="/buscar-servicios" method="get">
-                    <div class="circle-busqueda" id="busqueda-container">
-                        <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
-                        <button type="submit" id="busqueda-btn">
-                            <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
-                        </button>
-                    </div>
-                </form>
 
-                <c:choose>
-                    <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                        <a href="/perfilUsuario">
-                            <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                                width="40" height="40" style="border-radius: 50%;">
+<body class="d-flex flex-column">
+
+   <!-- Navbar -->
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+      <a class="navbar-brand" href="/">
+         <img src="<c:url value='/img/pololitosBlanco.png' />" alt="Logo pololitos" height="40">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item"><a class="nav-link active" href="/servicios">Servicios</a></li>
+            <c:if test="${not empty sessionScope.usuarioEnSesion}">
+               <li class="nav-item"><a class="nav-link" href="/mis-servicios">Mis Servicios</a></li>
+               <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-enviadas">Enviadas</a></li>
+               <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-recibidas">Recibidas</a></li>
+            </c:if>
+         </ul>
+         <form class="d-flex me-3" action="/buscar-servicios" method="get">
+            <input class="form-control me-2" type="search" name="query" placeholder="¿Qué servicio buscas?">
+            <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+         </form>
+         <c:choose>
+            <c:when test="${not empty sessionScope.usuarioEnSesion}">
+               <a href="/perfilUsuario" class="me-3">
+                  <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
+               </a>
+               <a href="/servicios/publicar" class="btn btn-success me-2">Crear Servicio</a>
+               <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+            </c:when>
+            <c:otherwise>
+               <a href="/login" class="btn btn-outline-light me-2">Iniciar sesión</a>
+               <a href="/registro" class="btn btn-outline-info">Regístrate</a>
+            </c:otherwise>
+         </c:choose>
+      </div>
+   </nav>
+
+   <!-- Contenido -->
+   <main class="container py-5">
+      <div class="mb-4">
+         <label for="categoryFilter" class="form-label">Filtrar por categoría:</label>
+         <select id="categoryFilter" class="form-select w-auto d-inline-block" onchange="filterByCategory()">
+            <option value="">Seleccionar categoría</option>
+            <c:forEach var="categoria" items="${categorias}">
+               <option value="${categoria.id}" ${param.categoriaId == categoria.id ? 'selected' : ''}>
+                  ${categoria.nombre}
+               </option>
+            </c:forEach>
+         </select>
+      </div>
+
+      <h1 class="text-center mb-4">Servicios por Categoría</h1>
+
+      <c:forEach var="categoria" items="${categorias}">
+         <c:if test="${empty param.categoriaId or param.categoriaId == categoria.id}">
+            <h2 class="text-white mt-4">${categoria.nombre}</h2>
+            <c:if test="${empty categoria.servicios}">
+               <p class="text-white-50">No hay servicios disponibles en esta categoría.</p>
+            </c:if>
+            <div class="row">
+               <c:forEach var="servicio" items="${categoria.servicios}">
+                  <div class="col-md-4 mb-4">
+                     <div class="card bg-dark text-white h-100">
+                        <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}">
+                           <img src="${servicio.imgUrl}" class="card-img-top" style="height: 220px; object-fit: cover;" alt="${servicio.nombre}">
                         </a>
-                        <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                        <a href="/logout"><button>Cerrar Sesión</button></a>
-                    </c:when>
-
-                    <c:otherwise>
-                        <a href="/login"><button>Iniciar sesión</button></a>
-                        <a href="/registro"><button>Regístrate</button></a>
-                    </c:otherwise>
-                </c:choose>
-            </div>
-        </header>
-        <main>
-            <div class="filter-container">
-                <label for="categoryFilter">Filtrar por categoría:</label>
-                <select id="categoryFilter" onchange="filterByCategory()">
-                    <option value="">Seleccionar categoría</option>
-                    <c:forEach var="categoria" items="${categorias}">
-                        <option value="${categoria.id}" ${param.categoriaId == categoria.id ? 'selected' : ''}>
-                            ${categoria.nombre}
-                        </option>
-                    </c:forEach>
-                </select>
-            </div>
-    
-            <div class="services-container">
-                <h1>Servicios por Categoría</h1>
-                <c:forEach var="categoria" items="${categorias}">
-                    <c:if test="${empty param.categoriaId or param.categoriaId == categoria.id}">
-                        <h2 class="category-title">${categoria.nombre}</h2>
-                        <c:if test="${empty categoria.servicios}">
-                            <p class="no-services-msg">No hay servicios disponibles en esta categoría.</p>
-                        </c:if>
-                        <div class="services-list">
-                            <c:forEach var="servicio" items="${categoria.servicios}">
-                                <div class="service-card-wrapper">
-                                    <div class="service-card">
-                                        <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="service-link">
-                                            <img src="${servicio.imgUrl}" class="card-img-top img-card-profile-service" alt="${servicio.nombre}">
-                                        </a>
-                                        <div class="service-info">
-                                            <h5 class="service-title">${servicio.nombre}</h5>
-                                            <p class="service-price"><strong>Precio:</strong> $${servicio.precio}</p>
-                                            <p class="service-author"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
-                                            <div>
-                                                <c:choose>
-                                                <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
-                                                    <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}"
-                                                        class="btn-request-service">
-                                                        <i class="fas fa-hand-paper"></i> Solicitar Servicio
-                                                    </a>
-                                                    <button class="btn-contact-seller" data-bs-toggle="modal"
-                                                        data-bs-target="#contactModal"
-                                                        onclick="openModal('${servicio.usuario.nombre}', '${servicio.nombre}')">
-                                                        Contactar con el Vendedor
-                                                    </button>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}"
-                                                        class="btn-view-service">
-                                                        <i class="fas fa-eye"></i> Ver
-                                                    </a>
-                                                </c:otherwise>
-                                            </c:choose>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </c:forEach>
+                        <div class="card-body d-flex flex-column">
+                           <h5 class="card-title text-truncate">${servicio.nombre}</h5>
+                           <p class="card-text mb-1"><strong>Precio:</strong> $${servicio.precio}</p>
+                           <p class="card-text"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
+                           <div class="mt-auto">
+                              <c:choose>
+                                 <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
+                                    <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-primary btn-sm me-2 mb-2">
+                                       <i class="bi bi-hand-index-thumb"></i> Solicitar Servicio
+                                    </a>
+                                    <button class="btn btn-outline-light btn-sm mb-2" data-bs-toggle="modal" data-bs-target="#contactModal"
+                                       onclick="openModal('${servicio.usuario.nombre}', '${servicio.nombre}')">
+                                       <i class="bi bi-chat-dots"></i> Contactar
+                                    </button>
+                                 </c:when>
+                                 <c:otherwise>
+                                    <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="btn btn-outline-info btn-sm">
+                                       <i class="bi bi-eye"></i> Ver
+                                    </a>
+                                 </c:otherwise>
+                              </c:choose>
+                           </div>
                         </div>
-                    </c:if>
-                </c:forEach>
+                     </div>
+                  </div>
+               </c:forEach>
             </div>
-        </main>
+         </c:if>
+      </c:forEach>
+   </main>
 
-        <footer>
-            <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
-            <ul class="nav-footer">
-                <li><a href="/contacto">Contacto</a></li>
-                <li><a href="/nosotros">Nosotros</a></li>
-            </ul>
-        </footer>
+   <!-- Footer -->
+   <footer class="bg-dark text-white text-center py-3 mt-auto">
+      <p class="mb-1">Pololitos &copy; 2025. Todos los derechos reservados</p>
+      <ul class="nav justify-content-center">
+         <li class="nav-item"><a class="nav-link text-white" href="/contacto">Contacto</a></li>
+         <li class="nav-item"><a class="nav-link text-white" href="/nosotros">Nosotros</a></li>
+      </ul>
+   </footer>
 
-        <script>
-            function filterByCategory() {
-                var selectedCategory = document.getElementById("categoryFilter").value;
-                var url = "/servicios";
-                if (selectedCategory) {
-                    url += "?categoriaId=" + selectedCategory;
-                }
-                window.location.href = url;
-            }
-        </script>
-    </body>
-    
-    </html>
+   <!-- Scripts -->
+   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+   <script>
+      function filterByCategory() {
+         var selectedCategory = document.getElementById("categoryFilter").value;
+         var url = "/servicios";
+         if (selectedCategory) {
+            url += "?categoriaId=" + selectedCategory;
+         }
+         window.location.href = url;
+      }
+
+      function openModal(nombreVendedor, nombreServicio) {
+         alert(`Simulación de contacto con ${nombreVendedor} para el servicio: ${nombreServicio}`);
+      }
+   </script>
+</body>
+</html>
