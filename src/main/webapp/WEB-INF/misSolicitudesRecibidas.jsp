@@ -11,6 +11,7 @@
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
    <style>
       html, body {
          height: 100%;
@@ -19,19 +20,11 @@
          background-color: #1e1e1e;
          color: white;
       }
-      body {
-         display: flex;
-         flex-direction: column;
-      }
-      main {
-         flex: 1;
-      }
-      .table thead {
-         color: #f1c40f;
-      }
-      .table td, .table th {
-         vertical-align: middle;
-      }
+      body { display: flex; flex-direction: column; }
+      main { flex: 1; }
+      .table thead { color: #f1c40f; }
+      .table td, .table th { vertical-align: middle; }
+      .inactiva { filter: grayscale(100%); opacity: 0.6; }
    </style>
 </head>
 <body>
@@ -73,11 +66,13 @@
    </div>
 </nav>
 
-<!-- Contenido -->
 <main class="container py-5">
    <h2 class="mb-4 text-center">Mis Solicitudes Recibidas</h2>
-   <c:if test="${not empty solicitudes}">
-      <div class="table-responsive">
+
+   <!-- ACTIVAS -->
+   <c:if test="${not empty solicitudesActivas}">
+      <h4 class="text-warning">Solicitudes Activas</h4>
+      <div class="table-responsive mb-5">
          <table class="table table-dark table-bordered table-hover text-center align-middle">
             <thead>
                <tr>
@@ -86,12 +81,12 @@
                   <th>Servicio</th>
                   <th>Estado</th>
                   <th>Comentario</th>
-                  <th>Acción</th>
+                  <th>Acciones</th>
                   <th>Chat</th>
                </tr>
             </thead>
             <tbody>
-               <c:forEach var="solicitud" items="${solicitudes}">
+               <c:forEach var="solicitud" items="${solicitudesActivas}">
                   <tr>
                      <td>${solicitud.id}</td>
                      <td>${solicitud.solicitante.nombre}</td>
@@ -99,10 +94,14 @@
                      <td>${solicitud.estado}</td>
                      <td>${solicitud.comentarioAdicional}</td>
                      <td>
-                        <c:if test="${solicitud.estado != 'Aceptada'}">
-                           <form action="/aceptar-solicitud" method="post">
+                        <c:if test="${solicitud.estado == 'Enviado'}">
+                           <form action="/aceptar-solicitud" method="post" style="display:inline-block;">
                               <input type="hidden" name="solicitudId" value="${solicitud.id}" />
-                              <button type="submit" class="btn btn-success btn-sm">Aceptar</button>
+                              <button type="submit" class="btn btn-success btn-sm mb-1">Aceptar</button>
+                           </form>
+                           <form action="/rechazar-solicitud" method="post" style="display:inline-block;">
+                              <input type="hidden" name="solicitudId" value="${solicitud.id}" />
+                              <button type="submit" class="btn btn-danger btn-sm mb-1">Rechazar</button>
                            </form>
                         </c:if>
                      </td>
@@ -129,7 +128,37 @@
          </table>
       </div>
    </c:if>
-   <c:if test="${empty solicitudes}">
+
+   <!-- INACTIVAS -->
+   <c:if test="${not empty solicitudesInactivas}">
+      <h4 class="text-white">Solicitudes Rechazadas o Completadas</h4>
+      <div class="table-responsive">
+         <table class="table table-bordered table-hover text-center align-middle inactiva">
+            <thead>
+               <tr>
+                  <th>ID</th>
+                  <th>Solicitante</th>
+                  <th>Servicio</th>
+                  <th>Estado</th>
+                  <th>Comentario</th>
+               </tr>
+            </thead>
+            <tbody>
+               <c:forEach var="solicitud" items="${solicitudesInactivas}">
+                  <tr>
+                     <td>${solicitud.id}</td>
+                     <td>${solicitud.solicitante.nombre}</td>
+                     <td>${solicitud.servicio.nombre}</td>
+                     <td>${solicitud.estado}</td>
+                     <td>${solicitud.comentarioAdicional}</td>
+                  </tr>
+               </c:forEach>
+            </tbody>
+         </table>
+      </div>
+   </c:if>
+
+   <c:if test="${empty solicitudesActivas and empty solicitudesInactivas}">
       <div class="alert alert-info text-center">No tienes solicitudes recibidas aún.</div>
    </c:if>
 </main>

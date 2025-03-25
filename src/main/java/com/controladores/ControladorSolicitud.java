@@ -76,74 +76,117 @@ public class ControladorSolicitud {
     @GetMapping("/mis-solicitudes-enviadas")
     public ModelAndView verMisSolicitudesEnviadas(HttpSession session) {
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-        if (usuarioEnSesion == null) {
+        if (usuarioEnSesion == null)
             return new ModelAndView("redirect:/login");
-        }
 
-        List<Solicitud> solicitudesEnviadas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion);
+        List<Solicitud> activas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion).stream()
+                .filter(s -> s.getEstado().equals("Enviado") || s.getEstado().equals("Aceptada"))
+                .toList();
+
+        List<Solicitud> inactivas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion).stream()
+                .filter(s -> s.getEstado().equals("Cancelada") || s.getEstado().equals("Completada"))
+                .toList();
+
+        Map<Long, Boolean> chatsCreados = new HashMap<>();
+        for (Solicitud s : activas) {
+            chatsCreados.put(s.getId(), repositorioChat.findBySolicitudId(s.getId()) != null);
+        }
 
         ModelAndView mav = new ModelAndView("misSolicitudesEnviadas.jsp");
-
-        // Map para almacenar si cada solicitud tiene un chat existente
-        Map<Long, Boolean> chatsCreados = new HashMap<>();
-
-        for (Solicitud solicitud : solicitudesEnviadas) {
-            // Verificar si ya existe un chat para la solicitud
-            boolean isChatCreated = repositorioChat.findBySolicitudId(solicitud.getId()) != null;
-            chatsCreados.put(solicitud.getId(), isChatCreated);
-        }
-
-        mav.addObject("solicitudes", solicitudesEnviadas);
+        mav.addObject("solicitudesActivas", activas);
+        mav.addObject("solicitudesInactivas", inactivas);
         mav.addObject("chatsCreados", chatsCreados);
-
         return mav;
     }
 
     @GetMapping("/mis-solicitudes-recibidas")
     public ModelAndView verMisSolicitudesRecibidas(HttpSession session) {
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
-        if (usuarioEnSesion == null) {
+        if (usuarioEnSesion == null)
             return new ModelAndView("redirect:/login");
-        }
 
-        List<Solicitud> solicitudesRecibidas = solicitudServicio.obtenerSolicitudesPorProveedor(usuarioEnSesion);
+        List<Solicitud> activas = solicitudServicio.obtenerSolicitudesPorProveedor(usuarioEnSesion).stream()
+                .filter(s -> s.getEstado().equals("Enviado") || s.getEstado().equals("Aceptada"))
+                .toList();
+
+        List<Solicitud> inactivas = solicitudServicio.obtenerSolicitudesPorProveedor(usuarioEnSesion).stream()
+                .filter(s -> s.getEstado().equals("Rechazada") || s.getEstado().equals("Completada"))
+                .toList();
+
+        Map<Long, Boolean> chatsCreados = new HashMap<>();
+        for (Solicitud s : activas) {
+            chatsCreados.put(s.getId(), repositorioChat.findBySolicitudId(s.getId()) != null);
+        }
 
         ModelAndView mav = new ModelAndView("misSolicitudesRecibidas.jsp");
-
-        // Crear un Map con los estados de chat
-        Map<Long, Boolean> chatsCreados = new HashMap<>();
-
-        for (Solicitud solicitud : solicitudesRecibidas) {
-            boolean isChatCreated = repositorioChat.findBySolicitudId(solicitud.getId()) != null;
-            chatsCreados.put(solicitud.getId(), isChatCreated);
-        }
-
-        // Pasar los datos al modelo
-        mav.addObject("solicitudes", solicitudesRecibidas);
+        mav.addObject("solicitudesActivas", activas);
+        mav.addObject("solicitudesInactivas", inactivas);
         mav.addObject("chatsCreados", chatsCreados);
-
         return mav;
     }
 
     @PostMapping("/aceptar-solicitud")
-    public String aceptarSolicitud(@RequestParam("solicitudId") Long solicitudId,
-            RedirectAttributes redirectAttributes) {
-        // Obtener la solicitud por ID
-        Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
-        if (solicitud == null) {
-            redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-            return "redirect:/mis-solicitudes-recibidas"; // Redirigir si la solicitud no existe
-        }
-
-        // Cambiar el estado de la solicitud a "Aceptada"
+public String aceptarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+                               RedirectAttributes redirectAttributes) {
+    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+    if (solicitud == null) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+    } else if (!"Enviado".equals(solicitud.getEstado())) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+    } else {
         solicitud.setEstado("Aceptada");
-
-        // Guardar la solicitud con el nuevo estado
         solicitudServicio.guardarSolicitud(solicitud);
         redirectAttributes.addFlashAttribute("success", "Solicitud aceptada correctamente.");
-
-        // Redirigir de vuelta a la página de solicitudes recibidas
-        return "redirect:/mis-solicitudes-recibidas";
     }
+    return "redirect:/mis-solicitudes-recibidas";
+}
+
+@PostMapping("/rechazar-solicitud")
+public String rechazarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+                                RedirectAttributes redirectAttributes) {
+    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+    if (solicitud == null) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+    } else if (!"Enviado".equals(solicitud.getEstado())) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+    } else {
+        solicitud.setEstado("Rechazada");
+        solicitudServicio.guardarSolicitud(solicitud);
+        redirectAttributes.addFlashAttribute("success", "Solicitud rechazada correctamente.");
+    }
+    return "redirect:/mis-solicitudes-recibidas";
+}
+
+@PostMapping("/cancelar-solicitud")
+public String cancelarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+                                RedirectAttributes redirectAttributes) {
+    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+    if (solicitud == null) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+    } else if (!"Enviado".equals(solicitud.getEstado())) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+    } else {
+        solicitud.setEstado("Cancelada");
+        solicitudServicio.guardarSolicitud(solicitud);
+        redirectAttributes.addFlashAttribute("success", "Solicitud cancelada correctamente.");
+    }
+    return "redirect:/mis-solicitudes-enviadas";
+}
+
+@PostMapping("/completar-solicitud")
+public String completarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+                                 RedirectAttributes redirectAttributes) {
+    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+    if (solicitud == null) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+    } else if (!"Enviado".equals(solicitud.getEstado())) {
+        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+    } else {
+        solicitud.setEstado("Completada");
+        solicitudServicio.guardarSolicitud(solicitud);
+        redirectAttributes.addFlashAttribute("success", "Trabajo marcado como completado.");
+    }
+    return "redirect:/mis-solicitudes-enviadas";
+}
 
 }
