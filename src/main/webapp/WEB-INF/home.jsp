@@ -29,7 +29,8 @@
     <main class="container text-center my-5">
         <h1 class="mb-3">Publica un Pololo.<br>Genera Ingresos Con Trabajos Pequeños.</h1>
         <p class="lead mb-4">Conectamos a personas que buscan ayuda con servicios locales dispuestos a brindar soluciones</p>
-        <a href="/servicios" class="btn btn-primary btn-lg px-4">Buscar Servicios</a>
+        <a href="/servicios" class="btn btn-primary btn-lg w-auto">Buscar Servicios</a>
+
 
         <!-- Sección Publicidad -->
         <div class="row justify-content-center my-5">
@@ -47,6 +48,32 @@
                 </div>
             </div>
         </div>
+        <!-- ¿Por qué elegirnos? -->
+<div class="row justify-content-center text-center text-white my-5">
+    <h2 class="mb-4">¿Por qué elegir Pololitos?</h2>
+    <div class="col-md-4 mb-3">
+        <div class="p-4 bg-dark rounded h-100">
+            <i class="bi bi-shield-lock-fill display-4 mb-3 text-primary"></i>
+            <h5>Seguridad Garantizada</h5>
+            <p>Protegemos tus datos y transacciones con sistemas seguros y monitoreados.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="p-4 bg-dark rounded h-100">
+            <i class="bi bi-incognito display-4 mb-3 text-warning"></i>
+            <h5>Confidencialidad</h5>
+            <p>Tu privacidad es nuestra prioridad. Nadie más verá tu información personal.</p>
+        </div>
+    </div>
+    <div class="col-md-4 mb-3">
+        <div class="p-4 bg-dark rounded h-100">
+            <i class="bi bi-chat-dots-fill display-4 mb-3 text-info"></i>
+            <h5>Chat Personalizado</h5>
+            <p>Comunícate en tiempo real con tus clientes o proveedores dentro de la plataforma.</p>
+        </div>
+    </div>
+</div>
+
 
         <!-- Carrusel Últimos Servicios -->
         <div class="section mb-5">
