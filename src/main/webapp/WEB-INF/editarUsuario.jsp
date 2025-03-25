@@ -35,12 +35,13 @@ prefix="c" %>
         <div class="col-md-8">
           <div class="card bg-dark border-light p-4">
             <h2 class="text-center text-white mb-4">Editar Perfil</h2>
+            <!-- FORMULARIO EDITAR PERFIL -->
             <%@ include file="/WEB-INF/componentes/forms/editUser.jsp" %>
           </div>
         </div>
       </div>
     </main>
-
+    <!-- footer -->
     <%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

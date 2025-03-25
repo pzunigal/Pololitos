@@ -61,67 +61,7 @@
   </div>
 </nav>
 
-<!-- Scripts Firebase + Bootstrap -->
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-<script>
-  const firebaseConfig = {
-    apiKey: "",
-    authDomain: "pololitos-a96fb.firebaseapp.com",
-    databaseURL: "https://pololitos-a96fb-default-rtdb.firebaseio.com",
-    projectId: "pololitos-a96fb",
-    storageBucket: "pololitos-a96fb.appspot.com",
-    messagingSenderId: "",
-    appId: ""
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.database();
-
-  const usuarioId = "${usuarioEnSesion.id}";
-  const badge = document.getElementById("notificacionBadge");
-  const lista = document.getElementById("notificacionesLista");
-
-  function renderNotificaciones(data) {
-    lista.innerHTML = "";
-    let contador = 0;
-
-    for (const id in data) {
-      const n = data[id];
-      if (n.receptorId != usuarioId) continue; // ✅ seguridad adicional
-
-      if (!n.leida) contador++;
-
-      const li = document.createElement("li");
-      li.className = "dropdown-item text-white" + (!n.leida ? " fw-bold" : "");
-      li.style.cursor = "pointer";
-      li.textContent = n.mensaje;
-      li.onclick = () => {
-        db.ref(`notificaciones/${usuarioId}/${id}/leida`).set(true).then(() => {
-          window.location.href = n.urlDestino;
-        });
-      };
-      lista.appendChild(li);
-    }
-
-    if (contador > 0) {
-      badge.style.display = "inline-block";
-      badge.textContent = contador;
-    } else {
-      badge.style.display = "none";
-    }
-
-    if (lista.children.length === 0) {
-      lista.innerHTML = "<li class='dropdown-item text-muted'>No hay notificaciones</li>";
-    }
-  }
-
-  if (usuarioId && lista) {
-    const ref = db.ref(`notificaciones/${usuarioId}`);
-    ref.on("value", (snapshot) => {
-      const data = snapshot.val() || {};
-      renderNotificaciones(data);
-    });
-  }
-</script>
