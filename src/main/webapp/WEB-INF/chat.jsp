@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -10,39 +11,11 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Chat</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="/css/chat.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
     <style>
-        .chat-container {
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            border: 2px solid #3498db;
-            border-radius: 10px;
-            background-color: #ecf0f1;
-        }
-        .chat-box {
-            height: 300px;
-            overflow-y: scroll;
-            border: 1px solid #ccc;
-            padding: 10px;
-            background: white;
-        }
-        .message {
-            margin: 5px 0;
-            padding: 8px;
-            border-radius: 5px;
-        }
-        .sent {
-            background-color: #3498db;
-            color: white;
-            text-align: right;
-        }
-        .received {
-            background-color: #2ecc71;
-            color: white;
-            text-align: left;
-        }
+
     </style>
 </head>
 <body>
@@ -50,7 +23,7 @@
     <div class="nav-container">
         <a href="/">
             <div class="logo">
-                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
+                <img src="/img/pololitosBlanco.png" alt="Logo pololitos">
             </div>
         </a>
         <nav>
@@ -67,7 +40,7 @@
     <div class="user-info">
         <div class="circle-busqueda">
             <input type="text" placeholder="¿Qué servicio buscas?">
-            <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
+            <a href=""><img src="/img/busqueda.png" alt="lupa de busqueda"></a>
         </div>
         <c:choose>
             <c:when test="${not empty sessionScope.usuarioEnSesion}">
@@ -84,28 +57,52 @@
         </c:choose>
     </div>
 </header>
-
-<div class="container mt-5">
+<main>
+    <div class="servicio-container">
+        <div class="servicio-info">
+            <h2>Nombre de servicio</h2>
+            <p>Descripcion de servicio
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Est enim necessitatibus modi suscipit minus. Rem reprehenderit adipisci recusandae voluptas ducimus maxime molestiae voluptatem ad. Expedita cumque in magni incidunt saepe!
+            </p>
+        </div>
+        <img src="/img/work.jpg" alt="">
+        <button>Ver servicio</button>
+    </div>
+    <div class="container">
     <div class="chat-container">
-        <h2 class="text-center">${chat.nombre}</h2>
-        <p class="text-center">Conversación entre proveedor y cliente</p>
+        
+        <div class="header-chat">
+            <img src="/img/user.png" alt="">
+            <div class="info-user">
+                <h2>Nombre</h2>
+                <p>Servicio que ofrece</p>
+            </div>
+            
+        </div>
+        
 
         <div class="chat-box" id="chat-box"></div>
 
-        <form class="mt-3" id="mensaje-form">
+        <form class="mensaje-form" id="mensaje-form">
             <input type="hidden" id="chatId" value="${chatId}">
             <input type="hidden" id="usuarioId" value="${sessionScope.usuarioEnSesion.id}">
             <input type="hidden" id="nombreUsuario" value="${sessionScope.usuarioEnSesion.nombre}">
-            <div class="mb-3">
-                <textarea class="form-control" id="mensaje-input" rows="2" placeholder="Escribe un mensaje..."></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary w-100">Enviar</button>
+        
+            <textarea class="form-control" id="mensaje-input" rows="1" placeholder="Escribe un mensaje..."></textarea>
+            
+            <button type="submit" class="enviar-btn">
+                <i class="fas fa-paper-plane"></i>
+            </button>
         </form>
     </div>
 </div>
 
+</main>
+
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+
 <script>
     const firebaseConfig = {
         apiKey: "",
@@ -137,7 +134,7 @@
         if (mensaje.usuarioId !== usuarioId) {
             const nombre = document.createElement("span");
             nombre.className = "nombre-usuario";
-            nombre.textContent = mensaje.nombreUsuario + ":";
+            
             div.appendChild(nombre);
         }
 

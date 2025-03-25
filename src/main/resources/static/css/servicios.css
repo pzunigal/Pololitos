@@ -196,7 +196,9 @@ body {
   padding: 20px;
 }
 
-
+.services-container {
+  margin-left: 20px;
+}
 /* Títulos */
 .category-title {
   margin-top: 20px;
@@ -216,6 +218,7 @@ body {
   gap: 20px;
   justify-content: flex-start;
   margin-top: 10px;
+  
 }
 
 /* Tarjetas de servicio */
