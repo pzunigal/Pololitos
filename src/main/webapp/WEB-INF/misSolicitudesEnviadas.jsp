@@ -1,146 +1,164 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://www.springframework.org/tags" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
 <!DOCTYPE html>
 <html lang="es">
-   <head>
-      <meta charset="UTF-8">
-      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-      <title>Mis Solicitudes Enviadas</title>
-      <link rel="stylesheet" href="/css/mis-solicitudes-enviadas.css">
-   </head>
-   <body>
-      <header>
-         <div class="nav-container">
-            <a href="/">
-               <div class="logo-pololitos">
-                  <img src="img/pololitosBlanco.png" alt="Logo-pololitos">
-               </div>
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Mis Solicitudes Enviadas</title>
+
+   <!-- Bootstrap -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+   <!-- Google Fonts -->
+   <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+
+   <!-- SweetAlert2 -->
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   <style>
+      html, body {
+         height: 100%;
+         margin: 0;
+         font-family: 'Quicksand', sans-serif;
+         background-color: #1e1e1e;
+         color: white;
+      }
+
+      body {
+         display: flex;
+         flex-direction: column;
+      }
+
+      main {
+         flex: 1;
+      }
+
+      .table thead {
+         color: #f1c40f;
+      }
+
+      .table td, .table th {
+         vertical-align: middle;
+      }
+   </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+   <a class="navbar-brand" href="/">
+      <img src="<c:url value='/img/pololitosBlanco.png' />" alt="Logo" height="40">
+   </a>
+   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+   <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+         <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
+         <c:if test="${not empty sessionScope.usuarioEnSesion}">
+            <li class="nav-item"><a class="nav-link" href="/mis-servicios">Mis Servicios</a></li>
+            <li class="nav-item"><a class="nav-link active" href="/mis-solicitudes-enviadas">Enviadas</a></li>
+            <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-recibidas">Recibidas</a></li>
+         </c:if>
+      </ul>
+      <form class="d-flex me-3" action="/buscar-servicios" method="get">
+         <input class="form-control me-2" type="search" name="query" placeholder="¿Qué servicio buscas?">
+         <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+      <c:choose>
+         <c:when test="${not empty sessionScope.usuarioEnSesion}">
+            <a href="/perfilUsuario" class="me-3">
+               <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
             </a>
-            <nav>
-               <ul class="nav-links">
-                  <li><a href="/servicios">Servicios</a></li>
-                  <c:choose>
-                     <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                        <li><a href="/mis-servicios">Mis Servicios</a></li>
-                     </c:when>
-                  </c:choose>
-                  <c:choose>
-                     <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                        <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                     </c:when>
-                  </c:choose>
-                  <c:choose>
-                     <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                        <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                     </c:when>
-                  </c:choose>
-               </ul>
-            </nav>
-         </div>
-         <div class="user-info">
-            <form action="/buscar-servicios" method="get">
-               <div class="circle-busqueda" id="busqueda-container">
-                   <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
-                   <button type="submit" id="busqueda-btn">
-                       <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
-                   </button>
-               </div>
-           </form>
-            <c:choose>
-               <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                  <a href="/perfilUsuario">
-                  <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                     width="40" height="40" style="border-radius: 50%;">
-                  </a>
-                  <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                  <a href="/logout"><button>Cerrar Sesión</button></a>
-               </c:when>
-               <c:otherwise>
-                  <a href="/login"><button>Iniciar sesión</button></a>
-                  <a href="/registro"><button>Regístrate</button></a>
-               </c:otherwise>
-            </c:choose>
-         </div>
-      </header>
-      <main>
-         <div class="container">
-            <h1 class="text-center mb-5">Mis Solicitudes Enviadas</h1>
-            <c:if test="${not empty solicitudes}">
-               <table class="table table-striped">
-                  <thead>
-                     <tr>
-                        <th>ID</th>
-                        <th>Servicio</th>
-                        <th>Estado</th>
-                        <th>Fecha de Solicitud</th>
-                        <th>Comentario Adicional</th>
-                        <th>Chat con el provedoor</th>
-                        <!-- Nueva columna para el chat -->
-                     </tr>
-                  </thead>
-                  <tbody>
-                    <c:forEach var="solicitud" items="${solicitudes}">
-                        <tr>
-                            <td>${solicitud.id}</td>
-                            <td>${solicitud.servicio.nombre}</td>
-                            <td>${solicitud.estado}</td>
-                            <td>
-                                <fmt:formatDate value="${solicitud.fechaSolicitud}" pattern="dd-MM-yyyy" />
-                            </td>                            
-                            <td>${solicitud.comentarioAdicional}</td>
-                            <td>
-                                <c:choose>
-                                    <c:when test="${chatsCreados[solicitud.id]}">
-                                        <!-- Botón verde cuando la conversación ya existe -->
-                                        <form action="/chat/continuar" method="post">
-                                            <input type="hidden" name="solicitudId" value="${solicitud.id}">
-                                            <button type="submit" class="btn btn-success mt-2">
-                                                <i class="fas fa-comments"></i> Chat
-                                            </button>
-                                        </form>
-                                    </c:when>
-                                    <c:otherwise>
-                                        <!-- Botón gris deshabilitado con alerta -->
-                                        <button class="btn btn-secondary mt-2">
-                                          <i class="fas fa-comments"></i> Chat no disponible
-                                      </button>
-                                    </c:otherwise>
-                                </c:choose>
-                            </td>
-                        </tr>
-                    </c:forEach>
-                </tbody>
-               </table>
-            </c:if>
-            <c:if test="${empty solicitudes}">
-               <div class="alert alert-warning text-center">
-                  No tienes solicitudes enviadas.
-               </div>
-            </c:if>
-         </div>
-      </main>
-      <footer>
-         <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
-         <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-         </ul>
-      </footer>
-      <script>
-         document.addEventListener("DOMContentLoaded", function () {
-             const botones = document.querySelectorAll(".btn-secondary");
-     
-             botones.forEach(boton => {
-                 boton.addEventListener("click", function () {
-                     alert("La conversación aún no ha sido iniciada por el proveedor");
-                 });
-             });
-         });
-     </script>
-     
-   </body>
+            <a href="/servicios/publicar" class="btn btn-success me-2">Crear Servicio</a>
+            <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+         </c:when>
+         <c:otherwise>
+            <a href="/login" class="btn btn-outline-light me-2">Iniciar sesión</a>
+            <a href="/registro" class="btn btn-outline-info">Regístrate</a>
+         </c:otherwise>
+      </c:choose>
+   </div>
+</nav>
+
+<!-- Contenido -->
+<main class="container py-5">
+   <h2 class="mb-4 text-center">Mis Solicitudes Enviadas</h2>
+
+   <c:if test="${not empty solicitudes}">
+      <div class="table-responsive">
+         <table class="table table-dark table-bordered table-hover text-center align-middle">
+            <thead>
+               <tr>
+                  <th>ID</th>
+                  <th>Proveedor</th>
+                  <th>Servicio</th>
+                  <th>Estado</th>
+                  <th>Comentario</th>
+                  <th>Fecha</th>
+                  <th>Chat</th>
+               </tr>
+            </thead>
+            <tbody>
+               <c:forEach var="solicitud" items="${solicitudes}">
+                  <tr>
+                     <td>${solicitud.id}</td>
+                     <td>${solicitud.servicio.usuario.nombre}</td>
+                     <td>${solicitud.servicio.nombre}</td>
+                     <td>${solicitud.estado}</td>
+                     <td>${solicitud.comentarioAdicional}</td>
+                     <td><fmt:formatDate value="${solicitud.fechaSolicitud}" pattern="dd/MM/yyyy" /></td>
+                     <td>
+                        <c:choose>
+                           <c:when test="${chatsCreados[solicitud.id]}">
+                              <form action="/chat/continuar" method="post">
+                                 <input type="hidden" name="solicitudId" value="${solicitud.id}" />
+                                 <button type="submit" class="btn btn-warning btn-sm">Continuar Chat</button>
+                              </form>
+                           </c:when>
+                           <c:otherwise>
+                              <button type="button" class="btn btn-secondary btn-sm" onclick="chatNoDisponible()">
+                                 Chat no disponible
+                              </button>
+                           </c:otherwise>
+                        </c:choose>
+                     </td>
+                  </tr>
+               </c:forEach>
+            </tbody>
+         </table>
+      </div>
+   </c:if>
+
+   <c:if test="${empty solicitudes}">
+      <div class="alert alert-info text-center">Aún no has enviado ninguna solicitud.</div>
+   </c:if>
+</main>
+
+<!-- Footer -->
+<footer class="bg-dark text-white text-center py-3 mt-auto">
+   <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
+   <ul class="nav justify-content-center">
+      <li class="nav-item"><a class="nav-link text-white" href="/contacto">Contacto</a></li>
+      <li class="nav-item"><a class="nav-link text-white" href="/nosotros">Nosotros</a></li>
+   </ul>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   function chatNoDisponible() {
+      Swal.fire({
+         icon: 'info',
+         title: 'Chat no disponible',
+         text: 'El proveedor debe iniciar la conversación primero.',
+         confirmButtonColor: '#3085d6'
+      });
+   }
+</script>
+</body>
 </html>

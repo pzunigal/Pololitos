@@ -1,93 +1,151 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
-<meta charset="UTF-8">
-<title>Mostrar Usuario</title>
-<link rel="stylesheet" href="/css/mostrarUsuario.css">
+   <meta charset="UTF-8">
+   <title>Mostrar Usuario</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+
+   <!-- Bootstrap & Icons -->
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+   <style>
+      body {
+         font-family: 'Quicksand', sans-serif;
+         background-color: #1e1e1e;
+         color: white;
+         min-height: 100vh;
+         display: flex;
+         flex-direction: column;
+      }
+
+      main {
+         flex: 1;
+      }
+
+      .profile-card {
+         background-color: #2c2c2c;
+         border-radius: 10px;
+         padding: 30px;
+         text-align: center;
+         color: white;
+         box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+      }
+
+      .profile-card img {
+         width: 150px;
+         height: 150px;
+         border-radius: 50%;
+         object-fit: cover;
+         margin-bottom: 20px;
+      }
+
+      .edit-button {
+         margin-top: 20px;
+      }
+
+      footer {
+         background-color: #111;
+         color: #ccc;
+         text-align: center;
+         padding: 15px 0;
+         margin-top: auto;
+      }
+
+      .nav-footer .nav-link {
+         color: #ccc;
+      }
+
+      .nav-footer .nav-link:hover {
+         color: white;
+      }
+   </style>
 </head>
 <body>
-    <header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
+
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
+   <a class="navbar-brand" href="/">
+      <img src="<c:url value='/img/pololitosBlanco.png' />" alt="Logo" height="40">
+   </a>
+   <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+   </button>
+   <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav me-auto">
+         <li class="nav-item"><a class="nav-link" href="/servicios">Servicios</a></li>
+         <c:if test="${not empty sessionScope.usuarioEnSesion}">
+            <li class="nav-item"><a class="nav-link" href="/mis-servicios">Mis Servicios</a></li>
+            <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-enviadas">Enviadas</a></li>
+            <li class="nav-item"><a class="nav-link" href="/mis-solicitudes-recibidas">Recibidas</a></li>
+         </c:if>
+      </ul>
+      <form class="d-flex me-3" action="/buscar-servicios" method="get">
+         <input class="form-control me-2" type="search" name="query" placeholder="¿Qué servicio buscas?">
+         <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+      <c:choose>
+         <c:when test="${not empty sessionScope.usuarioEnSesion}">
+            <a href="/perfilUsuario" class="me-3">
+               <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
             </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-servicios">Mis Servicios</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                        </c:when>
-                    </c:choose>
-                </ul>
-            </nav>
-        </div>
-        <div class="user-info">
-            <form action="/buscar-servicios" method="get">
-                <div class="circle-busqueda" id="busqueda-container">
-                    <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
-                    <button type="submit" id="busqueda-btn">
-                        <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
-                    </button>
-                </div>
-            </form>
+            <a href="/servicios/publicar" class="btn btn-success me-2">Crear Servicio</a>
+            <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+         </c:when>
+         <c:otherwise>
+            <a href="/login" class="btn btn-outline-light me-2">Iniciar sesión</a>
+            <a href="/registro" class="btn btn-outline-info">Regístrate</a>
+         </c:otherwise>
+      </c:choose>
+   </div>
+</nav>
 
-            <c:choose>
-                <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <a href="/perfilUsuario">
-                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                            width="40" height="40" style="border-radius: 50%;">
-                    </a>
-                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                    <a href="/logout"><button>Cerrar Sesión</button></a>
-                </c:when>
+<main class="container my-5">
+   <div class="row justify-content-center">
+      <div class="col-md-8">
+         <div class="profile-card">
+            <img src="${usuario.fotoPerfil}" alt="Foto de perfil">
+            <h2>${usuario.nombre} ${usuario.apellido}</h2>
+            <p><strong>Ciudad:</strong> ${usuario.ciudad}</p>
+            <p><strong>Teléfono:</strong> <a href="tel:${usuario.telefono}" class="text-info">${usuario.telefono}</a></p>
+            <p><strong>Correo:</strong> <a href="mailto:${usuario.email}" class="text-info">${usuario.email}</a></p>
+            <button class="btn btn-primary edit-button" onclick="confirmarEdicion()">Editar Perfil</button>
+         </div>
+      </div>
+   </div>
+</main>
 
-                <c:otherwise>
-                    <a href="/login"><button>Iniciar sesión</button></a>
-                    <a href="/registro"><button>Regístrate</button></a>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </header>
-    <main>
-        <div class="main-container">
-            <!-- Tarjeta de perfil -->
-            <div class="profile-card">
-                <img src="${usuario.fotoPerfil}" alt="Foto de perfil">
-                <div class="container-info">
-                    <h1 class="name">${usuario.nombre} ${usuario.apellido}</h1>
-                    <p class="city">Ciudad: ${usuario.ciudad}</p>
-                    <p class="contact-info">
-                        Teléfono: <a href="tel:${usuario.telefono}" class="link">${usuario.telefono}</a>
-                    </p>
-                    <p class="contact-info">
-                        Correo: <a href="mailto:${usuario.email}" class="link">${usuario.email}</a>
-                    </p>
-                    <a href="/editarPerfil" class="edit-button">Editar Perfil</a>
-                </div>
-            </div>
-    </main>    
-    <footer>
-        <p>Pololitos &copy; 2025. Todos los derechos reservados</p> 
-        <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-        </ul>
-    </footer>
+<footer class="bg-dark text-white text-center py-3">
+   <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
+   <ul class="nav justify-content-center nav-footer">
+      <li class="nav-item"><a class="nav-link" href="/contacto">Contacto</a></li>
+      <li class="nav-item"><a class="nav-link" href="/nosotros">Nosotros</a></li>
+   </ul>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+   function confirmarEdicion() {
+      Swal.fire({
+         title: '¿Editar tu perfil?',
+         text: 'Serás redirigido al formulario de edición.',
+         icon: 'question',
+         showCancelButton: true,
+         confirmButtonColor: '#3085d6',
+         cancelButtonColor: '#6c757d',
+         confirmButtonText: 'Sí, continuar',
+         cancelButtonText: 'Cancelar'
+      }).then((result) => {
+         if (result.isConfirmed) {
+            window.location.href = '/editarPerfil';
+         }
+      });
+   }
+</script>
+
 </body>
 </html>

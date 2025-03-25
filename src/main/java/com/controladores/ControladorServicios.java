@@ -155,49 +155,48 @@ public class ControladorServicios {
             @RequestParam("imagen") MultipartFile imagen,
             HttpSession session, Model model,
             RedirectAttributes redirectAttributes) { // 👈 Agregado RedirectAttributes
-    
+
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuarioEnSesion == null) {
             return "redirect:/login";
         }
-    
+
         Servicio servicioExistente = servicioServicios.obtenerPorId(id);
         if (servicioExistente == null || !servicioExistente.getUsuario().getId().equals(usuarioEnSesion.getId())) {
             return "redirect:/mis-servicios";
         }
-    
+
         if (result.hasErrors()) {
             model.addAttribute("error", "Existen errores en los campos del formulario.");
             model.addAttribute("servicio", servicioExistente);
             return "editarServicio.jsp";
         }
-    
+
         try {
             if (!imagen.isEmpty()) {
                 servicioCloudinary.eliminarArchivo(servicioExistente.getImgUrl());
                 String nuevaUrl = servicioCloudinary.subirArchivo(imagen, "servicios");
                 servicioExistente.setImgUrl(nuevaUrl);
             }
-    
+
             servicioExistente.setNombre(servicio.getNombre());
             servicioExistente.setDescripcion(servicio.getDescripcion());
             servicioExistente.setPrecio(servicio.getPrecio());
             servicioExistente.setCategoria(servicio.getCategoria());
             servicioExistente.setCiudad(servicio.getCiudad());
-    
+
             servicioServicios.guardar(servicioExistente);
-    
+
             // Mensaje flash de éxito
             redirectAttributes.addFlashAttribute("exito", "¡Servicio actualizado correctamente!");
-    
+
             return "redirect:/mis-servicios";
-    
+
         } catch (Exception e) {
             model.addAttribute("error", "Hubo un error actualizando el servicio.");
             return "editarServicio.jsp";
         }
     }
-    
 
     @PostMapping("/eliminar-servicio/{id}")
     @Transactional
@@ -275,9 +274,12 @@ public class ControladorServicios {
     @GetMapping("/buscar-servicios")
     public String buscarServicios(@RequestParam("query") String query, Model model) {
         List<Servicio> servicios = servicioServicios.buscarPorNombre(query);
-        System.out.println("Servicios encontrados: " + servicios.size());
+        List<Categoria> categorias = servicioServicios.obtenerCategoriasConServicios(); // 🔥
+
         model.addAttribute("servicios", servicios);
         model.addAttribute("query", query);
+        model.addAttribute("categorias", categorias);
+
         return "resultadoBusqueda.jsp";
     }
 
