@@ -122,11 +122,7 @@
 <body>
 
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4">
-   <a class="navbar-brand" href="/">
-      <img src="<c:url value='/img/pololitosBlanco.png' />" alt="Logo" height="40">
-   </a>
-</nav>
+<%@ include file="/WEB-INF/componentes/nav.jsp" %>
 
 <!-- Registro -->
 <div class="registro-wrapper container">

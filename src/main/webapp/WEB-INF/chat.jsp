@@ -46,44 +46,7 @@
     </style>
 </head>
 <body>
-<header>
-    <div class="nav-container">
-        <a href="/">
-            <div class="logo">
-                <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-            </div>
-        </a>
-        <nav>
-            <ul class="nav-links">
-                <li><a href="/servicios">Servicios</a></li>
-                <c:if test="${not empty sessionScope.usuarioEnSesion}">
-                    <li><a href="/mis-servicios">Mis Servicios</a></li>
-                    <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                    <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                </c:if>
-            </ul>
-        </nav>
-    </div>
-    <div class="user-info">
-        <div class="circle-busqueda">
-            <input type="text" placeholder="Buscar">
-            <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
-        </div>
-        <c:choose>
-            <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                <a href="/perfilUsuario">
-                    <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
-                </a>
-                <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                <a href="/logout"><button>Cerrar Sesión</button></a>
-            </c:when>
-            <c:otherwise>
-                <a href="/login"><button>Iniciar sesión</button></a>
-                <a href="/registro"><button>Regístrate</button></a>
-            </c:otherwise>
-        </c:choose>
-    </div>
-</header>
+    <%@ include file="/WEB-INF/componentes/nav.jsp" %>
 
 <div class="container mt-5">
     <div class="chat-container">
