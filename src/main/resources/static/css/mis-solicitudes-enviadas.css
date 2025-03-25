@@ -8,9 +8,8 @@ body {
     min-height: 100vh;
 }
 
-/* Navbar */
 header {
-    position:sticky;
+    position:fixed;
     top: 0;
     left: 0;
     width: 100%;
@@ -24,26 +23,17 @@ header {
 }
 
 main {
-    flex: 2;
+    padding-top: 50px;
+    flex: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-size: cover;
     background-position: center;
     background-image: url(https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg);
-}
-
-/* Contenedor principal */
-.main-container {
-    display: flex;
-    align-items: flex-start;
-    gap: 30px;
-    padding: 20px;
-}
-
-#busqueda-btn {
-    background-color: rgba(0, 0, 0, 0);
-}
+    background-repeat: no-repeat; /* Evita que la imagen se repita */
+    background-attachment: fixed; /* Fija la imagen mientras se hace scroll */
+  }
 
 .container div {
     margin-left: 40px;
@@ -56,7 +46,7 @@ main {
     width: 100%;
 }
 
-.logo img {
+.logo-pololitos img {
     width: 9em;
     height: auto;
     padding-left: 20px;
@@ -137,74 +127,79 @@ main {
     margin-left: 10px;
 }
 
-/* Tarjeta de perfil*/
-.profile-card {
-    max-width: 400px; 
-    margin: auto; 
-    padding: 20px;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    text-align: center; 
-}
+/*Fin header*/
 
-.container-info {
-    display: flex;
-    text-align: left;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: center;
-}
-
-.container-info p {
-    text-align: left;
-    width: 100%; 
-    padding-left: 20px;
-}
-
-.profile-card img {
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    object-fit: cover;
-    margin-bottom: 10px;
-    border: 2px solid #ddd;
-}
-
-.name {
-    font-size: 22px;
-    margin: 10px 0;
-    text-align: center;
-}
-
-.city, .contact-info {
+/* Estilo del botón */
+.btn {
     font-size: 14px;
-    color: #555;
-}
-
-.link {
-    color: #007BFF;
-    text-decoration: none;
-}
-
-.edit-button {
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 15px;
-    background: #007BFF;
+    padding: 8px 16px; 
+    background-color: #28a745; 
     color: white;
-    text-decoration: none;
+    border: none;
+    border-radius: 25px; 
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.3s, transform 0.3s; 
+    width: 115px;
+}
+
+.btn:hover {
+    background-color: #218838; 
+    transform: translateY(-2px); 
+}
+
+.btn:focus {
+    outline: none; 
+}
+
+
+table td {
+    text-align: center;
+    font-weight: bold;
+    color:floralwhite;
+}
+
+
+.container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+th {
+    background-color: #141519;
+}
+
+table thead {
+    background-color: #007bff;
+    color: white;
+}
+
+.alert {
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
     border-radius: 5px;
 }
 
-.edit-button:hover {
-    background: #0056b3;
-}
-/* Fin Tarjeta de perfil*/
 
 
-
-/* Footer  */
+/* Footer */
 
 footer {
     position: relative;
@@ -217,7 +212,6 @@ footer {
     padding: 12px 0;
     font-size: 15px;
     font-weight: 300;
-    z-index: 2;
 }
 
 footer p {
@@ -243,4 +237,20 @@ footer p {
 
 .nav-footer a:hover {
     color: #fff;
+}
+
+#busqueda-btn {
+    background-color: rgba(0, 0, 0, 0);
+}
+
+h1 {
+    color: #fff;
+    display: block;
+    font-size: 2em;
+    margin-block-end: 0.67em;
+    margin-inline-start: 0px;
+    margin-inline-end: 0px;
+    font-weight: bold;
+    unicode-bidi: isolate;
+    margin-top: 70px;
 }

@@ -30,10 +30,14 @@
                 </nav>
         </div>
         <div class="user-info">
-            <div class="circle-busqueda">
-                <input type="text" placeholder="¿Qué servicio buscas?">
-                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
-            </div>
+            <form action="/buscar-servicios" method="get">
+                <div class="circle-busqueda" id="busqueda-container">
+                    <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
+                    <button type="submit" id="busqueda-btn">
+                        <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
+                    </button>
+                </div>
+            </form>
             
             <c:choose>
                 <c:when test="${not empty sessionScope.usuarioEnSesion}">
@@ -60,7 +64,7 @@
         </div>
     </main>
     <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
+        <p>Pololitos &copy; 2025. Todos los derechos reservados</p> 
         <ul class="nav-footer">
             <li><a href="/contacto">Contacto</a></li>
             <li><a href="/nosotros">Nosotros</a></li>

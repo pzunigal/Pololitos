@@ -39,6 +39,10 @@ main {
     color: white;
 }
 
+#busqueda-btn {
+    background-color: rgba(0, 0, 0, 0);
+}
+
 .input-field {
     width: 95%;
     padding: 10px;
@@ -97,7 +101,7 @@ header {
 }
 
 .logo img {
-    width: 100px;
+    width: 9em;
     height: auto;
     padding-left: 20px;
     padding-right: 50px;

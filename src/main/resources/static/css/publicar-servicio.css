@@ -1,0 +1,114 @@
+/* Reset */
+* {
+    margin: 0;
+    padding: 0;
+    border: 0;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+}
+
+/* Main container específico del formulario */
+.servicio-form-container {
+    padding-top: 120px; /* para que no quede detrás del header */
+    max-width: 600px;
+    margin: 0 auto;
+    padding-bottom: 40px;
+}
+
+.servicio-form-container h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    color: #333;
+}
+
+/* Tarjeta contenedora del formulario */
+.servicio-card {
+    background-color: #ffffff;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+/* Encabezado de la tarjeta */
+.form-header {
+    margin-bottom: 25px;
+    text-align: center;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.form-header h3 {
+    font-size: 22px;
+    color: #333;
+}
+
+/* Grupo de campos */
+.form-grupo {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.form-grupo label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: #444;
+}
+
+.input-servicio {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.input-servicio:focus {
+    outline: none;
+    border-color: #007bff;
+}
+
+/* Errores de validación */
+.error-texto {
+    color: #dc3545;
+    font-size: 13px;
+    margin-top: 5px;
+}
+
+/* Botón publicar */
+.form-boton {
+    display: flex;
+    justify-content: center;
+    margin-top: 25px;
+}
+
+.btn-publicar {
+    background-color: #28a745;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-publicar:hover {
+    background-color: #218838;
+}
+
+/* Alerta de error */
+.alerta-error {
+    background-color: #f8d7da;
+    color: #842029;
+    padding: 10px 15px;
+    margin-bottom: 20px;
+    border-left: 4px solid #f5c2c7;
+    border-radius: 5px;
+    font-size: 14px;
+}
