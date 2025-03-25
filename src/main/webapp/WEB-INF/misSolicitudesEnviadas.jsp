@@ -107,7 +107,7 @@
                         ${error}
                      </div>
                   </c:if>
-                  
+
                   <c:if test="${not empty solicitudesActivas}">
                      <h4 class="text-warning">Solicitudes Activas</h4>
                      <div class="table-responsive mb-5">
@@ -141,17 +141,12 @@
                                        <fmt:formatDate value="${solicitud.fechaSolicitud}" pattern="dd/MM/yyyy" />
                                     </td>
                                     <td>
-                                       <c:if test="${solicitud.estado == 'Enviado'}">
-                                          <button class="btn btn-outline-danger btn-sm mb-1 btn-cancelar"
-                                             data-id="${solicitud.id}">
-                                             Cancelar
-                                          </button>
+                                       <button class="btn btn-outline-danger btn-sm mb-1 btn-cancelar"
+                                          data-id="${solicitud.id}">
+                                          Cancelar
+                                       </button>
 
-                                          <button class="btn btn-outline-success btn-sm mb-1 btn-completar"
-                                             data-id="${solicitud.id}" data-chat-creado="${chatsCreados[solicitud.id]}">
-                                             Completado
-                                          </button>
-                                       </c:if>
+
 
                                     </td>
                                     <td>
@@ -275,47 +270,8 @@
                         });
                      });
                   });
-
-                  // Confirmar completar solicitud
-                  document.querySelectorAll('.btn-completar').forEach(btn => {
-                     btn.addEventListener('click', () => {
-                        const id = btn.dataset.id;
-                        const chatCreado = btn.dataset.chatCreado === 'true';
-
-                        if (!chatCreado) {
-                           Swal.fire({
-                              title: '¿Seguro que quieres completar?',
-                              text: 'El proveedor aún no se ha puesto en contacto contigo. ¿Estás seguro de marcarlo como completado?',
-                              icon: 'question',
-                              showCancelButton: true,
-                              confirmButtonColor: '#28a745',
-                              cancelButtonColor: '#aaa',
-                              confirmButtonText: 'Sí, marcar',
-                              cancelButtonText: 'Cancelar'
-                           }).then((result) => {
-                              if (result.isConfirmed) enviarFormularioCompletar(id);
-                           });
-                        } else {
-                           enviarFormularioCompletar(id);
-                        }
-                     });
-                  });
-
-                  function enviarFormularioCompletar(id) {
-                     const form = document.createElement('form');
-                     form.method = 'POST';
-                     form.action = '/completar-solicitud';
-
-                     const input = document.createElement('input');
-                     input.type = 'hidden';
-                     input.name = 'solicitudId';
-                     input.value = id;
-                     form.appendChild(input);
-
-                     document.body.appendChild(form);
-                     form.submit();
-                  }
                </script>
+
 
             </body>
 

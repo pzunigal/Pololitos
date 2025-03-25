@@ -126,67 +126,78 @@ public class ControladorSolicitud {
     }
 
     @PostMapping("/aceptar-solicitud")
-public String aceptarSolicitud(@RequestParam("solicitudId") Long solicitudId,
-                               RedirectAttributes redirectAttributes) {
-    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
-    if (solicitud == null) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-    } else if (!"Enviado".equals(solicitud.getEstado())) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
-    } else {
-        solicitud.setEstado("Aceptada");
-        solicitudServicio.guardarSolicitud(solicitud);
-        redirectAttributes.addFlashAttribute("success", "Solicitud aceptada correctamente.");
+    public String aceptarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+            RedirectAttributes redirectAttributes) {
+        Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+        if (solicitud == null) {
+            redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+        } else if (!"Enviado".equals(solicitud.getEstado())) {
+            redirectAttributes.addFlashAttribute("error",
+                    "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+        } else {
+            solicitud.setEstado("Aceptada");
+            solicitudServicio.guardarSolicitud(solicitud);
+            redirectAttributes.addFlashAttribute("success", "Solicitud aceptada correctamente.");
+        }
+        return "redirect:/mis-solicitudes-recibidas";
     }
-    return "redirect:/mis-solicitudes-recibidas";
-}
 
-@PostMapping("/rechazar-solicitud")
-public String rechazarSolicitud(@RequestParam("solicitudId") Long solicitudId,
-                                RedirectAttributes redirectAttributes) {
-    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
-    if (solicitud == null) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-    } else if (!"Enviado".equals(solicitud.getEstado())) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
-    } else {
-        solicitud.setEstado("Rechazada");
-        solicitudServicio.guardarSolicitud(solicitud);
-        redirectAttributes.addFlashAttribute("success", "Solicitud rechazada correctamente.");
+    @PostMapping("/rechazar-solicitud")
+    public String rechazarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+            RedirectAttributes redirectAttributes) {
+        Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+        if (solicitud == null) {
+            redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+        } else if (!"Enviado".equals(solicitud.getEstado())) {
+            redirectAttributes.addFlashAttribute("error",
+                    "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+        } else {
+            solicitud.setEstado("Rechazada");
+            solicitudServicio.guardarSolicitud(solicitud);
+            redirectAttributes.addFlashAttribute("success", "Solicitud rechazada correctamente.");
+        }
+        return "redirect:/mis-solicitudes-recibidas";
     }
-    return "redirect:/mis-solicitudes-recibidas";
-}
 
-@PostMapping("/cancelar-solicitud")
-public String cancelarSolicitud(@RequestParam("solicitudId") Long solicitudId,
-                                RedirectAttributes redirectAttributes) {
-    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
-    if (solicitud == null) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-    } else if (!"Enviado".equals(solicitud.getEstado())) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
-    } else {
-        solicitud.setEstado("Cancelada");
-        solicitudServicio.guardarSolicitud(solicitud);
-        redirectAttributes.addFlashAttribute("success", "Solicitud cancelada correctamente.");
+    @PostMapping("/cancelar-solicitud")
+    public String cancelarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+            RedirectAttributes redirectAttributes) {
+        Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+
+        if (solicitud == null) {
+            redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+        } else if (!solicitud.getEstado().equals("Enviado") && !solicitud.getEstado().equals("Aceptada")) {
+            redirectAttributes.addFlashAttribute("error",
+                    "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+        } else {
+            solicitud.setEstado("Cancelada");
+            solicitudServicio.guardarSolicitud(solicitud);
+            redirectAttributes.addFlashAttribute("success", "Solicitud cancelada correctamente.");
+        }
+
+        return "redirect:/mis-solicitudes-enviadas";
     }
-    return "redirect:/mis-solicitudes-enviadas";
-}
 
-@PostMapping("/completar-solicitud")
+    @PostMapping("/completar-solicitud")
 public String completarSolicitud(@RequestParam("solicitudId") Long solicitudId,
                                  RedirectAttributes redirectAttributes) {
     Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+
     if (solicitud == null) {
         redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-    } else if (!"Enviado".equals(solicitud.getEstado())) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+    } else if ("Completada".equals(solicitud.getEstado())) {
+        redirectAttributes.addFlashAttribute("error", "Esta solicitud ya fue marcada como completada.");
+    } else if (!"Aceptada".equals(solicitud.getEstado())) {
+        redirectAttributes.addFlashAttribute("error",
+                "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
     } else {
         solicitud.setEstado("Completada");
         solicitudServicio.guardarSolicitud(solicitud);
         redirectAttributes.addFlashAttribute("success", "Trabajo marcado como completado.");
     }
-    return "redirect:/mis-solicitudes-enviadas";
+
+    return "redirect:/mis-solicitudes-recibidas";
 }
+
 
 }
