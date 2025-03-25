@@ -34,7 +34,7 @@
    </style>
 </head>
 
-<body class="d-flex flex-column">
+<body class="d-flex flex-column body-with-bg">
 
    <!-- Navbar -->
    <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>

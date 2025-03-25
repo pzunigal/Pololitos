@@ -10,19 +10,10 @@
    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
    <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Roboto&family=Noto+Sans&display=swap" rel="stylesheet">
-   <style>
-      body {
-         font-family: 'Quicksand', sans-serif;
-         background-color: #1e1e1e;
-         color: white;
-         min-height: 100vh;
-         display: flex;
-         flex-direction: column;
-      }
-      main { flex: 1; }
-   </style>
+   <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
+
 </head>
-<body>
+<body class="body-without-bg">
 
    <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 

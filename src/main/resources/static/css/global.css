@@ -5,6 +5,9 @@
 @import url(views/login.css);
 @import url(views/requests-sent.css);
 @import url(views/requests-received.css);
+@import url(views/view-profile.css);
+@import url(views/register.css);
+@import url(views/services.css);
 .body-with-bg {
     font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
     min-height: 100vh;
