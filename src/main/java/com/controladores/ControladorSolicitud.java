@@ -15,6 +15,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import com.modelos.Servicio;
 import com.modelos.Solicitud;
 import com.modelos.Usuario;
+import com.servicios.ServicioNotificaciones;
 import com.servicios.ServicioServicios;
 import com.servicios.ServicioSolicitud;
 import com.repositorios.RepositorioChatMySQL;
@@ -37,27 +38,27 @@ public class ControladorSolicitud {
 
     @Autowired
     private RepositorioChatMySQL repositorioChat;
+    @Autowired
+    private ServicioNotificaciones servicioNotificaciones;
 
     @PostMapping("/crear-solicitud")
-    public String crearSolicitud(@RequestParam("mensaje") String mensaje, @RequestParam("servicioId") Long servicioId,
-            HttpSession session, RedirectAttributes redirectAttributes) {
+    public String crearSolicitud(@RequestParam("mensaje") String mensaje,
+            @RequestParam("servicioId") Long servicioId,
+            HttpSession session,
+            RedirectAttributes redirectAttributes) {
 
-        // Verificar si el usuario está en sesión
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuarioEnSesion == null) {
-            // Guardar la URL a la que intentaba acceder en sesión
             session.setAttribute("urlPendiente", "/servicio/detalles/" + servicioId);
-            return "redirect:/login"; // Redirigir al login
+            return "redirect:/login";
         }
 
-        // Obtener el servicio
         Servicio servicio = servicioServicio.obtenerPorId(servicioId);
         if (servicio == null) {
             redirectAttributes.addFlashAttribute("error", "El servicio no existe.");
             return "redirect:/servicios";
         }
 
-        // Crear la solicitud
         Solicitud nuevaSolicitud = new Solicitud();
         nuevaSolicitud.setSolicitante(usuarioEnSesion);
         nuevaSolicitud.setServicio(servicio);
@@ -65,11 +66,13 @@ public class ControladorSolicitud {
         nuevaSolicitud.setFechaSolicitud(new Date());
         nuevaSolicitud.setComentarioAdicional(mensaje);
 
-        // Guardar la solicitud
         solicitudServicio.guardarSolicitud(nuevaSolicitud);
-        redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
 
-        // Redirigir a la página de solicitudes enviadas
+        // Enviar notificación solo al proveedor (no al usuario que la crea)
+        servicioNotificaciones.notificarNuevaSolicitud(
+                servicio.getUsuario().getId(), nuevaSolicitud.getId());
+
+        redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
         return "redirect:/mis-solicitudes-enviadas";
     }
 
@@ -179,25 +182,24 @@ public class ControladorSolicitud {
     }
 
     @PostMapping("/completar-solicitud")
-public String completarSolicitud(@RequestParam("solicitudId") Long solicitudId,
-                                 RedirectAttributes redirectAttributes) {
-    Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+    public String completarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+            RedirectAttributes redirectAttributes) {
+        Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
 
-    if (solicitud == null) {
-        redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-    } else if ("Completada".equals(solicitud.getEstado())) {
-        redirectAttributes.addFlashAttribute("error", "Esta solicitud ya fue marcada como completada.");
-    } else if (!"Aceptada".equals(solicitud.getEstado())) {
-        redirectAttributes.addFlashAttribute("error",
-                "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
-    } else {
-        solicitud.setEstado("Completada");
-        solicitudServicio.guardarSolicitud(solicitud);
-        redirectAttributes.addFlashAttribute("success", "Trabajo marcado como completado.");
+        if (solicitud == null) {
+            redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
+        } else if ("Completada".equals(solicitud.getEstado())) {
+            redirectAttributes.addFlashAttribute("error", "Esta solicitud ya fue marcada como completada.");
+        } else if (!"Aceptada".equals(solicitud.getEstado())) {
+            redirectAttributes.addFlashAttribute("error",
+                    "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
+        } else {
+            solicitud.setEstado("Completada");
+            solicitudServicio.guardarSolicitud(solicitud);
+            redirectAttributes.addFlashAttribute("success", "Trabajo marcado como completado.");
+        }
+
+        return "redirect:/mis-solicitudes-recibidas";
     }
-
-    return "redirect:/mis-solicitudes-recibidas";
-}
-
 
 }

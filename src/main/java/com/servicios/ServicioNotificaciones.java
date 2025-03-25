@@ -47,14 +47,15 @@ public class ServicioNotificaciones {
 
     public void notificarNuevaSolicitud(Long proveedorId, Long solicitudId) {
         Notificacion noti = new Notificacion(
-                proveedorId,
-                "solicitud",
-                "Has recibido una nueva solicitud",
-                "/mis-solicitudes-recibidas",
-                Instant.now().toString()
+            proveedorId,
+            "solicitud",
+            "Has recibido una nueva solicitud de un usuario interesado en tu servicio",
+            "/mis-solicitudes-recibidas",
+            Instant.now().toString()
         );
         repo.guardarNotificacion(noti);
     }
+    
 
     public void marcarNotificacionLeida(Long usuarioId, String notificacionId) {
         repo.marcarComoLeida(usuarioId, notificacionId);
