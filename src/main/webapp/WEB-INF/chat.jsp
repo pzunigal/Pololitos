@@ -96,9 +96,13 @@
         </form>
     </div>
 </div>
-
 </main>
-
+<footer>
+    <button> 
+        <i class="fa-solid fa-arrow-left"></i>
+        Volver
+    </button>
+</footer>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
 

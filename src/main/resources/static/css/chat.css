@@ -7,6 +7,7 @@
 main {
     display: flex;
     margin: auto;
+    margin-bottom: 20px;
 }
 
 body {
@@ -178,10 +179,20 @@ h1 {
     background-color: #28a745;
     color: white;
     border-radius: 10px;
-    padding: 5px;
+    padding: 10px;
     font-size: 20px;
     cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición suave */
+    transition: all 0.3s ease-in-out; 
 }
+
+.servicio-container button:hover {
+    background-color: #3a3a3a; /* Color al pasar el mouse */
+    color: white;
+    transform: scale(0.95); /* Reduce el tamaño a un 95% */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra opcional para profundidad */
+}
+
 
 .servicio-container img {
     width: 490px;
@@ -316,5 +327,30 @@ h1 {
 
 #mensaje-form button:hover {
     background-color: #0056b3;
+}
+
+footer {
+    display: flex;
+    justify-content: center;
+    
+    
+}
+
+footer button {
+    margin: 20px;
+    margin-bottom: 80px;
+    padding: 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease; /* Transición suave */
+    transition: all 0.3s ease-in-out; 
+}
+
+footer button:hover {
+    background-color: #3a3a3a; /* Color al pasar el mouse */
+    color: white;
+    transform: scale(0.95); /* Reduce el tamaño a un 95% */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra opcional para profundidad */
+
 }
 
