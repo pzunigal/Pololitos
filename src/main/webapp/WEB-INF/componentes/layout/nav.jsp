@@ -32,23 +32,29 @@
         </form>
 
         <c:if test="${not empty usuarioEnSesion}">
-          <div class="dropdown">
-            <button class="btn btn-outline-light position-relative"
-                    id="notificacionesDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">
-              <i class="bi bi-bell-fill"></i>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    id="notificacionBadge" style="display:none;">0</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end bg-dark text-white"
-                aria-labelledby="notificacionesDropdown"
-                id="notificacionesLista"
-                style="width: 300px; max-height: 400px; overflow-y: auto;">
-              <li class="dropdown-item text-white">Cargando notificaciones...</li>
-            </ul>
-          </div>
-        </c:if>
+  <input type="hidden" id="usuarioIdNavbar" value="${sessionScope.usuarioEnSesion.id}" />
+
+  <div class="dropdown">
+    <button class="btn btn-outline-light position-relative"
+            id="notificacionesDropdown"
+            data-bs-toggle="dropdown"
+            aria-expanded="false">
+      <i class="bi bi-bell-fill"></i>
+      <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+            id="notificacionBadge" style="display:none;">0</span>
+    </button>
+
+    <ul class="dropdown-menu dropdown-menu-end bg-dark text-white"
+        aria-labelledby="notificacionesDropdown"
+        id="notificacionesLista"
+        style="width: 300px; max-height: 400px; overflow-y: auto; overflow-x: hidden;">
+      <li class="dropdown-item text-white small text-wrap text-break">
+        Cargando notificaciones...
+      </li>
+    </ul>
+  </div>
+</c:if>
+
       </div>
 
       <!-- Perfil y botones -->
@@ -87,3 +93,12 @@
     });
   });
 </script>
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+
+<!-- Firebase Init común -->
+<script src="<c:url value='/js/firebase-init.js' />"></script>
+
+<!-- Notificaciones -->
+<script src="<c:url value='/js/notificaciones.js' />"></script>

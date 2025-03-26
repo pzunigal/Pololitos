@@ -62,7 +62,7 @@ public class ControladorSolicitud {
         Solicitud nuevaSolicitud = new Solicitud();
         nuevaSolicitud.setSolicitante(usuarioEnSesion);
         nuevaSolicitud.setServicio(servicio);
-        nuevaSolicitud.setEstado("Enviado");
+        nuevaSolicitud.setEstado("Enviada");
         nuevaSolicitud.setFechaSolicitud(new Date());
         nuevaSolicitud.setComentarioAdicional(mensaje);
 
@@ -83,7 +83,7 @@ public class ControladorSolicitud {
             return new ModelAndView("redirect:/login");
 
         List<Solicitud> activas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion).stream()
-                .filter(s -> s.getEstado().equals("Enviado") || s.getEstado().equals("Aceptada"))
+                .filter(s -> s.getEstado().equals("Enviada") || s.getEstado().equals("Aceptada"))
                 .toList();
 
         List<Solicitud> inactivas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion).stream()
@@ -109,7 +109,7 @@ public class ControladorSolicitud {
             return new ModelAndView("redirect:/login");
 
         List<Solicitud> activas = solicitudServicio.obtenerSolicitudesPorProveedor(usuarioEnSesion).stream()
-                .filter(s -> s.getEstado().equals("Enviado") || s.getEstado().equals("Aceptada"))
+                .filter(s -> s.getEstado().equals("Enviada") || s.getEstado().equals("Aceptada"))
                 .toList();
 
         List<Solicitud> inactivas = solicitudServicio.obtenerSolicitudesPorProveedor(usuarioEnSesion).stream()
