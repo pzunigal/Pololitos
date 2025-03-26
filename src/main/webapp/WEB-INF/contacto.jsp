@@ -1,87 +1,67 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Contacto</title>
-<link rel="stylesheet" href="/css/home.css">
-</head>
-<body>
-	<header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
-            </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                </ul>
-            </nav>
-        </div>
-        <div class="user-info">
-            <div class="circle-busqueda">
-                <input type="text" placeholder="¿Qué servicio buscas?">
-                <a href=""><img src="img/busqueda.png" alt="lupa de busqueda"></a>
-            </div>
-            
-            <c:choose>
-                <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <a href="/perfilUsuario">
-                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil" width="40" height="40" style="border-radius: 50%;">
-                    </a>
-                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                    <a href="/logout"><button>Cerrar Sesión</button></a>
-                </c:when>
-                
-                <c:otherwise>
-                    <a href="/login"><button>Iniciar sesión</button></a>
-                    <a href="/registro"><button>Regístrate</button></a>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </header>
-    <main>
-        <section class="contacto">
-            <h1>Contáctanos - Pololitos</h1>
-            <p>En <strong>Pololitos</strong>, conectamos a personas que necesitan ayuda con sus tareas con profesionales que pueden hacer su vida más fácil y eficiente. ¡Estamos aquí para ayudarte! Completa el formulario o usa nuestros datos de contacto.</p>
-            
-            <div class="contacto-contenido">
-                <form action="#" method="POST">
-                    <label for="nombre">Nombre:</label>
-                    <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
-                    
-                    <label for="email">Correo electrónico:</label>
-                    <input type="email" id="email" name="email" placeholder="tuemail@ejemplo.com" required>
-                    
-                    <label for="telefono">Teléfono (opcional):</label>
-                    <input type="tel" id="telefono" name="telefono" placeholder="123-456-7890">
-                    
-                    <label for="mensaje">¿En qué te podemos ayudar?</label>
-                    <textarea id="mensaje" name="mensaje" rows="5" placeholder="Describe tu necesidad o tarea..." required></textarea>
-                    
-                    <button type="submit">Enviar mensaje</button>
-                </form>
-                
-                <div class="info-contacto">
-                    <h2>Otras formas de contactarnos</h2>
-                    <p><strong>Email:</strong> hola@pololitos.com</p>
-                    <p><strong>Teléfono:</strong> +123 456 7890</p>
-                    <p><strong>Horario:</strong> Lunes a Viernes, 9:00 - 18:00</p>
-                    <p>¡Conéctate con nosotros y dejemos que los profesionales hagan el trabajo por ti!</p>
-                </div>
-            </div>
-        </section>
-    </main>
-    <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
-        <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-        </ul>
-    </footer>
-</body>
-</html>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+    <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
+        <!DOCTYPE html>
+        <html lang="es">
+
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+            <title>Contacto - Pololitos</title>
+
+            <!-- Fuentes personalizadas -->
+            <link rel="preconnect" href="https://fonts.googleapis.com">
+            <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+            <link
+                href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap"
+                rel="stylesheet">
+
+            <!-- Bootstrap & Icons -->
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+            <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
+            <style>
+                body {
+                    font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
+                    min-height: 100vh;
+                    background-image: url('https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg');
+                    background-size: cover;
+                    background-position: center;
+                    display: flex;
+                    flex-direction: column;
+                    color: white;
+                }
+            </style>
+        </head>
+
+        <body class="d-flex flex-column">
+
+            <!-- Navbar -->
+            <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
+
+                <!-- Main content -->
+                <main class="container my-5">
+                    <div class="text-center mb-4">
+                        <h1>Contáctanos - Pololitos</h1>
+                        <p class="lead">¿Tienes dudas o quieres publicitar tu servicio? ¡Estamos aquí para ayudarte!</p>
+                    </div>
+
+                    <div class="row justify-content-around">
+                        <!-- Formulario de contacto -->
+                        <%@ include file="/WEB-INF/componentes/forms/contactForm.jsp" %>
+
+                            <!-- Información de contacto -->
+                            <%@ include file="/WEB-INF/componentes/cards/contactInfo.jsp" %>
+                    </div>
+
+                    </div>
+                </main>
+
+                <!-- Footer -->
+                <%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
+
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+        </body>
+
+        </html>

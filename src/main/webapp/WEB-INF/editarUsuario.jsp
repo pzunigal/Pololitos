@@ -1,67 +1,86 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+pageEncoding="UTF-8" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c" %>
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>Editar Usuario</title>
-<link rel="stylesheet" href="/css/dashboard.css">
-</head>
-<body>
-	<header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
-            </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                </ul>
-            </nav>
-        </div>
-        <div class="user-info">
-            <a href=""><img src="img/busqueda.png" alt=""></a>
-            <a href=""><img src="img/user.png" alt="Usuario"></a>
-            <button>Cerrar Sesión</button>
-        </div>
-    </header>
-    <main>
-        <div class="profile-card">
-            <h1 class="name">Editar Perfil</h1>
-            <form action="/actualizarPerfil" method="post">
-                <label for="name">Nombre:</label>
-                <input type="text" id="name" name="name" class="input-field" placeholder="Ingresa tu nombre" required>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Editar Usuario</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-                <label for="name">Apellido:</label>
-                <input type="text" id="name" name="name" class="input-field" placeholder="Ingresa tu apellido" required>
-                
-                <label for="city">Ciudad:</label>
-                <input type="text" id="city" name="city" class="input-field" placeholder="Ingresa tu ciudad" required>
-                
-                <label for="phone">Teléfono:</label>
-                <input type="tel" id="phone" name="phone" class="input-field" placeholder="Ingresa tu numero de telefono: Ej.+(56)9 1414 2424" required>
-                
-                <label for="profile">Perfil:</label>
-                <input type="url" id="profile" name="profile" class="input-field" placeholder="Ingresa la url de una imagen para tu perfil" required>
-                
-                <label for="password">Contraseña:</label>
-                <input type="password" id="password" name="password" class="input-field" placeholder="Ingresa tu nueva contraseña" required>
+    <!-- Bootstrap & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
+  </head>
 
-                <label for="password">Confirmar Contraseña:</label>
-                <input type="password" id="password" name="password" class="input-field" placeholder="Confirma tu nueva contraseña" required>
-                
-                <button type="submit" class="edit-button">Guardar Cambios</button>
-            </form>
+  <body class="body-without-bg">
+    <!-- Navbar -->
+    <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
+
+    <!-- Contenido -->
+    <main class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card bg-dark border-light p-4">
+            <h2 class="text-center text-white mb-4">Editar Perfil</h2>
+            <!-- FORMULARIO EDITAR PERFIL -->
+            <%@ include file="/WEB-INF/componentes/forms/editUser.jsp" %>
+          </div>
         </div>
+      </div>
     </main>
-    <footer>
-        <p>Pololitos &copy; 2025, Todos los derechos reservados</p> 
-        <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-        </ul>
-    </footer>
-</body>
+    <!-- footer -->
+    <%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document
+        .getElementById("fotoPerfilArchivo")
+        .addEventListener("change", function (event) {
+          const preview = document.getElementById("preview");
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              preview.src = e.target.result;
+              preview.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          } else {
+            preview.style.display = "none";
+          }
+        });
+
+      function confirmarActualizacion(e) {
+        e.preventDefault();
+        Swal.fire({
+          title: "¿Guardar cambios?",
+          text: "Tu perfil será actualizado con la nueva información.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#6c757d",
+          confirmButtonText: "Sí, actualizar",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            e.target.submit();
+          }
+        });
+        return false;
+      }
+    </script>
+  </body>
 </html>

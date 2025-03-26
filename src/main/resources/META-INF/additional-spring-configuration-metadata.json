@@ -33,5 +33,45 @@
     "name": "cloudinary.api_key",
     "type": "java.lang.String",
     "description": "A description for 'cloudinary.api_key'"
+  },
+  {
+    "name": "firebase.credentials-file",
+    "type": "java.lang.String",
+    "description": "A description for 'firebase.credentials-file'"
+  },
+  {
+    "name": "firebase.database-url",
+    "type": "java.lang.String",
+    "description": "A description for 'firebase.database-url'"
+  },
+  {
+    "name": "FIREBASE_DATABASE_URL",
+    "type": "java.lang.String",
+    "description": "A description for 'FIREBASE_DATABASE_URL'"
+  },
+  {
+    "name": "FIREBASE_CREDENTIALS_FILE",
+    "type": "java.lang.String",
+    "description": "A description for 'FIREBASE_CREDENTIALS_FILE'"
+  },
+  {
+    "name": "FIREBASE_CREDENTIALS_FILE",
+    "type": "java.lang.String",
+    "description": "A description for 'FIREBASE_CREDENTIALS_FILE'"
+  },
+  {
+    "name": "FIREBASE_DATABASE_URL",
+    "type": "java.lang.String",
+    "description": "A description for 'FIREBASE_DATABASE_URL'"
+  },
+  {
+    "name": "FIREBASE_CREDENTIALS_FILE",
+    "type": "java.lang.String",
+    "description": "A description for 'FIREBASE_CREDENTIALS_FILE'"
+  },
+  {
+    "name": "FIREBASE_CREDENTIALS_FILE",
+    "type": "java.lang.String",
+    "description": "A description for 'FIREBASE_CREDENTIALS_FILE'"
   }
 ]}

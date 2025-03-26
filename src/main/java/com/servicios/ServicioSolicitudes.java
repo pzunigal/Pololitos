@@ -1,7 +1,7 @@
 package com.servicios;
 
 import com.modelos.Solicitud;
-import com.repositorios.RepositorioSolicitudes; 
+import com.repositorios.RepositorioSolicitud; 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 public class ServicioSolicitudes {
 
     @Autowired
-    private RepositorioSolicitudes repositorioSolicitudes; 
+    private RepositorioSolicitud repositorioSolicitud; 
 
     // Método para aceptar solicitud
     public boolean aceptarSolicitud(Long id) {
         // Lógica para aceptar la solicitud (cambiar el estado)
-        Solicitud solicitud = repositorioSolicitudes.findById(id).orElse(null);
+        Solicitud solicitud = repositorioSolicitud.findById(id).orElse(null);
         if (solicitud != null) {
             solicitud.setEstado("ACEPTADA"); 
-            repositorioSolicitudes.save(solicitud);
+            repositorioSolicitud.save(solicitud);
             return true;
         }
         return false;
@@ -26,10 +26,10 @@ public class ServicioSolicitudes {
     // Método para rechazar solicitud
     public boolean rechazarSolicitud(Long id) {
         // Lógica para rechazar la solicitud (cambiar el estado)
-        Solicitud solicitud = repositorioSolicitudes.findById(id).orElse(null); 
+        Solicitud solicitud = repositorioSolicitud.findById(id).orElse(null); 
         if (solicitud != null) {
             solicitud.setEstado("RECHAZADA");  
-            repositorioSolicitudes.save(solicitud); 
+            repositorioSolicitud.save(solicitud); 
             return true;
         }
         return false;

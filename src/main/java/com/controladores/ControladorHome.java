@@ -1,18 +1,18 @@
 package com.controladores;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.modelos.Categoria;
 import com.modelos.Servicio;
 import com.modelos.Usuario;
 import com.servicios.ServicioServicios;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ControladorHome {
@@ -21,14 +21,19 @@ public class ControladorHome {
     private ServicioServicios servicioServicios;
 
     @GetMapping("/")
-	public String index() {
-		return "home.jsp";
-	}
+    public String index(Model model, HttpSession session) {
+        List<Categoria> categorias = servicioServicios.obtenerCategoriasConServicios();
+        model.addAttribute("categorias", categorias);
 
-    @GetMapping("/servicios")
-    public String servicios(Model model) {
-        model.addAttribute("servicios", servicioServicios.obtenerTodosLosServicios());
-        return "servicios.jsp";
+        List<Servicio> ultimosServicios = servicioServicios.obtenerUltimosServicios(8);
+        model.addAttribute("ultimosServicios", ultimosServicios);
+
+        // Obtener usuario en sesión
+        Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
+
+        // Pasar datos al modelo
+        model.addAttribute("usuarioSesion", usuarioEnSesion); // Se envía el usuario en sesión
+        return "home.jsp";
     }
 
     @GetMapping("/contacto")
@@ -39,42 +44,5 @@ public class ControladorHome {
     @GetMapping("/nosotros")
     public String nosotros() {
         return "nosotros.jsp";
-    }
-    
-	// Método para manejar la búsqueda con filtros
-    @GetMapping("/buscar")
-    public String buscar(
-        @RequestParam(value = "nombre", required = false) String nombre,
-        @RequestParam(value = "usuario", required = false) Usuario usuario,
-        @RequestParam(value = "categoria", required = false) Categoria categoria,
-        @RequestParam(value = "precio", required = false) Double precio,
-        Model model
-    ) {
-        List<Servicio> serviciosEncontrados = new ArrayList<>();
-
-        // Filtrar por nombre
-        if (nombre != null && !nombre.isEmpty()) {
-            serviciosEncontrados = servicioServicios.buscarPorNombre(nombre);
-        }
-
-        // Filtrar por categoría
-        if (categoria != null) {
-            serviciosEncontrados.addAll(servicioServicios.buscarPorCategoria(categoria));
-        }
-
-        // Filtrar por precio
-        if (precio != null) {
-            serviciosEncontrados.addAll(servicioServicios.buscarPorPrecio(precio));
-        }
-		
-        // Filtrar por usuario
-        if (usuario != null) {
-            serviciosEncontrados.addAll(servicioServicios.buscarPorUsuario(usuario));
-        }
-
-        // Pasamos los resultados de la búsqueda al modelo
-        model.addAttribute("servicios", serviciosEncontrados);
-
-        return "resultadoBusqueda.jsp";  // Nombre de la vista donde se mostrarán los resultados
     }
 }

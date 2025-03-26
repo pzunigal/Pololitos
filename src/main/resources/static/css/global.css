@@ -1,0 +1,55 @@
+@import url(components/forms/contact-form.css);
+@import url(views/edit-user.css);
+@import url(components/forms/edit-service.css);
+@import url(views/index.css);
+@import url(views/login.css);
+@import url(views/requests-sent.css);
+@import url(views/requests-received.css);
+@import url(views/view-profile.css);
+@import url(views/register.css);
+@import url(views/services.css);
+@import url(views/service-profile.css);
+@import url(views/chat.css);
+.body-with-bg {
+    font-family: 'Quicksand', 'Roboto', 'Noto Sans', 'Winky Sans', sans-serif;
+    min-height: 100vh;
+    background-image: url('https://c1.wallpaperflare.com/path/427/745/192/notebook-natural-laptop-macbook-497500668a927f46aa19fafb668d8702.jpg');
+    background-size: cover;
+    background-position: center;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+.body-without-bg {
+    font-family: 'Quicksand', sans-serif;
+    background-color: #1e1e1e;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+ }
+ @media (min-width: 1020px) and (max-width: 1140px) {
+    nav .navbar-collapse {
+      flex-wrap: wrap !important;
+      gap: 10px;
+    }
+  
+    nav form,
+    nav .d-flex.align-items-center {
+      width: 100%;
+      justify-content: start;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+  
+    nav .dropdown {
+      margin-top: 10px;
+    }
+  
+    nav .btn,
+    nav form input,
+    nav form button {
+      margin-top: 5px;
+    }
+  }
+  

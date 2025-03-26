@@ -32,14 +32,16 @@
 	<dependencies>
 	<dependency>
     <groupId>com.cloudinary</groupId>
-    <artifactId>cloudinary-http5</artifactId>
-    <version>2.0.0</version>
+    <artifactId>cloudinary-http44</artifactId>
+    <version>1.29.0</version>
 </dependency>
+
 <dependency>
     <groupId>com.cloudinary</groupId>
     <artifactId>cloudinary-taglib</artifactId>
     <version>2.0.0</version>
 </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -97,15 +99,57 @@
 			<artifactId>lombok</artifactId>
 			<optional>true</optional>
 		</dependency>
+		<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-devtools</artifactId>
+    <scope>runtime</scope>
+</dependency>
+<dependency>
+    <groupId>com.google.firebase</groupId>
+    <artifactId>firebase-admin</artifactId>
+    <version>9.1.1</version>
+</dependency>
+
+
+<dependency>
+    <groupId>com.google.auth</groupId>
+    <artifactId>google-auth-library-oauth2-http</artifactId>
+    <version>1.24.1</version> <!-- Última versión estable -->
+</dependency>
+<dependency>
+    <groupId>io.github.cdimascio</groupId>
+    <artifactId>java-dotenv</artifactId>
+    <version>5.2.2</version>
+</dependency>
+
+
+
+
+
+
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
-	</build>
+	<packaging>war</packaging>
+
+<build>
+    <finalName>app</finalName>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+                <mainClass>com.PeguitasApplication</mainClass>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.3.2</version>
+            <configuration>
+                <failOnMissingWebXml>false</failOnMissingWebXml>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 
 </project>

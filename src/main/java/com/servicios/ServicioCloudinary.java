@@ -1,63 +1,84 @@
-/* package com.servicios;
+package com.servicios;
 
-import java.io.IOException;
-import java.util.Map;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.util.Locale;
+import java.util.Map;
 
 @Service
 public class ServicioCloudinary {
 
-    private final Cloudinary cloudinary;
+    @Autowired
+    private Cloudinary cloudinary;
 
-    public ServicioCloudinary(@Value("${cloudinary.cloud_name}") String cloudName,
-                              @Value("${cloudinary.api_key}") String apiKey,
-                              @Value("${cloudinary.api_secret}") String apiSecret) {
-        this.cloudinary = new Cloudinary(ObjectUtils.asMap(
-            "cloud_name", cloudName,
-            "api_key", apiKey,
-            "api_secret", apiSecret,
-            "secure", true));
+    /**
+     * Sube un archivo a Cloudinary, mantiene el formato original si es válido (jpg/jpeg/png),
+     * y convierte a jpg si es de otro tipo (heic, webp, etc).
+     */
+    @SuppressWarnings("unchecked")
+    public String subirArchivo(MultipartFile archivo, String carpeta) throws IOException {
+        String originalFilename = archivo.getOriginalFilename();
+        String extension = obtenerExtension(originalFilename).toLowerCase(Locale.ROOT);
+
+        Map<String, Object> params;
+
+        if (extension.equals("jpg") || extension.equals("jpeg") || extension.equals("png")) {
+            params = ObjectUtils.asMap("folder", carpeta);
+        } else {
+            params = ObjectUtils.asMap(
+                "folder", carpeta,
+                "format", "jpg"
+            );
+        }
+
+        Map<?, ?> resultado = cloudinary.uploader().upload(archivo.getBytes(), params);
+        return resultado.get("secure_url").toString();
     }
 
-    public String uploadFile(MultipartFile file) {
+    /**
+     * Elimina una imagen de Cloudinary si pertenece a /profile-images/ o /servicios/.
+     * Ignora las imágenes externas o no gestionadas por Cloudinary.
+     */
+    public void eliminarArchivo(String urlImagen) {
         try {
-            if (file.isEmpty()) {
-                throw new IllegalArgumentException("El archivo está vacío");
+            if (!urlImagen.contains("/profile-images/") && !urlImagen.contains("/servicios/")) {
+                return;
             }
-            
-            // Verificar si el tipo de archivo es una imagen
-            String contentType = file.getContentType();
-            if (contentType == null || !contentType.startsWith("image/")) {
-                throw new IllegalArgumentException("El archivo debe ser una imagen");
-            }
-
-            // Verificar las extensiones de la imagen
-            String fileName = file.getOriginalFilename().toLowerCase();
-            if (!(fileName.endsWith(".jpg") || fileName.endsWith(".jpeg") || fileName.endsWith(".png"))) {
-                throw new IllegalArgumentException("El archivo debe ser JPG, JPEG o PNG");
-            }
-
-            // Parametros para subir el archivo a Cloudinary
-            Map<String, Object> uploadParams = ObjectUtils.asMap(
-                "folder", "servicios",
-                "resource_type", "image",
-                "use_filename", true,
-                "unique_filename", false
-            );
-
-            // Subir el archivo a Cloudinary
-            Map<String, Object> uploadResult = cloudinary.uploader().upload(file.getBytes(), uploadParams);
-            return (String) uploadResult.get("secure_url");
-
-        } catch (IOException e) {
-            throw new RuntimeException("Error al subir la imagen a Cloudinary", e);
-        } catch (IllegalArgumentException e) {
-            throw new RuntimeException("Error en los parámetros de la imagen: " + e.getMessage(), e);
+            String publicId = extraerPublicId(urlImagen);
+            cloudinary.uploader().destroy(publicId, ObjectUtils.emptyMap());
+        } catch (Exception e) {
+            // Silenciar errores para evitar caídas
         }
     }
+
+    /**
+     * Extrae el public_id desde una URL completa de Cloudinary.
+     */
+    private String extraerPublicId(String url) {
+        try {
+            String sinExtension = url.substring(0, url.lastIndexOf('.'));
+            int index = sinExtension.indexOf("/profile-images/");
+            if (index == -1) index = sinExtension.indexOf("/servicios/");
+            if (index == -1) throw new IllegalArgumentException("URL no válida: no contiene carpetas conocidas");
+
+            return sinExtension.substring(index + 1);
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudo extraer el public_id desde la URL: " + url, e);
+        }
+    }
+
+    /**
+     * Extrae la extensión del archivo (sin el punto).
+     */
+    private String obtenerExtension(String nombreArchivo) {
+        if (nombreArchivo == null || !nombreArchivo.contains(".")) {
+            return "";
+        }
+        return nombreArchivo.substring(nombreArchivo.lastIndexOf('.') + 1);
+    }
 }
- */
