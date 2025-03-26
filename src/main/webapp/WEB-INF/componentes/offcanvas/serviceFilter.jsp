@@ -8,7 +8,8 @@
        <form action="/servicios" method="get">
           <div class="mb-3">
              <label for="categoriaId" class="form-label">Categoría</label>
-             <select name="categoriaId" id="categoriaId" class="form-select">
+             <select name="categoriaId" id="categoriaId" class="form-select w-100">
+
                 <option value="">Todas las categorías</option>
                 <c:forEach var="categoria" items="${categorias}">
                    <option value="${categoria.id}" <c:if test="${param.categoriaId == categoria.id}">selected</c:if>>

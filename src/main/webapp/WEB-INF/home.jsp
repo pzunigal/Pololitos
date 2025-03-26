@@ -31,6 +31,13 @@
         <p class="lead mb-4">Conectamos a personas que buscan ayuda con servicios locales dispuestos a brindar soluciones</p>
         <a href="/servicios" class="btn btn-primary btn-lg w-auto">Buscar Servicios</a>
 
+        <div class="video-tutorial my-5">
+            <h2 class="mb-3">¿No sabes cómo usar Pololitos?</h2>
+            <p class="mb-4">Mira este video corto donde te explicamos paso a paso cómo buscar, publicar y contactar por un pololito.</p>
+            <div class="ratio ratio-16x9 rounded overflow-hidden shadow">
+                <iframe src="https://www.youtube.com/embed/KDliA6la4eA" title="Cómo usar Pololitos" allowfullscreen></iframe>
+            </div>
+        </div>
 
         <!-- Sección Publicidad -->
         <div class="row justify-content-center my-5">
