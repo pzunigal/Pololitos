@@ -107,6 +107,11 @@ public class ControladorChat {
             // Validar si el usuario actual es el solicitante o el proveedor del servicio
             boolean esSolicitante = solicitud.getSolicitante().getId().equals(usuarioEnSesion.getId());
             boolean esProveedor = solicitud.getServicio().getUsuario().getId().equals(usuarioEnSesion.getId());
+            Usuario otroUsuario = esSolicitante
+                    ? solicitud.getServicio().getUsuario()
+                    : solicitud.getSolicitante();
+            String rolDescripcion = esSolicitante ? solicitud.getServicio().getNombre() : "Solicitante";
+            model.addAttribute("rolDescripcion", rolDescripcion);
 
             if (!esSolicitante && !esProveedor) {
                 return "redirect:/";
@@ -122,6 +127,7 @@ public class ControladorChat {
             model.addAttribute("mensajes", chat.getMensajes() != null ? chat.getMensajes() : new ArrayList<>());
             model.addAttribute("chatId", chatId);
             model.addAttribute("solicitanteId", chat.getSolicitanteId());
+            model.addAttribute("otroUsuario", otroUsuario);
 
             return "chat.jsp";
         } catch (Exception e) {

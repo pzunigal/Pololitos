@@ -32,31 +32,96 @@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
   <body class="body-without-bg">
     <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 
-    <main>
-      <div class="servicio-container">
-        <div class="servicio-info">
-          <h2>Nombre de servicio</h2>
-          <p>
-            Descripcion de servicio Lorem ipsum dolor sit amet consectetur
-            adipisicing elit. Est enim necessitatibus modi suscipit minus. Rem
-            reprehenderit adipisci recusandae voluptas ducimus maxime molestiae
-            voluptatem ad. Expedita cumque in magni incidunt saepe!
-          </p>
-        </div>
-        <img src="/img/work.jpg" alt="" />
-        <button>Ver servicio</button>
-      </div>
+    <main class="my-4">
       <div class="container">
-        <!-- CHAT FORM -->
-        <%@ include file="/WEB-INF/componentes/forms/chatForm.jsp" %>
+        <div class="d-flex flex-wrap justify-content-center gap-4">
+          <!-- Servicio -->
+          <div
+            class="card shadow flex-fill"
+            style="min-width: 300px; max-width: 500px"
+          >
+            <img
+              src="/img/work.jpg"
+              class="card-img-top"
+              alt="Imagen del servicio"
+            />
+            <div class="card-body">
+              <h5 class="card-title">Nombre de servicio</h5>
+              <p class="card-text">
+                Descripción de servicio Lorem ipsum dolor sit amet consectetur
+                adipisicing elit. Est enim necessitatibus modi suscipit minus...
+              </p>
+            </div>
+            <div class="card-footer bg-transparent border-0">
+              <a href="#" class="btn btn-primary">Ver servicio</a>
+            </div>
+          </div>
+
+          <!-- Chat -->
+          <div
+            class="card shadow flex-fill bg-dark d-flex flex-column"
+            style="min-width: 300px; max-width: 500px"
+          >
+            <div class="card-header d-flex align-items-center text-white">
+              <img
+                src="/img/user.png"
+                alt="Usuario"
+                class="rounded-circle me-2"
+                style="width: 40px; height: 40px"
+              />
+              <div>
+                <h6 class="mb-0">
+                  ${otroUsuario.nombre} ${otroUsuario.apellido}
+                </h6>
+                <small>${rolDescripcion}</small>
+              </div>
+            </div>
+
+            <div
+              class="card-body flex-grow-1 p-3 overflow-auto chat-box-bg"
+              id="chat-box"
+              style="min-height: 200px; max-height: 400px"
+            >
+              <!-- Mensajes se insertan aquí con JS -->
+            </div>
+
+            <div class="card-footer p-0">
+              <form class="d-flex align-items-center gap-2" id="mensaje-form">
+                <input type="hidden" id="chatId" value="${chatId}" />
+                <input
+                  type="hidden"
+                  id="usuarioId"
+                  value="${sessionScope.usuarioEnSesion.id}"
+                />
+                <input
+                  type="hidden"
+                  id="nombreUsuario"
+                  value="${sessionScope.usuarioEnSesion.nombre} ${sessionScope.usuarioEnSesion.apellido}"
+                />
+
+                <textarea
+                  class="form-control"
+                  id="mensaje-input"
+                  rows="1"
+                  placeholder="Escribe un mensaje..."
+                ></textarea>
+
+                <button type="submit" class="btn btn-success">
+                  <i class="fas fa-paper-plane"></i>
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
       </div>
     </main>
-    <footer>
-      <button onclick="volverAtrasRecargando()">
-        <i class="fa-solid fa-arrow-left"></i>
-        Volver
+
+    <div class="text-center mt-4">
+      <button class="btn btn-secondary" onclick="volverAtrasRecargando()">
+        <i class="fa-solid fa-arrow-left"></i> Volver
       </button>
-    </footer>
+    </div>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="<c:url value='/js/chatScript.js' />"></script>

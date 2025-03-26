@@ -1,97 +1,18 @@
-* {
-    margin: 0;
-    padding: 0;
-    border: 0;
-}
-
 .body-without-bg {
-    font-family: 'Quicksand', sans-serif;
-    background-color: #1e1e1e;
-    color: white;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
- }
-
+  font-family: "Quicksand", sans-serif;
+  background-color: #1e1e1e;
+  color: white;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
 
 main {
-    display: flex;
-    margin: auto;
-    margin-bottom: 20px;
+  display: flex;
+  margin: auto;
+  margin-bottom: 20px;
 }
-
-.servicio-container {
-    background-color: #141519;
-    border-radius: 10px 0 0 10px;
-    padding: 20px;
-    width: 500px;
-    color: white;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
-    align-items: center;
-}
-
-.servicio-container img {
-    width: 100%;
-    border-radius: 10px;
-    object-fit: cover;
-}
-
-.servicio-container button {
-    background-color: #28a745;
-    color: white;
-    border-radius: 10px;
-    padding: 10px;
-    font-size: 20px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-.servicio-container button:hover {
-    background-color: #3a3a3a;
-    transform: scale(0.95);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
-
-.container {
-    max-width: 800px;
-    width: 100%;
-}
-
-.chat-container {
-    background-color: #141519;
-    border-radius: 0 10px 10px 0;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-    padding: 20px;
-    flex: 1;
-}
-
-.header-chat {
-    display: flex;
-    color: white;
-    padding-bottom: 20px;
-}
-
-.header-chat img {
-    width: 50px;
-    height: 50px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.info-user h2 {
-    margin: 0;
-    padding-bottom: 5px;
-}
-
-.info-user p {
-    font-size: 14px;
-    color: #b3b3b3;
-    margin: 0;
-}
-
-.chat-box {
+#chat-box {
     height: 500px;
     overflow-y: auto;
     display: flex;
@@ -101,47 +22,55 @@ main {
                 radial-gradient(circle, #313131 10%, transparent 10%) 10px 10px;
     background-size: 20px 20px;
     border-radius: 25px;
-}
-
-.message {
+  }
+  
+  .message {
     max-width: 70%;
     padding: 10px;
     margin: 5px 0;
     border-radius: 10px;
     word-wrap: break-word;
     font-size: 14px;
-}
-
-.sent {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  /* Mensajes enviados: a la derecha */
+  .sent {
     align-self: flex-end;
     background-color: #007bff;
     color: white;
     border-radius: 10px 10px 0 10px;
-}
-
-.received {
+    padding: 8px 12px;
+  }
+  
+  /* Mensajes recibidos: a la izquierda */
+  .received {
     align-self: flex-start;
     background-color: #737373;
     color: white;
     border-radius: 10px 10px 10px 0;
     border: 1px solid #6b6b6b;
-}
-
-.nombre-usuario {
-    font-weight: bold;
-    display: block;
+    padding: 8px 12px;
+  }
+  
+  /* Opcional: nombre encima de mensajes recibidos */
+  .nombre-usuario {
+    font-size: 12px;
+    color: #cccccc;
     margin-bottom: 3px;
-}
+    font-weight: bold;
+  }
+  
 
-#mensaje-form {
+  #mensaje-form {
     display: flex;
     align-items: center;
     background: #141519;
-    border-radius: 0 0 25px 25px;
     padding: 5px;
-}
-
-#mensaje-input {
+  }
+  
+  #mensaje-input {
     flex: 1;
     border: none;
     outline: none;
@@ -150,9 +79,9 @@ main {
     border-radius: 25px;
     resize: none;
     background-color: #f3f3f3;
-}
-
-#mensaje-form button {
+  }
+  
+  #mensaje-form button {
     border: none;
     background-color: #007bff;
     color: white;
@@ -164,29 +93,9 @@ main {
     align-items: center;
     justify-content: center;
     transition: background 0.3s;
-}
-
-#mensaje-form button:hover {
+  }
+  
+  #mensaje-form button:hover {
     background-color: #0056b3;
-}
-
-footer {
-    display: flex;
-    justify-content: center;
-}
-
-footer button {
-    margin: 20px;
-    margin-bottom: 80px;
-    padding: 10px;
-    border-radius: 10px;
-    cursor: pointer;
-    transition: all 0.3s ease-in-out;
-}
-
-footer button:hover {
-    background-color: #3a3a3a;
-    color: white;
-    transform: scale(0.95);
-    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
-}
+  }
+  
