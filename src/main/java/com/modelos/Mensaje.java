@@ -7,11 +7,11 @@ public class Mensaje {
     private String id;
     private String contenido;
     private Long usuarioId;
-    private String nombreUsuario;
-    private String createdAt; // CAMBIO: De Date a String
+    private String nombreUsuario; // ← NUEVO
+    private String createdAt;
 
     public Mensaje() {
-        this.createdAt = Date.from(Instant.now()).toInstant().toString(); // Guarda en formato ISO-8601
+        this.createdAt = Date.from(Instant.now()).toInstant().toString();
     }
 
     public Mensaje(String contenido, Long usuarioId, String nombreUsuario) {
@@ -62,7 +62,6 @@ public class Mensaje {
         this.createdAt = createdAt;
     }
 
-    // Utilidad: Convertir createdAt en String a Date (si lo necesitas)
     public Date getCreatedAtAsDate() {
         try {
             return Date.from(Instant.parse(createdAt));

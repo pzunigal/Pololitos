@@ -1,108 +1,75 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 <!DOCTYPE html>
 <html lang="es">
-   <head>
-      <meta charset="UTF-8">
-      <title>Editar Servicio</title>
-      <link rel="stylesheet" href="/css/editarServicio.css">
-      <style>
-         .imagen-preview {
-            max-width: 200px;
-            margin-bottom: 10px;
-            border: 1px solid #ccc;
-            padding: 4px;
-         }
-      </style>
-   </head>
-   <body>
-      <header>
-         <div class="nav-container">
-            <a href="/">
-               <img src="${pageContext.request.contextPath}/img/pololitosBlanco.png" alt="Logo Pololitos" class="logo">
-            </a>
-            <nav>
-               <ul class="nav-links">
-                  <li><a href="/mis-servicios">Mis Servicios</a></li>
-               </ul>
-            </nav>
-         </div>
-      </header>
-      <main>
-         <div class="form-container">
-            <h1>Editar Servicio</h1>
-            <form action="/actualizar-servicio/${servicio.id}" method="post" enctype="multipart/form-data">
-               <input type="hidden" name="_method" value="PATCH">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Editar Servicio</title>
 
-               <label for="nombre">Nombre</label>
-               <input type="text" id="nombre" name="nombre" value="${servicio.nombre}" required>
+    <!-- Fuentes personalizadas -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Quicksand:wght@300..700&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Winky+Sans:ital,wght@0,300..900;1,300..900&display=swap"
+      rel="stylesheet"
+    />
 
-               <label for="descripcion">Descripción</label>
-               <textarea id="descripcion" name="descripcion" required>${servicio.descripcion}</textarea>
+    <!-- Bootstrap -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
+  </head>
 
-               <label for="precio">Precio</label>
-               <input type="number" id="precio" name="precio" value="${servicio.precio}" required>
+  <body class="d-flex flex-column body-with-bg">
+    <!-- Navbar -->
+    <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 
-               <label for="ciudad">Ciudad</label>
-               <input type="text" id="ciudad" name="ciudad" value="${servicio.ciudad}" required>
+    <!-- Contenido -->
+    <main class="container my-5">
+      <div
+        class="bg-dark text-white p-5 rounded shadow col-12 col-sm-10 col-md-8 col-lg-7 col-xl-6 col-xxl-6 mx-auto"
+      >
+        <h1 class="mb-4 text-center">Editar Servicio</h1>
 
-               <label for="fechaPublicacion">Fecha de Publicación</label>
-               <input type="text" id="fechaPublicacion" name="fechaPublicacion" 
-                  value="<fmt:formatDate value='${servicio.fechaPublicacion}' pattern='dd/MM/yyyy'/>" disabled>
-               
-               <label for="categoria">Categoría</label>
-               <select id="categoria" name="categoria" required>
-                  <c:forEach var="categoria" items="${categorias}">
-                     <option value="${categoria.id}" ${categoria.id == servicio.categoria.id ? 'selected' : ''}>
-                        ${categoria.nombre}
-                     </option>
-                  </c:forEach>
-               </select>
+        <c:if test="${not empty error}">
+          <div class="alert alert-danger text-center">${error}</div>
+        </c:if>
 
-               <label for="imagenActual">Imagen actual</label>
-               <img src="${servicio.imgUrl}" alt="Imagen actual" class="imagen-preview" id="imagenActual">
+        <%@ include file="/WEB-INF/componentes/forms/editService.jsp" %>
+      </div>
+    </main>
 
-               <label for="imagen">Nueva imagen (opcional)</label>
-               <input type="file" id="imagen" name="imagen" accept="image/png, image/jpeg, image/jpg">
-               <div id="previewContainer">
-                  <label>Vista previa de nueva imagen:</label>
-                  <img id="preview" class="imagen-preview" style="display:none;">
-               </div>
+    <!-- Footer -->
+    <%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
 
-               <div class="button-group">
-                  <button type="submit" class="btn">Actualizar Servicio</button>
-                  <a href="/mis-servicios" class="btn-secondary">Volver</a>
-               </div>
-            </form>
-         </div>
-      </main>
-      <footer>
-         <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
-         <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-         </ul>
-      </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+      const inputImagen = document.getElementById("imagen");
+      const preview = document.getElementById("preview");
 
-      <script>
-         const inputImagen = document.getElementById('imagen');
-         const preview = document.getElementById('preview');
-
-         inputImagen.addEventListener('change', function(event) {
-            const archivo = event.target.files[0];
-            if (archivo) {
-               const reader = new FileReader();
-               reader.onload = function(e) {
-                  preview.src = e.target.result;
-                  preview.style.display = 'block';
-               }
-               reader.readAsDataURL(archivo);
-            } else {
-               preview.src = '';
-               preview.style.display = 'none';
-            }
-         });
-      </script>
-   </body>
+      inputImagen.addEventListener("change", function (event) {
+        const archivo = event.target.files[0];
+        if (archivo) {
+          const reader = new FileReader();
+          reader.onload = function (e) {
+            preview.src = e.target.result;
+            preview.style.display = "block";
+          };
+          reader.readAsDataURL(archivo);
+        } else {
+          preview.src = "";
+          preview.style.display = "none";
+        }
+      });
+    </script>
+  </body>
 </html>

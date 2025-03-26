@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -17,12 +18,14 @@ import org.springframework.web.bind.annotation.PathVariable;
 import com.modelos.Categoria;
 import com.modelos.Resena;
 import com.modelos.Servicio;
+import com.modelos.Solicitud;
 import com.modelos.Usuario;
 import com.servicios.ServicioSubirArchivo;
 import com.servicios.ServicioCategorias;
 import com.servicios.ServicioCloudinary;
 import com.servicios.ServicioResena;
 import com.servicios.ServicioServicios;
+import com.servicios.ServicioSolicitud;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.servlet.http.HttpSession;
@@ -47,6 +50,8 @@ public class ControladorServicios {
 
     @Autowired
     private ServicioCloudinary servicioCloudinary;
+    @Autowired
+    private ServicioSolicitud servicioSolicitud;
 
     @GetMapping("/servicios/publicar")
     public String mostrarFormulario(HttpSession session, Model model) {
@@ -81,32 +86,21 @@ public class ControladorServicios {
             return "redirect:/login";
 
         if (result.hasErrors()) {
-            System.out.println("Errores en validación del formulario:");
-            result.getFieldErrors().forEach(
-                    err -> System.out.println("Campo: " + err.getField() + " - Error: " + err.getDefaultMessage()));
             model.addAttribute("error", "Existen errores en los campos del formulario.");
             cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
         }
 
         if (file.isEmpty()) {
-            System.out.println("Archivo vacío recibido");
             model.addAttribute("error", "Debe subir una imagen.");
             cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
         }
 
-        //Aquí imprimimos los detalles del archivo recibido
-        System.out.println("Nombre del archivo recibido: " + file.getOriginalFilename());
-        System.out.println("Tamaño del archivo (bytes): " + file.getSize());
-
         try {
-            System.out.println("Intentando subir archivo a Cloudinary...");
             String urlImagen = fileUploadService.uploadFile(file, "servicios");
-            System.out.println("Imagen subida con éxito: " + urlImagen);
             servicio.setImgUrl(urlImagen);
         } catch (Exception e) {
-            e.printStackTrace(); // log completo en consola
             model.addAttribute("error", "Error al subir la imagen: " + e.getMessage());
             cargarDatosFormulario(model, usuarioEnSesion, servicio, null);
             return "nuevoServicio.jsp";
@@ -158,8 +152,9 @@ public class ControladorServicios {
     public String actualizarServicio(@PathVariable("id") Long id,
             @Valid @ModelAttribute("servicio") Servicio servicio,
             BindingResult result,
-            @RequestParam("imagen") MultipartFile imagen, // Cambiado a MultipartFile
-            HttpSession session, Model model) {
+            @RequestParam("imagen") MultipartFile imagen,
+            HttpSession session, Model model,
+            RedirectAttributes redirectAttributes) { // 👈 Agregado RedirectAttributes
 
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
         if (usuarioEnSesion == null) {
@@ -178,17 +173,12 @@ public class ControladorServicios {
         }
 
         try {
-            // Si se subió una nueva imagen
             if (!imagen.isEmpty()) {
-                // Eliminar imagen anterior en Cloudinary
                 servicioCloudinary.eliminarArchivo(servicioExistente.getImgUrl());
-
-                // Subir nueva imagen a Cloudinary
                 String nuevaUrl = servicioCloudinary.subirArchivo(imagen, "servicios");
                 servicioExistente.setImgUrl(nuevaUrl);
             }
 
-            // Actualizar los demás campos
             servicioExistente.setNombre(servicio.getNombre());
             servicioExistente.setDescripcion(servicio.getDescripcion());
             servicioExistente.setPrecio(servicio.getPrecio());
@@ -196,6 +186,10 @@ public class ControladorServicios {
             servicioExistente.setCiudad(servicio.getCiudad());
 
             servicioServicios.guardar(servicioExistente);
+
+            // Mensaje flash de éxito
+            redirectAttributes.addFlashAttribute("exito", "¡Servicio actualizado correctamente!");
+
             return "redirect:/mis-servicios";
 
         } catch (Exception e) {
@@ -206,10 +200,18 @@ public class ControladorServicios {
 
     @PostMapping("/eliminar-servicio/{id}")
     @Transactional
-    public String eliminarServicio(@PathVariable("id") Long id, Model model) {
+    public String eliminarServicio(@PathVariable("id") Long id, RedirectAttributes redirectAttributes) {
         try {
             Servicio servicio = servicioServicios.obtenerPorId(id);
             if (servicio != null) {
+                // Verificar si hay solicitudes asociadas
+                List<Solicitud> solicitudes = servicioSolicitud.obtenerSolicitudesPorServicio(servicio);
+                if (solicitudes != null && !solicitudes.isEmpty()) {
+                    redirectAttributes.addFlashAttribute("error",
+                            "No puedes eliminar este servicio porque tiene solicitudes registradas.");
+                    return "redirect:/mis-servicios";
+                }
+
                 // Eliminar imagen de Cloudinary
                 servicioCloudinary.eliminarArchivo(servicio.getImgUrl());
 
@@ -218,7 +220,8 @@ public class ControladorServicios {
             }
             return "redirect:/mis-servicios";
         } catch (Exception e) {
-            model.addAttribute("error", true);
+            redirectAttributes.addFlashAttribute("error",
+                    "Hubo un error inesperado al intentar eliminar el servicio: " + e.getMessage());
             return "redirect:/mis-servicios";
         }
     }
@@ -247,33 +250,49 @@ public class ControladorServicios {
     }
 
     @GetMapping("/servicios")
-    public String mostrarServicios(@RequestParam(value = "categoriaId", required = false) Long categoriaId, Model model,
-            HttpSession session) {
-        // Obtener usuario en sesión
+    public String mostrarServicios(
+            @RequestParam(value = "categoriaId", required = false) Long categoriaId,
+            @RequestParam(value = "precioMin", required = false) Double precioMin,
+            @RequestParam(value = "precioMax", required = false) Double precioMax,
+            Model model, HttpSession session) {
+
         Usuario usuarioEnSesion = (Usuario) session.getAttribute("usuarioEnSesion");
 
-        List<Categoria> categoriasConServicios;
+        List<Categoria> categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
 
         if (categoriaId != null) {
-            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios()
-                    .stream()
+            categoriasConServicios = categoriasConServicios.stream()
                     .filter(c -> c.getId().equals(categoriaId))
                     .collect(Collectors.toList());
-        } else {
-            categoriasConServicios = servicioServicios.obtenerCategoriasConServicios();
+        }
+
+        if (precioMin != null || precioMax != null) {
+            for (Categoria categoria : categoriasConServicios) {
+                List<Servicio> filtrados = categoria.getServicios().stream()
+                        .filter(s -> (precioMin == null || s.getPrecio() >= precioMin) &&
+                                (precioMax == null || s.getPrecio() <= precioMax))
+                        .collect(Collectors.toList());
+                categoria.setServicios(filtrados);
+            }
         }
 
         model.addAttribute("categorias", categoriasConServicios);
         model.addAttribute("usuarioSesion", usuarioEnSesion);
+        model.addAttribute("precioMin", precioMin);
+        model.addAttribute("precioMax", precioMax);
+        model.addAttribute("categoriaId", categoriaId);
         return "servicios.jsp";
     }
 
     @GetMapping("/buscar-servicios")
     public String buscarServicios(@RequestParam("query") String query, Model model) {
         List<Servicio> servicios = servicioServicios.buscarPorNombre(query);
-        System.out.println("Servicios encontrados: " + servicios.size());
+        List<Categoria> categorias = servicioServicios.obtenerCategoriasConServicios(); // 🔥
+
         model.addAttribute("servicios", servicios);
         model.addAttribute("query", query);
+        model.addAttribute("categorias", categorias);
+
         return "resultadoBusqueda.jsp";
     }
 

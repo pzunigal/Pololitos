@@ -1,104 +1,86 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+pageEncoding="UTF-8" %> <%@ taglib uri="http://java.sun.com/jsp/jstl/core"
+prefix="c" %>
 <!DOCTYPE html>
-<html>
-<head>
-    <meta charset="UTF-8">
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
     <title>Editar Usuario</title>
-    <link rel="stylesheet" href="/css/dashboard.css">
-</head>
-<body>
-    <header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
-            </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                    <c:if test="${not empty sessionScope.usuarioEnSesion}">
-                        <li><a href="/mis-servicios">Mis Servicios</a></li>
-                        <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                        <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                    </c:if>
-                </ul>
-            </nav>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Bootstrap & Icons -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
+  </head>
+
+  <body class="body-without-bg">
+    <!-- Navbar -->
+    <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
+
+    <!-- Contenido -->
+    <main class="container my-5">
+      <div class="row justify-content-center">
+        <div class="col-md-8">
+          <div class="card bg-dark border-light p-4">
+            <h2 class="text-center text-white mb-4">Editar Perfil</h2>
+            <!-- FORMULARIO EDITAR PERFIL -->
+            <%@ include file="/WEB-INF/componentes/forms/editUser.jsp" %>
+          </div>
         </div>
-        <div class="user-info">
-            <form action="/buscar-servicios" method="get">
-                <div class="circle-busqueda" id="busqueda-container">
-                    <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
-                    <button type="submit" id="busqueda-btn">
-                        <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
-                    </button>
-                </div>
-            </form>
-            <c:if test="${not empty sessionScope.usuarioEnSesion}">
-                <a href="/perfilUsuario">
-                    <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                         width="40" height="40" style="border-radius: 50%;">
-                </a>
-                <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                <a href="/logout"><button>Cerrar Sesión</button></a>
-            </c:if>
-        </div>
-    </header>
-
-    <main>
-        <div class="profile-card">
-            <h1 class="name">Editar Perfil</h1>
-            <form method="post" action="/actualizarPerfil" enctype="multipart/form-data">
-                <input type="hidden" name="_method" value="PATCH" />
-
-                <label for="nombre">Nombre:</label>
-                <input type="text" name="nombre" value="${usuario.nombre}" class="input-field" placeholder="Nombre completo" required />
-
-                <label for="apellido">Apellido:</label>
-                <input type="text" name="apellido" value="${usuario.apellido}" class="input-field" placeholder="Apellido" required />
-
-                <label for="ciudad">Ciudad:</label>
-                <input type="text" name="ciudad" value="${usuario.ciudad}" class="input-field" placeholder="Ciudad" required />
-
-                <label for="telefono">Teléfono:</label>
-                <input type="text" name="telefono" value="${usuario.telefono}" class="input-field" placeholder="Ej. +56912345678" required />
-
-                <label>Imagen actual:</label><br>
-                <img src="${usuario.fotoPerfil}" alt="Imagen actual" style="max-width: 200px; margin-bottom: 10px;"><br>
-
-                <label for="fotoPerfilArchivo">Nueva imagen (opcional):</label>
-                <input type="file" id="fotoPerfilArchivo" name="fotoPerfilArchivo" accept="image/*" class="input-field">
-                <img id="preview" style="display:none; max-width: 200px; margin-top: 10px;"><br>
-
-                <button type="submit" class="edit-button">Guardar Cambios</button>
-            </form>
-        </div>
+      </div>
     </main>
+    <!-- footer -->
+    <%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
 
-    <footer>
-        <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
-        <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-        </ul>
-    </footer>
-
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById('fotoPerfilArchivo').addEventListener('change', function(event) {
-            const preview = document.getElementById('preview');
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    preview.src = e.target.result;
-                    preview.style.display = 'block';
-                };
-                reader.readAsDataURL(file);
-            } else {
-                preview.style.display = 'none';
-            }
+      document
+        .getElementById("fotoPerfilArchivo")
+        .addEventListener("change", function (event) {
+          const preview = document.getElementById("preview");
+          const file = event.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+              preview.src = e.target.result;
+              preview.style.display = "block";
+            };
+            reader.readAsDataURL(file);
+          } else {
+            preview.style.display = "none";
+          }
         });
+
+      function confirmarActualizacion(e) {
+        e.preventDefault();
+        Swal.fire({
+          title: "¿Guardar cambios?",
+          text: "Tu perfil será actualizado con la nueva información.",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonColor: "#3085d6",
+          cancelButtonColor: "#6c757d",
+          confirmButtonText: "Sí, actualizar",
+          cancelButtonText: "Cancelar",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            e.target.submit();
+          }
+        });
+        return false;
+      }
     </script>
-</body>
+  </body>
 </html>

@@ -41,6 +41,7 @@
     <artifactId>cloudinary-taglib</artifactId>
     <version>2.0.0</version>
 </dependency>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
@@ -115,6 +116,12 @@
     <artifactId>google-auth-library-oauth2-http</artifactId>
     <version>1.24.1</version> <!-- Última versión estable -->
 </dependency>
+<dependency>
+    <groupId>io.github.cdimascio</groupId>
+    <artifactId>java-dotenv</artifactId>
+    <version>5.2.2</version>
+</dependency>
+
 
 
 
@@ -122,14 +129,27 @@
 
 	</dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-			
-		</plugins>
-	</build>
+	<packaging>war</packaging>
+
+<build>
+    <finalName>app</finalName>
+    <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+                <mainClass>com.PeguitasApplication</mainClass>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-war-plugin</artifactId>
+            <version>3.3.2</version>
+            <configuration>
+                <failOnMissingWebXml>false</failOnMissingWebXml>
+            </configuration>
+        </plugin>
+    </plugins>
+</build>
 
 </project>

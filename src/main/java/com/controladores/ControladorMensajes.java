@@ -25,9 +25,12 @@ public class ControladorMensajes {
             return "redirect:/login";
         }
 
-        Mensaje mensaje = new Mensaje(contenido, usuario.getId(), usuario.getNombre());
+        String nombreCompleto = usuario.getNombre() + " " + usuario.getApellido();
+
+        Mensaje mensaje = new Mensaje(contenido, usuario.getId(), nombreCompleto);
         servicioMensajes.enviarMensaje(chatId, mensaje);
 
         return "redirect:/chat/ver/" + chatId;
     }
+
 }

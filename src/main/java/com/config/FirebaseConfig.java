@@ -9,29 +9,41 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.Resource;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.credentials-file}")
-    private Resource firebaseCredentialsFile;
-
-    @Value("${firebase.database-url}")
+    @Value("${FIREBASE_DATABASE_URL}")
     private String firebaseDatabaseUrl;
+
+    @Value("${FIREBASE_CONFIG:}") // solo se usa en producción
+    private String firebaseConfigFromEnv;
+
+    @Value("${FIREBASE_CREDENTIALS_FILE:}") // fallback para local
+    private Resource firebaseCredentialsFile;
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        try (InputStream serviceAccount = firebaseCredentialsFile.getInputStream()) {
-            FirebaseOptions options = FirebaseOptions.builder()
-                    .setCredentials(GoogleCredentials.fromStream(serviceAccount))
-                    .setDatabaseUrl(firebaseDatabaseUrl)
-                    .build();
-            return FirebaseApp.initializeApp(options);
+        InputStream credentialsStream;
+
+        if (!firebaseConfigFromEnv.isEmpty()) {
+            credentialsStream = new ByteArrayInputStream(firebaseConfigFromEnv.getBytes(StandardCharsets.UTF_8));
+        } else {
+            credentialsStream = firebaseCredentialsFile.getInputStream();
         }
+
+        FirebaseOptions options = FirebaseOptions.builder()
+                .setCredentials(GoogleCredentials.fromStream(credentialsStream))
+                .setDatabaseUrl(firebaseDatabaseUrl)
+                .build();
+
+        return FirebaseApp.initializeApp(options);
     }
-    
+
     @Bean
     public FirebaseDatabase firebaseDatabase(FirebaseApp firebaseApp) {
         return FirebaseDatabase.getInstance(firebaseApp);

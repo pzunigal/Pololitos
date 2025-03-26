@@ -3,129 +3,69 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Resultados de Búsqueda</title>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="/css/servicios.css">
-    <link rel="stylesheet" href="/css/home.css">
+   <meta charset="UTF-8">
+   <title>Resultados de Búsqueda</title>
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+   <link href="https://fonts.googleapis.com/css2?family=Quicksand&family=Roboto&family=Noto+Sans&display=swap" rel="stylesheet">
+   <link rel="stylesheet" href="<c:url value='/css/global.css' />" />
+
 </head>
+<body class="body-without-bg">
 
-<body>
-    <header>
-        <div class="nav-container">
-            <a href="/">
-                <div class="logo">
-                    <img src="img/pololitosBlanco.png" alt="Logo pololitos">
-                </div>
-            </a>
-            <nav>
-                <ul class="nav-links">
-                    <li><a href="/servicios">Servicios</a></li>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-servicios">Mis Servicios</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-enviadas">Enviadas</a></li>
-                        </c:when>
-                    </c:choose>
-                    <c:choose>
-                        <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                            <li><a href="/mis-solicitudes-recibidas">Recibidas</a></li>
-                        </c:when>
-                    </c:choose>
-                </ul>
-            </nav>
-        </div>
-        <div class="user-info">
-            <form action="/buscar-servicios" method="get">
-                <div class="circle-busqueda" id="busqueda-container">
-                    <input type="text" name="query" id="busqueda-input" placeholder="¿Qué servicio buscas?">
-                    <button type="submit" id="busqueda-btn">
-                        <img src="img/busqueda.png" alt="lupa de busqueda" id="busqueda-icon">
-                    </button>
-                </div>
-            </form>
-            <c:choose>
-                <c:when test="${not empty sessionScope.usuarioEnSesion}">
-                    <a href="/perfilUsuario">
-                        <img src="${sessionScope.usuarioEnSesion.fotoPerfil}" alt="Foto de perfil"
-                            width="40" height="40" style="border-radius: 50%;">
-                    </a>
-                    <a href="/servicios/publicar"><button>Crear Servicio</button></a>
-                    <a href="/logout"><button>Cerrar Sesión</button></a>
-                </c:when>
-                <c:otherwise>
-                    <a href="/login"><button>Iniciar sesión</button></a>
-                    <a href="/registro"><button>Regístrate</button></a>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </header>
+   <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
 
-    <main>
-        <div class="services-container">
-            <h1>Resultados de la búsqueda: "${query}"</h1>
-            <c:choose>
-                <c:when test="${not empty servicios}">
-                    <div class="services-list">
-                        <c:forEach var="servicio" items="${servicios}">
-                            <div class="service-card-wrapper">
-                                <div class="service-card">
-                                    <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}" class="service-link">
-                                        <img src="${servicio.imgUrl}" class="card-img-top img-card-profile-service" alt="${servicio.nombre}">
-                                    </a>
-                                    <div class="service-info">
-                                        <h5 class="service-title">${servicio.nombre}</h5>
-                                        <p class="service-price"><strong>Precio:</strong> $${servicio.precio}</p>
-                                        <p class="service-author"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
-                                        <div>
-                                            <c:choose>
-                                            <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
-                                                <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}"
-                                                    class="btn-request-service">
-                                                    <i class="fas fa-hand-paper"></i> Solicitar Servicio
-                                                </a>
-                                                <button class="btn-contact-seller" data-bs-toggle="modal"
-                                                    data-bs-target="#contactModal"
-                                                    onclick="openModal('${servicio.usuario.nombre}', '${servicio.nombre}')">
-                                                    Contactar con el Vendedor
-                                                </button>
-                                            </c:when>
-                                            <c:otherwise>
-                                                <a href="${pageContext.request.contextPath}/servicio/detalles/${servicio.id}"
-                                                    class="btn-view-service">
-                                                    <i class="fas fa-eye"></i> Ver
-                                                </a>
-                                            </c:otherwise>
-                                            </c:choose>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </c:forEach>
-                    </div>
-                </c:when>
-                <c:otherwise>
-                    <p>No se encontraron servicios para la búsqueda: "${query}".</p>
-                </c:otherwise>
-            </c:choose>
-        </div>
-    </main>
+<main class="container py-5">
+   <h1 class="mb-4">Resultados de la búsqueda: "${query}"</h1>
+   <c:choose>
+      <c:when test="${not empty servicios}">
+         <div class="row">
+            <c:forEach var="servicio" items="${servicios}">
+               <div class="col-md-4 mb-4">
+                  <div class="card bg-dark text-white h-100">
+                     <a href="/servicio/detalles/${servicio.id}">
+                        <img src="${servicio.imgUrl}" class="card-img-top" style="height: 220px; object-fit: cover;" alt="${servicio.nombre}">
+                     </a>
+                     <div class="card-body d-flex flex-column">
+                        <h5 class="card-title text-truncate">${servicio.nombre}</h5>
+                        <p class="card-text mb-1"><strong>Precio:</strong> $${servicio.precio}</p>
+                        <p class="card-text"><small>Autor: ${servicio.usuario.nombre} ${servicio.usuario.apellido}</small></p>
+                        <div class="mt-auto">
+                           <c:choose>
+                              <c:when test="${empty usuarioSesion or usuarioSesion.id ne servicio.usuario.id}">
+                                 <a href="/servicio/detalles/${servicio.id}" class="btn btn-primary btn-sm me-2 mb-2">
+                                    <i class="bi bi-hand-index-thumb"></i> Solicitar Servicio
+                                 </a>
+                              </c:when>
+                              <c:otherwise>
+                                 <a href="/servicio/detalles/${servicio.id}" class="btn btn-outline-info btn-sm">
+                                    <i class="bi bi-eye"></i> Ver
+                                 </a>
+                              </c:otherwise>
+                           </c:choose>
+                        </div>
+                     </div>
+                  </div>
+               </div>
+            </c:forEach>
+         </div>
+      </c:when>
+      <c:otherwise>
+         <div class="alert alert-warning">No se encontraron servicios para la búsqueda: "${query}".</div>
+      </c:otherwise>
+   </c:choose>
 
-    <footer>
-        <p>Pololitos &copy; 2025. Todos los derechos reservados</p>
-        <ul class="nav-footer">
-            <li><a href="/contacto">Contacto</a></li>
-            <li><a href="/nosotros">Nosotros</a></li>
-        </ul>
-    </footer>
+   <div class="text-center mt-5">
+      <a href="/servicios" class="btn btn-outline-light">
+         <i class="bi bi-arrow-left"></i> Volver a Servicios
+      </a>
+   </div>
+</main>
+
+<%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
-
 </html>
