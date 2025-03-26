@@ -19,45 +19,47 @@
       </c:if>
     </ul>
 
-    <!-- Notificaciones solo si hay sesión -->
-    <c:if test="${not empty usuarioEnSesion}">
-        <div class="dropdown me-3">
-            <button class="btn btn-outline-light position-relative dropdown-toggle"
-                    id="notificacionesDropdown"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false">
-              <i class="bi bi-bell-fill"></i>
-              <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-                    id="notificacionBadge" style="display:none;">0</span>
-            </button>
-            <ul class="dropdown-menu dropdown-menu-end bg-dark text-light"
-                aria-labelledby="notificacionesDropdown"
-                id="notificacionesLista"
-                style="width: 300px; max-height: 400px; overflow-y: auto;">
-              <li class="dropdown-item text-muted">Cargando notificaciones...</li>
-            </ul>
-          </div>
-          
-    </c:if>
+   
 
     <form class="d-flex me-3" action="/buscar-servicios" method="get">
       <input class="form-control me-2" type="search" name="query" placeholder="Buscar">
       <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
-    </form>
+      <!-- Notificaciones solo si hay sesión -->
+     <c:if test="${not empty usuarioEnSesion}">
+      <div class="dropdown ms-3">
+          <button class="btn btn-outline-light position-relative"
+                  id="notificacionesDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false">
+            <i class="bi bi-bell-fill"></i>
+            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                  id="notificacionBadge" style="display:none;">0</span>
+          </button>
 
-    <c:choose>
-      <c:when test="${not empty usuarioEnSesion}">
-        <a href="/perfilUsuario" class="me-3">
-          <img src="${usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
-        </a>
-        <a href="/servicios/publicar" class="btn btn-success me-2">Crear Servicio</a>
-        <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
-      </c:when>
-      <c:otherwise>
-        <a href="/login" class="btn btn-outline-light me-2">Iniciar sesión</a>
-        <a href="/registro" class="btn btn-outline-info">Regístrate</a>
-      </c:otherwise>
-    </c:choose>
+        </div>
+        
+  </c:if>
+    </form>
+     
+    <div class="d-flex align-items-center flex-wrap gap-3 mt-3 mt-sm-3 mt-md-3 mt-lg-0">
+
+
+      <c:choose>
+        <c:when test="${not empty usuarioEnSesion}">
+          <a href="/perfilUsuario">
+            <img src="${usuarioEnSesion.fotoPerfil}" alt="Perfil" width="40" height="40" class="rounded-circle">
+          </a>
+          <a href="/servicios/publicar" class="btn btn-success">Crear Servicio</a>
+          <a href="/logout" class="btn btn-danger">Cerrar Sesión</a>
+        </c:when>
+        <c:otherwise>
+          <a href="/login" class="btn btn-outline-light">Iniciar sesión</a>
+          <a href="/registro" class="btn btn-outline-info">Regístrate</a>
+        </c:otherwise>
+      </c:choose>
+    </div>
+    
+
   </div>
 </nav>
 
