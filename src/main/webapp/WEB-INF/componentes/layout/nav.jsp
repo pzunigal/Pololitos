@@ -41,11 +41,11 @@
               <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
                     id="notificacionBadge" style="display:none;">0</span>
             </button>
-            <ul class="dropdown-menu dropdown-menu-end bg-dark text-light"
+            <ul class="dropdown-menu dropdown-menu-end bg-dark text-white"
                 aria-labelledby="notificacionesDropdown"
                 id="notificacionesLista"
                 style="width: 300px; max-height: 400px; overflow-y: auto;">
-              <li class="dropdown-item text-muted">Cargando notificaciones...</li>
+              <li class="dropdown-item text-white">Cargando notificaciones...</li>
             </ul>
           </div>
         </c:if>

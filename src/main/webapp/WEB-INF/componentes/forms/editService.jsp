@@ -54,7 +54,7 @@
     </div>
 
     <div class="text-center mt-4">
-       <button type="submit" class="btn btn-primary px-4 me-2">Actualizar Servicio</button>
+       <button type="submit" class="btn btn-primary px-4 me-2 mb-3">Actualizar Servicio</button>
        <a href="/mis-servicios" class="btn btn-secondary">Volver</a>
     </div>
  </form>
