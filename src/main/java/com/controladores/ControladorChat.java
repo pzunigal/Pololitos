@@ -1,6 +1,7 @@
 package com.controladores;
 
 import com.modelos.Chat;
+import com.modelos.Servicio;
 import com.modelos.Solicitud;
 import com.modelos.Usuario;
 import com.servicios.ServicioChat;
@@ -128,6 +129,8 @@ public class ControladorChat {
             model.addAttribute("chatId", chatId);
             model.addAttribute("solicitanteId", chat.getSolicitanteId());
             model.addAttribute("otroUsuario", otroUsuario);
+            Servicio servicio = solicitud.getServicio();
+            model.addAttribute("servicio", servicio);
 
             return "chat.jsp";
         } catch (Exception e) {
