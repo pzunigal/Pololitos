@@ -52,6 +52,8 @@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
     </div>
     <!-- Footer -->
     <%@ include file="/WEB-INF/componentes/layout/footer.jsp" %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
     <script src="<c:url value='/js/chatScript.js' />"></script>

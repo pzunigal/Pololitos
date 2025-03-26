@@ -28,28 +28,3 @@
     display: flex;
     flex-direction: column;
  }
- @media (min-width: 1020px) and (max-width: 1140px) {
-    nav .navbar-collapse {
-      flex-wrap: wrap !important;
-      gap: 10px;
-    }
-  
-    nav form,
-    nav .d-flex.align-items-center {
-      width: 100%;
-      justify-content: start;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
-  
-    nav .dropdown {
-      margin-top: 10px;
-    }
-  
-    nav .btn,
-    nav form input,
-    nav form button {
-      margin-top: 5px;
-    }
-  }
-  
