@@ -57,7 +57,7 @@ public class ServicioNotificaciones {
 
     Notificacion noti = new Notificacion(
         servicio.getUsuario().getId(), // receptorId
-        "solicitud",
+        "Solicitud De Servicio",
         texto,
         "/mis-solicitudes-recibidas",
         Instant.now().toString(),
