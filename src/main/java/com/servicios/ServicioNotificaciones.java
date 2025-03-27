@@ -1,6 +1,9 @@
 package com.servicios;
 
 import com.modelos.Notificacion;
+import com.modelos.Servicio;
+import com.modelos.Solicitud;
+import com.modelos.Usuario;
 import com.repositorios.RepositorioNotificacionesFirebase;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +18,7 @@ public class ServicioNotificaciones {
         this.repo = repo;
     }
 
-    public void notificarNuevoMensaje(Long receptorId, String mensajePreview, String chatId) {
+    /* public void notificarNuevoMensaje(Long receptorId, String mensajePreview, String chatId) {
         Notificacion noti = new Notificacion(
                 receptorId,
                 "mensaje",
@@ -43,18 +46,30 @@ public class ServicioNotificaciones {
                 Instant.now().toString()
         );
         repo.guardarNotificacion(noti);
-    }
+    } */
 
-    public void notificarNuevaSolicitud(Long proveedorId, Long solicitudId) {
-        Notificacion noti = new Notificacion(
-            proveedorId,
-            "solicitud",
-            "Has recibido una nueva solicitud de un usuario interesado en tu servicio",
-            "/mis-solicitudes-recibidas",
-            Instant.now().toString()
-        );
-        repo.guardarNotificacion(noti);
-    }
+    public void notificarNuevaSolicitud(Solicitud solicitud) {
+    Usuario solicitante = solicitud.getSolicitante();
+    Servicio servicio = solicitud.getServicio();
+
+    String texto = solicitante.getNombre() + " " + solicitante.getApellido() +
+                   " ha solicitado tu servicio: " + servicio.getNombre();
+
+    Notificacion noti = new Notificacion(
+        servicio.getUsuario().getId(), // receptorId
+        "solicitud",
+        texto,
+        "/mis-solicitudes-recibidas",
+        Instant.now().toString(),
+        solicitante.getId(),
+        solicitante.getNombre() + " " + solicitante.getApellido(),
+        servicio.getNombre(),
+        servicio.getImgUrl()
+    );
+
+    repo.guardarNotificacion(noti);
+}
+
     
 
     public void marcarNotificacionLeida(Long usuarioId, String notificacionId) {

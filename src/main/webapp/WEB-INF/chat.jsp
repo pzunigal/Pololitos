@@ -56,6 +56,8 @@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database-compat.js"></script>
+    <!-- Firebase Init común -->
+    <script src="<c:url value='/js/firebase-init.js' />"></script>
     <script src="<c:url value='/js/chatScript.js' />"></script>
   </body>
 </html>

@@ -69,8 +69,8 @@ public class ControladorSolicitud {
         solicitudServicio.guardarSolicitud(nuevaSolicitud);
 
         // Enviar notificación solo al proveedor (no al usuario que la crea)
-        servicioNotificaciones.notificarNuevaSolicitud(
-                servicio.getUsuario().getId(), nuevaSolicitud.getId());
+        servicioNotificaciones.notificarNuevaSolicitud(nuevaSolicitud);
+
 
         redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
         return "redirect:/mis-solicitudes-enviadas";
