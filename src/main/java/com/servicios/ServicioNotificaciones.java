@@ -51,11 +51,32 @@ public class ServicioNotificaciones {
             case "Completada" -> "El proveedor ha marcado la solicitud como completada";
             default -> "Tu solicitud cambió de estado";
         };
-    
+
         Notificacion noti = Notificacion.crearCambioEstado(solicitud, nuevoEstado, mensaje);
         repo.guardarNotificacion(noti);
     }
+
+    public void notificarConversacionIniciada(Solicitud solicitud, String chatId) {
+        Usuario solicitante = solicitud.getSolicitante();
+        Usuario proveedor = solicitud.getServicio().getUsuario();
+        Servicio servicio = solicitud.getServicio();
     
+        String mensaje = "El proveedor ha iniciado una conversación sobre tu solicitud.";
+    
+        Notificacion noti = new Notificacion(
+                solicitante.getId(), // Receptor: el solicitante
+                "Conversación Iniciada", // Tipo
+                mensaje, // Mensaje
+                "/chat/ver/" + chatId, // URL destino
+                Instant.now().toString(), // Timestamp
+                proveedor.getId(), // Emisor ID
+                proveedor.getNombre() + " " + proveedor.getApellido(), // Nombre emisor
+                servicio.getNombre(), // Nombre del servicio
+                proveedor.getFotoPerfil() // ✅ Imagen del perfil del proveedor
+        );
+    
+        repo.guardarNotificacion(noti);
+    }
     
 
 }
