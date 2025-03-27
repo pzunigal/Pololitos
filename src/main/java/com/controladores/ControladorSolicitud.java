@@ -135,7 +135,7 @@ public class ControladorSolicitud {
         Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
         if (solicitud == null) {
             redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-        } else if (!"Enviado".equals(solicitud.getEstado())) {
+        } else if (!"Enviada".equals(solicitud.getEstado())) {
             redirectAttributes.addFlashAttribute("error",
                     "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
         } else {
