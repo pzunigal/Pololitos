@@ -44,9 +44,10 @@ document.addEventListener("DOMContentLoaded", function () {
       const content = document.createElement("div");
       content.className = "text-break";
       content.innerHTML = `
-          <div><strong>${noti.tipo || "Usuario"}</strong></div>
-          <div class="text-white-50">${noti.mensaje}</div>
-        `;
+  <div><strong>${noti.tipo || "Notificación"}</strong></div>
+  <div class="text-white-50">${noti.mensaje}</div>
+  <div class="text-muted small">${noti.nombreEmisor || ""}</div>
+`;
 
       item.appendChild(img);
       item.appendChild(content);

@@ -71,7 +71,6 @@ public class ControladorSolicitud {
         // Enviar notificación solo al proveedor (no al usuario que la crea)
         servicioNotificaciones.notificarNuevaSolicitud(nuevaSolicitud);
 
-
         redirectAttributes.addFlashAttribute("success", "Solicitud enviada correctamente.");
         return "redirect:/mis-solicitudes-enviadas";
     }
@@ -87,7 +86,8 @@ public class ControladorSolicitud {
                 .toList();
 
         List<Solicitud> inactivas = solicitudServicio.obtenerSolicitudesPorSolicitante(usuarioEnSesion).stream()
-                .filter(s -> s.getEstado().equals("Cancelada") || s.getEstado().equals("Completada"))
+                .filter(s -> s.getEstado().equals("Cancelada") || s.getEstado().equals("Completada")
+                        || s.getEstado().equals("Rechazada"))
                 .toList();
 
         Map<Long, Boolean> chatsCreados = new HashMap<>();
@@ -113,7 +113,8 @@ public class ControladorSolicitud {
                 .toList();
 
         List<Solicitud> inactivas = solicitudServicio.obtenerSolicitudesPorProveedor(usuarioEnSesion).stream()
-                .filter(s -> s.getEstado().equals("Rechazada") || s.getEstado().equals("Completada"))
+                .filter(s -> s.getEstado().equals("Rechazada") || s.getEstado().equals("Completada")
+                        || s.getEstado().equals("Cancelada"))
                 .toList();
 
         Map<Long, Boolean> chatsCreados = new HashMap<>();
@@ -140,6 +141,10 @@ public class ControladorSolicitud {
         } else {
             solicitud.setEstado("Aceptada");
             solicitudServicio.guardarSolicitud(solicitud);
+
+            // Notificar cambio de estado
+            servicioNotificaciones.notificarCambioEstado(solicitud, "Aceptada");
+
             redirectAttributes.addFlashAttribute("success", "Solicitud aceptada correctamente.");
         }
         return "redirect:/mis-solicitudes-recibidas";
@@ -151,12 +156,15 @@ public class ControladorSolicitud {
         Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
         if (solicitud == null) {
             redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-        } else if (!"Enviado".equals(solicitud.getEstado())) {
+        } else if (!"Enviada".equals(solicitud.getEstado())) {
             redirectAttributes.addFlashAttribute("error",
                     "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
         } else {
             solicitud.setEstado("Rechazada");
             solicitudServicio.guardarSolicitud(solicitud);
+
+            servicioNotificaciones.notificarCambioEstado(solicitud, "Rechazada");
+
             redirectAttributes.addFlashAttribute("success", "Solicitud rechazada correctamente.");
         }
         return "redirect:/mis-solicitudes-recibidas";
@@ -164,17 +172,25 @@ public class ControladorSolicitud {
 
     @PostMapping("/cancelar-solicitud")
     public String cancelarSolicitud(@RequestParam("solicitudId") Long solicitudId,
+            HttpSession session,
             RedirectAttributes redirectAttributes) {
+
         Solicitud solicitud = solicitudServicio.getSolicitudById(solicitudId);
+        @SuppressWarnings("unused")
+        Usuario usuario = (Usuario) session.getAttribute("usuarioEnSesion");
 
         if (solicitud == null) {
             redirectAttributes.addFlashAttribute("error", "La solicitud no existe.");
-        } else if (!solicitud.getEstado().equals("Enviado") && !solicitud.getEstado().equals("Aceptada")) {
+        } else if (!solicitud.getEstado().equals("Enviada") && !solicitud.getEstado().equals("Aceptada")) {
             redirectAttributes.addFlashAttribute("error",
                     "La solicitud ya fue actualizada por otra acción. Se ha recargado la vista.");
         } else {
             solicitud.setEstado("Cancelada");
             solicitudServicio.guardarSolicitud(solicitud);
+
+            // Agregamos notificación al proveedor del servicio
+            servicioNotificaciones.notificarCambioEstado(solicitud, "Cancelada");
+
             redirectAttributes.addFlashAttribute("success", "Solicitud cancelada correctamente.");
         }
 
@@ -196,6 +212,9 @@ public class ControladorSolicitud {
         } else {
             solicitud.setEstado("Completada");
             solicitudServicio.guardarSolicitud(solicitud);
+
+            servicioNotificaciones.notificarCambioEstado(solicitud, "Completada");
+
             redirectAttributes.addFlashAttribute("success", "Trabajo marcado como completado.");
         }
 
