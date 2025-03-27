@@ -11,6 +11,7 @@
 @import url(views/service-profile.css);
 @import url(views/chat.css);
 @import url(components/layout/navbar.css);
+@import url(components/offcanvas/service-filter.css);
 .body-with-bg {
   font-family: "Quicksand", "Roboto", "Noto Sans", "Winky Sans", sans-serif;
   min-height: 100vh;
