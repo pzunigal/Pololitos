@@ -2,6 +2,8 @@
 <%@ taglib uri="http://www.springframework.org/tags" prefix="form" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+
 
 <!DOCTYPE html>
 <html lang="es">
@@ -58,7 +60,8 @@
                      <img src="${servicio.imgUrl}" class="card-img-top" alt="${servicio.nombre}" style="height: 200px; object-fit: cover;">
                      <div class="card-body d-flex flex-column">
                         <h5 class="card-title text-truncate">${servicio.nombre}</h5>
-                        <p class="card-text mb-1"><strong>Precio:</strong> $${servicio.precio}</p>
+                        <p class="card-text mb-1"><strong>Precio:</strong> $<fmt:formatNumber value="${servicio.precio}" type="number" groupingUsed="true" /></p>
+
                         <p class="card-text mb-3"><strong>Ubicación:</strong> ${servicio.ciudad}</p>
                         <div class="mt-auto d-flex justify-content-between">
                            <form action="${pageContext.request.contextPath}/eliminar-servicio/${servicio.id}" method="post">

@@ -14,7 +14,11 @@
 
     <div class="mb-3">
        <label for="precio" class="form-label">Precio</label>
-       <input type="number" class="form-control" id="precio" name="precio" value="${servicio.precio}" required>
+       <input type="number" class="form-control" id="precio" name="precio"
+       value="${servicio.precio.intValue()}" step="1" required>
+
+      
+
     </div>
 
     <div class="mb-3">
