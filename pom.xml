@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.proyecto</groupId>
-	<artifactId>Peguitas</artifactId>
+	<artifactId>Pololitos</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>Peguitas</name>
+	<name>Pololitos</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
@@ -138,7 +138,7 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
-                <mainClass>com.PeguitasApplication</mainClass>
+                <mainClass>com.PololitosApplication</mainClass>
             </configuration>
         </plugin>
         <plugin>
