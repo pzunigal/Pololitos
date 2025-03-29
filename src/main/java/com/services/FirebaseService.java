@@ -6,17 +6,15 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ServicioFirebase {
+public class FirebaseService {
 
     private final DatabaseReference databaseReference;
 
-    // Inyectamos FirebaseApp para asegurarnos de que esté inicializada
-    public ServicioFirebase(FirebaseApp firebaseApp) {
+    public FirebaseService(FirebaseApp firebaseApp) {
         this.databaseReference = FirebaseDatabase.getInstance(firebaseApp).getReference();
     }
 
     public void saveData(String key, Object data) {
-        // Guardar datos en Firebase de manera asíncrona
         databaseReference.child(key).setValueAsync(data);
     }
 }

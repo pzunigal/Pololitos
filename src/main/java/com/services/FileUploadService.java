@@ -10,19 +10,19 @@ import java.io.IOException;
 import java.util.Map;
 
 @Service
-public class ServicioSubirArchivo {
+public class FileUploadService {
 
     @Autowired
     private Cloudinary cloudinary;
 
-    public String uploadFile(MultipartFile file, String carpetaDestino) throws IOException {
+    public String uploadFile(MultipartFile file, String targetFolder) throws IOException {
         if (file.isEmpty()) return null;
 
         @SuppressWarnings("rawtypes")
         Map uploadResult = cloudinary.uploader().upload(file.getBytes(), ObjectUtils.asMap(
-                "folder", carpetaDestino // ahora puedes especificar cualquier carpeta desde el backend
+                "folder", targetFolder
         ));
 
-        return (String) uploadResult.get("secure_url"); // usa secure_url para HTTPS
+        return (String) uploadResult.get("secure_url");
     }
 }

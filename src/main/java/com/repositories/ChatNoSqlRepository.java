@@ -10,24 +10,24 @@ import org.springframework.stereotype.Repository;
 import java.util.Date;
 
 @Repository
-public class RepositorioChatNOSQL {
+public class ChatNoSqlRepository {
 
     private final DatabaseReference databaseReference;
 
-    public RepositorioChatNOSQL(FirebaseDatabase firebaseDatabase) {
+    public ChatNoSqlRepository(FirebaseDatabase firebaseDatabase) {
         this.databaseReference = firebaseDatabase.getReference("chats");
     }
 
-    // Método para obtener un chat de Firebase de forma asíncrona
+    // Get a chat from Firebase asynchronously
     public void getChat(String chatId, ValueEventListener listener) {
         databaseReference.child(chatId).addListenerForSingleValueEvent(listener);
     }
 
-    // Guardar el chat en Firebase
+    // Save a chat to Firebase
     public String saveChat(Chat chat) {
         DatabaseReference newRef = databaseReference.push();
-        chat.setId(newRef.getKey());  // Firebase genera el ID automáticamente
-        chat.setFechaCreacion(new Date().getTime()); // Guardar como timestamp
+        chat.setId(newRef.getKey()); // Firebase auto-generates the ID
+        chat.setCreationTimestamp(new Date().getTime()); // Save as timestamp
         newRef.setValueAsync(chat);
         return chat.getId();
     }

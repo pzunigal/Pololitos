@@ -1,13 +1,12 @@
 package com.repositories;
 
 import org.springframework.data.repository.CrudRepository;
-
 import org.springframework.stereotype.Repository;
 
-import com.models.Usuario;
+import com.models.User;
 
 @Repository
-public interface RepositorioUsuarios extends CrudRepository<Usuario, Long> {
+public interface UserRepository extends CrudRepository<User, Long> {
 
-	Usuario findByEmail(String email);
+    User findByEmail(String email);
 }
