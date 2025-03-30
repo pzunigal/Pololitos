@@ -41,6 +41,8 @@ public class ServiceService {
         return (List<OfferedService>) serviceRepository.findAll();
     }
 
+    
+    
     public boolean existsById(Long id) {
         return serviceRepository.existsById(id);
     }

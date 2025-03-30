@@ -12,6 +12,8 @@ import com.forgedevs.pololitos.models.Category;
 @Repository
 public interface ServiceRepository extends JpaRepository<OfferedService, Long> {
 
+    List<OfferedService> findAll();
+
     // Search services by name (case-insensitive)
     List<OfferedService> findByNameContainingIgnoreCase(String name);
 
@@ -29,4 +31,6 @@ public interface ServiceRepository extends JpaRepository<OfferedService, Long> {
 
     // Find services by user ID
     List<OfferedService> findByUserId(Long userId);
+    
+
 }

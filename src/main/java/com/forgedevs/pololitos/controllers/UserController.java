@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.forgedevs.pololitos.models.LoginUser;
-import com.forgedevs.pololitos.models.LoginUserResponse;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.User;
+import com.forgedevs.pololitos.responses.LoginUserResponse;
+
 import com.forgedevs.pololitos.services.CloudinaryService;
-import com.forgedevs.pololitos.services.ServiceService;
+import com.forgedevs.pololitos.services.JwtService;
 import com.forgedevs.pololitos.services.UserService;
 
 import jakarta.validation.Valid;
@@ -29,10 +30,40 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    private ServiceService serviceService;
+    private CloudinaryService cloudinaryService;
 
     @Autowired
-    private CloudinaryService cloudinaryService;
+    private JwtService jwtService;
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginUser loginUser, BindingResult result) {
+        try {
+            // Usamos los datos de loginUser (que ahora contiene email y password)
+            User user = userService.login(loginUser.getEmailLogin(), loginUser.getPasswordLogin(), result);
+
+            if (result.hasErrors() || user == null) {
+                return ResponseEntity.status(401).body("Credenciales inválidas.");
+            }
+
+            // Crear el JWT con los datos del usuario
+            String token = jwtService.generateToken(user); // jwtService es un servicio que genera el JWT
+
+            // Creamos el LoginUserResponse para responder con los campos necesarios
+            LoginUserResponse response = new LoginUserResponse(
+                    user.getEmail(),
+                    user.getFirstName(),
+                    user.getLastName(),
+                    user.getProfileImage(),
+                    user.getPhone(),
+                    user.getCity(),
+                    token);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            // Captura errores generales
+            return ResponseEntity.status(500).body("Error al generar el token: " + e.getMessage());
+        }
+    }
 
     @PostMapping("/register")
     public ResponseEntity<?> registerUser(@Valid @ModelAttribute User newUser,
@@ -53,38 +84,6 @@ public class UserController {
         }
 
         return ResponseEntity.ok(savedUser);
-    }
-
-    @PostMapping("/login")
-    public ResponseEntity<?> login(@RequestBody LoginUser loginUser, BindingResult result) {
-        // Usamos los datos de loginUser (que ahora contiene email y password)
-        User user = userService.login(loginUser.getEmailLogin(), loginUser.getPasswordLogin(), result);
-
-        if (result.hasErrors() || user == null) {
-            return ResponseEntity.status(401).body("Credenciales inválidas.");
-        }
-
-        // Creamos el LoginUserResponse para responder con los campos necesarios
-        LoginUserResponse response = new LoginUserResponse(
-                user.getEmail(),
-                user.getFirstName(),
-                user.getLastName(),
-                user.getProfileImage(),
-                user.getPhone(),
-                user.getCity());
-
-        return ResponseEntity.ok(response);
-    }
-
-    @GetMapping("/{userId}/profile")
-    public ResponseEntity<?> getProfile(@PathVariable Long userId) {
-        User user = userService.findById(userId);
-        if (user == null) {
-            return ResponseEntity.notFound().build();
-        }
-
-        List<OfferedService> userServices = serviceService.getServicesByUserId(user.getId());
-        return ResponseEntity.ok(new UserProfileResponse(user, userServices));
     }
 
     @PatchMapping("/{userId}/profile")

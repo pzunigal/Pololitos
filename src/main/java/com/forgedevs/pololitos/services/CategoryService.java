@@ -14,8 +14,8 @@ public class CategoryService {
     @Autowired
     private CategoryRepository categoryRepository;
 
-    // Method to get all categories (for category selection in forms)
-    public List<Category> getAll() {
-        return (List<Category>) categoryRepository.findAll();
+    public List<Category> getAllCategories() {
+        return categoryRepository.findAll(); 
     }
+    
 }

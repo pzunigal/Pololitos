@@ -18,11 +18,11 @@ public class HomeController {
     private ServiceService serviceService;
 
     // Endpoint para obtener todas las categorías con sus servicios
-    @GetMapping("/categories")
+   /*  @GetMapping("/categories")
     public ResponseEntity<List<Category>> getAllCategoriesWithServices() {
         List<Category> categories = serviceService.getCategoriesWithServices();
         return ResponseEntity.ok(categories);
-    }
+    } */
 
     // Endpoint para obtener los últimos servicios (limit configurable)
     @GetMapping("/services/latest")
