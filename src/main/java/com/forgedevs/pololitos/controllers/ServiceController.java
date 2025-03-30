@@ -147,17 +147,17 @@ public class ServiceController {
         try {
             String token = authHeader.replace("Bearer ", "");
             Long userIdFromToken = jwtService.extractUserId(token);
-    
+
             OfferedService service = serviceService.getById(id);
-    
+
             if (service == null) {
                 return ResponseEntity.notFound().build();
             }
-    
+
             if (!service.getUser().getId().equals(userIdFromToken)) {
                 return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No autorizado para acceder a este servicio.");
             }
-    
+
             // Convertir a DTO
             ServiceDTO dto = new ServiceDTO(service);
             return ResponseEntity.ok(dto);
@@ -167,7 +167,23 @@ public class ServiceController {
             return ResponseEntity.badRequest().body("Hubo un error obteniendo el servicio.");
         }
     }
-    
+
+    @GetMapping("/public/service/{id}")
+    public ResponseEntity<?> getPublicServiceById(@PathVariable Long id) {
+        try {
+            OfferedService service = serviceService.getById(id);
+
+            if (service == null) {
+                return ResponseEntity.notFound().build();
+            }
+
+            ServiceDTO dto = new ServiceDTO(service);
+
+            return ResponseEntity.ok(dto);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al obtener el servicio público.");
+        }
+    }
 
     @PatchMapping("/update/{id}")
     @Transactional
