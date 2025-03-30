@@ -8,12 +8,14 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
 
 import com.forgedevs.pololitos.models.Category;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.User;
 import com.forgedevs.pololitos.repositories.CategoryRepository;
 import com.forgedevs.pololitos.repositories.ServiceRepository;
+
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -26,6 +28,24 @@ public class ServiceService {
     @Autowired
     private CategoryRepository categoryRepository;
 
+    public Page<OfferedService> getPaginatedServices(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return serviceRepository.findAll(pageable);
+    }
+    public Page<OfferedService> getServicesByUserId(Long userId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("id").descending());
+        return serviceRepository.findByUserId(userId, pageable);
+    }
+
+
+
+
+
+
+
+
+
+    
     public List<Category> getCategoriesWithServices() {
         List<Category> categories = categoryRepository.findAll();
         for (Category category : categories) {
@@ -41,6 +61,8 @@ public class ServiceService {
         return (List<OfferedService>) serviceRepository.findAll();
     }
 
+    
+    
     
     
     public boolean existsById(Long id) {

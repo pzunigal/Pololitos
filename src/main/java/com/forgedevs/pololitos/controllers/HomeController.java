@@ -5,8 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import com.forgedevs.pololitos.models.Category;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.services.ServiceService;
 
@@ -16,13 +14,6 @@ public class HomeController {
 
     @Autowired
     private ServiceService serviceService;
-
-    // Endpoint para obtener todas las categorías con sus servicios
-   /*  @GetMapping("/categories")
-    public ResponseEntity<List<Category>> getAllCategoriesWithServices() {
-        List<Category> categories = serviceService.getCategoriesWithServices();
-        return ResponseEntity.ok(categories);
-    } */
 
     // Endpoint para obtener los últimos servicios (limit configurable)
     @GetMapping("/services/latest")

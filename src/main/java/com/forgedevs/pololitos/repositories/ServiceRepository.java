@@ -4,13 +4,24 @@ import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.User;
 import com.forgedevs.pololitos.models.Category;
 
 @Repository
 public interface ServiceRepository extends JpaRepository<OfferedService, Long> {
+
+    Page<OfferedService> findAll(Pageable pageable);
+
+    Page<OfferedService> findByUserId(Long userId, Pageable pageable);
+
+
+
+
+    
+
 
     List<OfferedService> findAll();
 

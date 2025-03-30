@@ -10,17 +10,20 @@ import org.springframework.web.multipart.MultipartFile;
 import java.text.ParseException;
 import com.nimbusds.jose.JOSEException;
 import com.forgedevs.pololitos.dtos.ServiceDTO;
+import com.forgedevs.pololitos.models.Category;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.User;
+import com.forgedevs.pololitos.repositories.CategoryRepository;
 import com.forgedevs.pololitos.services.CloudinaryService;
 
 import com.forgedevs.pololitos.services.ServiceService;
+import org.springframework.data.domain.Page;
 
 import com.forgedevs.pololitos.services.FileUploadService;
 import com.forgedevs.pololitos.services.JwtService;
+
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
-import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/services")
@@ -29,7 +32,8 @@ public class ServiceController {
 
     @Autowired
     private ServiceService serviceService;
-
+    @Autowired
+    private CategoryRepository categoryRepository;
     @Autowired
     private JwtService jwtService;
     @Autowired
@@ -37,44 +41,133 @@ public class ServiceController {
     @Autowired
     private CloudinaryService cloudinaryService;
 
-    @GetMapping("/public")
-    public List<ServiceDTO> getAllPublicServices() {
-        return serviceService.getAllServices().stream()
-                .map(ServiceDTO::new)
-                .collect(Collectors.toList());
+    @GetMapping("/paginated")
+    public ResponseEntity<Page<ServiceDTO>> getPaginatedServices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        Page<OfferedService> paginated = serviceService.getPaginatedServices(page, size);
+        Page<ServiceDTO> dtoPage = paginated.map(ServiceDTO::new);
+
+        return ResponseEntity.ok(dtoPage);
+    }
+
+    @GetMapping("/my-services")
+    public ResponseEntity<?> getMyServices(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+
+            Page<OfferedService> paged = serviceService.getServicesByUserId(userId, page, size);
+            Page<ServiceDTO> dtoPage = paged.map(ServiceDTO::new);
+            return ResponseEntity.ok(dtoPage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido.");
+        }
+    }
+
+    public record OfferedServiceDTO(
+            Long id,
+            String name,
+            String description,
+            Double price,
+            String city,
+            String imageUrl,
+            String categoryName) {
     }
 
     @PostMapping("/post-service")
-@Transactional
-public ResponseEntity<?> createService(
-        @Valid @ModelAttribute("service") OfferedService service,
-        @RequestParam("file") MultipartFile file,
-        @RequestHeader("Authorization") String authHeader) {
+    @Transactional
+    public ResponseEntity<?> createService(
+            @RequestParam("name") String name,
+            @RequestParam("description") String description,
+            @RequestParam("price") Double price,
+            @RequestParam("city") String city,
+            @RequestParam("categoryId") Long categoryId,
+            @RequestParam("file") MultipartFile file,
+            @RequestHeader("Authorization") String authHeader) {
 
-    if (file.isEmpty()) {
-        return ResponseEntity.badRequest().body("Debe subir una imagen.");
+        if (file.isEmpty()) {
+            return ResponseEntity.badRequest().body("Debe subir una imagen.");
+        }
+
+        try {
+            // Extraer ID de usuario desde el token
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+
+            // Buscar la categoría
+            Category category = categoryRepository.findById(categoryId)
+                    .orElseThrow(() -> new EntityNotFoundException("Categoría no encontrada"));
+
+            // Subir imagen
+            String imageUrl = fileUploadService.uploadFile(file, "servicios");
+
+            // Crear entidad OfferedService
+            OfferedService service = new OfferedService();
+            service.setName(name);
+            service.setDescription(description);
+            service.setPrice(price);
+            service.setCity(city);
+            service.setImageUrl(imageUrl);
+            service.setCategory(category);
+
+            User user = new User();
+            user.setId(userId);
+            service.setUser(user);
+
+            // Guardar y devolver DTO
+            OfferedService saved = serviceService.save(service);
+
+            OfferedServiceDTO dto = new OfferedServiceDTO(
+                    saved.getId(),
+                    saved.getName(),
+                    saved.getDescription(),
+                    saved.getPrice(),
+                    saved.getCity(),
+                    saved.getImageUrl(),
+                    saved.getCategory().getName());
+
+            return ResponseEntity.ok(dto);
+
+        } catch (ParseException | JOSEException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Error al crear el servicio: " + e.getMessage());
+        }
     }
 
-    try {
-        String token = authHeader.replace("Bearer ", "");
-        Long userIdFromToken = jwtService.extractUserId(token);
-
-        String imageUrl = fileUploadService.uploadFile(file, "servicios");
-        service.setImageUrl(imageUrl);
-
-        User user = new User();
-        user.setId(userIdFromToken);
-        service.setUser(user);
-
-        OfferedService saved = serviceService.save(service);
-        return ResponseEntity.ok(saved);
-    } catch (ParseException | JOSEException e) {
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido.");
-    } catch (Exception e) {
-        return ResponseEntity.badRequest().body("Error al crear el servicio.");
+    @GetMapping("/my-service/{id}")
+    public ResponseEntity<?> getMyServiceById(
+            @PathVariable Long id,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userIdFromToken = jwtService.extractUserId(token);
+    
+            OfferedService service = serviceService.getById(id);
+    
+            if (service == null) {
+                return ResponseEntity.notFound().build();
+            }
+    
+            if (!service.getUser().getId().equals(userIdFromToken)) {
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body("No autorizado para acceder a este servicio.");
+            }
+    
+            // Convertir a DTO
+            ServiceDTO dto = new ServiceDTO(service);
+            return ResponseEntity.ok(dto);
+        } catch (ParseException | JOSEException e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Token inválido.");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Hubo un error obteniendo el servicio.");
+        }
     }
-}
-
+    
 
     @PatchMapping("/update/{id}")
     @Transactional

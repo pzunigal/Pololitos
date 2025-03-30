@@ -9,11 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
+import com.forgedevs.pololitos.dtos.LoginUserResponse;
 import com.forgedevs.pololitos.models.LoginUser;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.User;
-import com.forgedevs.pololitos.responses.LoginUserResponse;
 
 import com.forgedevs.pololitos.services.CloudinaryService;
 import com.forgedevs.pololitos.services.JwtService;
@@ -50,6 +49,7 @@ public class UserController {
 
             // Creamos el LoginUserResponse para responder con los campos necesarios
             LoginUserResponse response = new LoginUserResponse(
+                    user.getId(),
                     user.getEmail(),
                     user.getFirstName(),
                     user.getLastName(),
