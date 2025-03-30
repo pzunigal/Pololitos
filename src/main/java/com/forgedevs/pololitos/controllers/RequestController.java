@@ -6,18 +6,25 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import com.forgedevs.pololitos.dtos.RequestDTO;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.Request;
 import com.forgedevs.pololitos.models.User;
 import com.forgedevs.pololitos.repositories.ChatRepository;
+import com.forgedevs.pololitos.services.JwtService;
 import com.forgedevs.pololitos.services.NotificationService;
 import com.forgedevs.pololitos.services.RequestService;
 import com.forgedevs.pololitos.services.ServiceService;
-
-import jakarta.servlet.http.HttpSession;
+import com.forgedevs.pololitos.services.UserService;
 
 @RestController
 @RequestMapping("/api/requests")
@@ -36,166 +43,204 @@ public class RequestController {
     @Autowired
     private NotificationService notificationService;
 
+    @Autowired
+    private JwtService jwtService;
+
+    @Autowired
+    private UserService userService;
+
     @PostMapping("/create")
-    public String createRequest(@RequestParam("message") String message,
-                                 @RequestParam("serviceId") Long serviceId,
-                                 HttpSession session,
-                                 RedirectAttributes redirectAttributes) {
+    public ResponseEntity<?> createRequest(@RequestBody Map<String, Object> payload,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User requester = userService.findById(userId);
 
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-        if (loggedInUser == null) {
-            session.setAttribute("pendingUrl", "/services/details/" + serviceId);
-            return "redirect:/login";
+            Long serviceId = Long.valueOf(payload.get("serviceId").toString());
+            String message = payload.get("message").toString();
+
+            OfferedService service = serviceService.getById(serviceId);
+            if (service == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Servicio no encontrado.");
+            }
+
+            Request newRequest = new Request();
+            newRequest.setRequester(requester);
+            newRequest.setService(service);
+            newRequest.setStatus("Enviada");
+            newRequest.setRequestDate(new Date());
+            newRequest.setAdditionalComment(message);
+
+            requestService.saveRequest(newRequest);
+            notificationService.notifyNewRequest(newRequest);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("message", "Solicitud creada exitosamente.");
+            response.put("requestId", newRequest.getId());
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al crear solicitud: " + e.getMessage());
         }
-
-        OfferedService service = serviceService.getById(serviceId);
-        if (service == null) {
-            redirectAttributes.addFlashAttribute("error", "Service not found.");
-            return "redirect:/services";
-        }
-
-        Request newRequest = new Request();
-        newRequest.setRequester(loggedInUser);
-        newRequest.setService(service);
-        newRequest.setStatus("Sent");
-        newRequest.setRequestDate(new Date());
-        newRequest.setAdditionalComment(message);
-
-        requestService.saveRequest(newRequest);
-        notificationService.notifyNewRequest(newRequest);
-
-        redirectAttributes.addFlashAttribute("success", "Request sent successfully.");
-        return "redirect:/my-sent-requests";
     }
 
     @GetMapping("/my-sent")
-    public Map<String, Object> viewMySentRequests(HttpSession session) {
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> viewMySentRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User loggedInUser = userService.findById(userId);
 
-        if (loggedInUser == null) {
-            response.put("redirect", "/login");
-            return response;
+            Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
+
+            Page<Request> allRequests = requestService.getPaginatedRequestsByRequester(loggedInUser, pageable);
+
+            List<RequestDTO> active = allRequests.getContent().stream()
+                    .filter(r -> r.getStatus().equals("Enviada") || r.getStatus().equals("Aceptada"))
+                    .map(RequestDTO::new)
+                    .toList();
+
+            List<RequestDTO> inactive = allRequests.getContent().stream()
+                    .filter(r -> r.getStatus().equals("Cancelada") || r.getStatus().equals("Completada")
+                            || r.getStatus().equals("Rechazada"))
+                    .map(RequestDTO::new)
+                    .toList();
+
+            Map<Long, Boolean> chatCreated = new HashMap<>();
+            for (RequestDTO dto : active) {
+                chatCreated.put(dto.getId(), chatRepository.findByRequestId(dto.getId()) != null);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("active", active);
+            response.put("inactive", inactive);
+            response.put("chatCreated", chatCreated);
+            response.put("total", allRequests.getTotalElements());
+            response.put("page", page);
+            response.put("size", size);
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Error al obtener solicitudes: " + e.getMessage());
         }
-
-        List<Request> active = requestService.getRequestsByRequester(loggedInUser).stream()
-                .filter(r -> r.getStatus().equals("Sent") || r.getStatus().equals("Accepted"))
-                .toList();
-
-        List<Request> inactive = requestService.getRequestsByRequester(loggedInUser).stream()
-                .filter(r -> r.getStatus().equals("Canceled") || r.getStatus().equals("Completed") || r.getStatus().equals("Rejected"))
-                .toList();
-
-        Map<Long, Boolean> chatCreated = new HashMap<>();
-        for (Request r : active) {
-            chatCreated.put(r.getId(), chatRepository.findByRequestId(r.getId()) != null);
-        }
-
-        response.put("activeRequests", active);
-        response.put("inactiveRequests", inactive);
-        response.put("chatCreated", chatCreated);
-
-        return response;
     }
 
     @GetMapping("/my-received")
-    public Map<String, Object> viewMyReceivedRequests(HttpSession session) {
-        User loggedInUser = (User) session.getAttribute("loggedInUser");
-        Map<String, Object> response = new HashMap<>();
+    public ResponseEntity<?> viewMyReceivedRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User loggedInUser = userService.findById(userId);
 
-        if (loggedInUser == null) {
-            response.put("redirect", "/login");
-            return response;
+            Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
+
+            Page<Request> allRequests = requestService.getPaginatedRequestsByServiceProvider(loggedInUser, pageable);
+
+            List<RequestDTO> active = allRequests.getContent().stream()
+                    .filter(r -> r.getStatus().equals("Enviada") || r.getStatus().equals("Aceptada"))
+                    .map(RequestDTO::new)
+                    .toList();
+
+            List<RequestDTO> inactive = allRequests.getContent().stream()
+                    .filter(r -> r.getStatus().equals("Rechazada") || r.getStatus().equals("Completada"))
+                    .map(RequestDTO::new)
+                    .toList();
+
+            Map<Long, Boolean> chatCreated = new HashMap<>();
+            for (RequestDTO dto : active) {
+                chatCreated.put(dto.getId(), chatRepository.findByRequestId(dto.getId()) != null);
+            }
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("active", active);
+            response.put("inactive", inactive);
+            response.put("chatCreated", chatCreated);
+            response.put("total", allRequests.getTotalElements());
+            response.put("page", page);
+            response.put("size", size);
+
+            return ResponseEntity.ok(response);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Error al obtener solicitudes recibidas: " + e.getMessage());
         }
-
-        List<Request> active = requestService.getRequestsByProvider(loggedInUser).stream()
-                .filter(r -> r.getStatus().equals("Sent") || r.getStatus().equals("Accepted"))
-                .toList();
-
-        List<Request> inactive = requestService.getRequestsByProvider(loggedInUser).stream()
-                .filter(r -> r.getStatus().equals("Rejected") || r.getStatus().equals("Completed") || r.getStatus().equals("Canceled"))
-                .toList();
-
-        Map<Long, Boolean> chatCreated = new HashMap<>();
-        for (Request r : active) {
-            chatCreated.put(r.getId(), chatRepository.findByRequestId(r.getId()) != null);
-        }
-
-        response.put("activeRequests", active);
-        response.put("inactiveRequests", inactive);
-        response.put("chatCreated", chatCreated);
-
-        return response;
     }
 
-    @PostMapping("/accept")
-    public String acceptRequest(@RequestParam("requestId") Long requestId,
-                                 RedirectAttributes redirectAttributes) {
+    private ResponseEntity<?> updateRequestStatus(Long requestId, String expectedStatus, String newStatus) {
         Request request = requestService.getRequestById(requestId);
         if (request == null) {
-            redirectAttributes.addFlashAttribute("error", "Request not found.");
-        } else if (!"Sent".equals(request.getStatus())) {
-            redirectAttributes.addFlashAttribute("error", "Request has already been updated by another action.");
-        } else {
-            request.setStatus("Accepted");
-            requestService.saveRequest(request);
-            notificationService.notifyStatusChange(request, "Accepted");
-            redirectAttributes.addFlashAttribute("success", "Request accepted successfully.");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada.");
         }
-        return "redirect:/my-received-requests";
+
+        if (!request.getStatus().equals(expectedStatus)) {
+            return ResponseEntity.badRequest().body("La solicitud ya fue actualizada.");
+        }
+
+        request.setStatus(newStatus);
+        requestService.saveRequest(request);
+        notificationService.notifyStatusChange(request, newStatus);
+
+        return ResponseEntity.ok("Estado actualizado correctamente.");
     }
 
-    @PostMapping("/reject")
-    public String rejectRequest(@RequestParam("requestId") Long requestId,
-                                 RedirectAttributes redirectAttributes) {
-        Request request = requestService.getRequestById(requestId);
-        if (request == null) {
-            redirectAttributes.addFlashAttribute("error", "Request not found.");
-        } else if (!"Sent".equals(request.getStatus())) {
-            redirectAttributes.addFlashAttribute("error", "Request has already been updated by another action.");
-        } else {
-            request.setStatus("Rejected");
-            requestService.saveRequest(request);
-            notificationService.notifyStatusChange(request, "Rejected");
-            redirectAttributes.addFlashAttribute("success", "Request rejected successfully.");
-        }
-        return "redirect:/my-received-requests";
+    @PatchMapping("/{requestId}/accept")
+    public ResponseEntity<?> acceptRequest(@PathVariable Long requestId) {
+        return updateRequestStatus(requestId, "Enviada", "Aceptada");
     }
 
-    @PostMapping("/cancel")
-    public String cancelRequest(@RequestParam("requestId") Long requestId,
-                                 HttpSession session,
-                                 RedirectAttributes redirectAttributes) {
-        Request request = requestService.getRequestById(requestId);
-        if (request == null) {
-            redirectAttributes.addFlashAttribute("error", "Request not found.");
-        } else if (!request.getStatus().equals("Sent") && !request.getStatus().equals("Accepted")) {
-            redirectAttributes.addFlashAttribute("error", "Request has already been updated by another action.");
-        } else {
-            request.setStatus("Canceled");
-            requestService.saveRequest(request);
-            notificationService.notifyStatusChange(request, "Canceled");
-            redirectAttributes.addFlashAttribute("success", "Request canceled successfully.");
-        }
-        return "redirect:/my-sent-requests";
+    @PatchMapping("/{requestId}/reject")
+    public ResponseEntity<?> rejectRequest(@PathVariable Long requestId) {
+        return updateRequestStatus(requestId, "Enviada", "Rechazada");
     }
 
-    @PostMapping("/complete")
-    public String completeRequest(@RequestParam("requestId") Long requestId,
-                                   RedirectAttributes redirectAttributes) {
-        Request request = requestService.getRequestById(requestId);
-        if (request == null) {
-            redirectAttributes.addFlashAttribute("error", "Request not found.");
-        } else if ("Completed".equals(request.getStatus())) {
-            redirectAttributes.addFlashAttribute("error", "Request has already been marked as completed.");
-        } else if (!"Accepted".equals(request.getStatus())) {
-            redirectAttributes.addFlashAttribute("error", "Request has already been updated by another action.");
-        } else {
-            request.setStatus("Completed");
-            requestService.saveRequest(request);
-            notificationService.notifyStatusChange(request, "Completed");
-            redirectAttributes.addFlashAttribute("success", "Work marked as completed.");
-        }
-        return "redirect:/my-received-requests";
+    @PatchMapping("/{requestId}/complete")
+    public ResponseEntity<?> completeRequest(@PathVariable Long requestId) {
+        return updateRequestStatus(requestId, "Aceptada", "Completada");
     }
+
+    @PatchMapping("/{requestId}/cancel")
+    public ResponseEntity<?> cancelRequest(@PathVariable Long requestId,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User user = userService.findById(userId);
+
+            Request request = requestService.getRequestById(requestId);
+            if (request == null) {
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada.");
+            }
+
+            if (!request.getRequester().getId().equals(user.getId())) {
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                        .body("No tienes permiso para cancelar esta solicitud.");
+            }
+
+            if (!request.getStatus().equals("Enviada") && !request.getStatus().equals("Aceptada")) {
+                return ResponseEntity.badRequest().body("La solicitud ya fue actualizada.");
+            }
+
+            request.setStatus("Cancelada");
+            requestService.saveRequest(request);
+            notificationService.notifyStatusChange(request, "Cancelada");
+
+            return ResponseEntity.ok("Solicitud cancelada correctamente.");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al cancelar solicitud: " + e.getMessage());
+        }
+    }
+
 }

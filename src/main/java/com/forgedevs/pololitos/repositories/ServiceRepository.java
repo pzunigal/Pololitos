@@ -17,6 +17,7 @@ public interface ServiceRepository extends JpaRepository<OfferedService, Long> {
 
     Page<OfferedService> findByUserId(Long userId, Pageable pageable);
 
+    
 
 
 

@@ -2,6 +2,8 @@ package com.forgedevs.pololitos.repositories;
 
 import java.util.List;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -23,4 +25,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     List<Request> findByRequesterAndStatus(User requester, String status);
 
     List<Request> findByService_UserAndStatus(User provider, String status);
+    Page<Request> findAllByRequester(User user, Pageable pageable);
+    Page<Request> findByServiceUser(User provider, Pageable pageable);
+
 }

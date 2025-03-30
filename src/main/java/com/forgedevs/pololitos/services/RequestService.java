@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.forgedevs.pololitos.models.OfferedService;
@@ -62,4 +64,12 @@ public class RequestService {
     public List<Request> getRequestsByStatusAndProvider(User provider, String status) {
         return requestRepository.findByService_UserAndStatus(provider, status);
     }
+    public Page<Request> getPaginatedRequestsByRequester(User user, Pageable pageable) {
+        return requestRepository.findAllByRequester(user, pageable);
+    }
+    public Page<Request> getPaginatedRequestsByServiceProvider(User provider, Pageable pageable) {
+        return requestRepository.findByServiceUser(provider, pageable);
+    }
+    
+    
 }
