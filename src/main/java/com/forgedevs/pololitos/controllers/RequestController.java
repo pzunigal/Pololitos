@@ -86,7 +86,7 @@ public class RequestController {
                     .body("Error al crear solicitud: " + e.getMessage());
         }
     }
-
+    
     @GetMapping("/my-sent")
     public ResponseEntity<?> viewMySentRequests(
             @RequestParam(defaultValue = "0") int page,
