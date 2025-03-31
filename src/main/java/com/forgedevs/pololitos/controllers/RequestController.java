@@ -2,7 +2,7 @@ package com.forgedevs.pololitos.controllers;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +19,6 @@ import com.forgedevs.pololitos.dtos.RequestDTO;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.Request;
 import com.forgedevs.pololitos.models.User;
-import com.forgedevs.pololitos.repositories.ChatRepository;
 import com.forgedevs.pololitos.services.JwtService;
 import com.forgedevs.pololitos.services.NotificationService;
 import com.forgedevs.pololitos.services.RequestService;
@@ -36,9 +35,6 @@ public class RequestController {
 
     @Autowired
     private ServiceService serviceService;
-
-    @Autowired
-    private ChatRepository chatRepository;
 
     @Autowired
     private NotificationService notificationService;
@@ -86,9 +82,9 @@ public class RequestController {
                     .body("Error al crear solicitud: " + e.getMessage());
         }
     }
-    
-    @GetMapping("/my-sent")
-    public ResponseEntity<?> viewMySentRequests(
+
+    @GetMapping("/my-sent/active")
+    public ResponseEntity<?> viewMySentActiveRequests(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "2") int size,
             @RequestHeader("Authorization") String authHeader) {
@@ -98,43 +94,42 @@ public class RequestController {
             User loggedInUser = userService.findById(userId);
 
             Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
+            Page<Request> activePage = requestService.getPaginatedActiveRequestsByRequester(loggedInUser, pageable);
 
-            Page<Request> allRequests = requestService.getPaginatedRequestsByRequester(loggedInUser, pageable);
-
-            List<RequestDTO> active = allRequests.getContent().stream()
-                    .filter(r -> r.getStatus().equals("Enviada") || r.getStatus().equals("Aceptada"))
-                    .map(RequestDTO::new)
-                    .toList();
-
-            List<RequestDTO> inactive = allRequests.getContent().stream()
-                    .filter(r -> r.getStatus().equals("Cancelada") || r.getStatus().equals("Completada")
-                            || r.getStatus().equals("Rechazada"))
-                    .map(RequestDTO::new)
-                    .toList();
-
-            Map<Long, Boolean> chatCreated = new HashMap<>();
-            for (RequestDTO dto : active) {
-                chatCreated.put(dto.getId(), chatRepository.findByRequestId(dto.getId()) != null);
-            }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("active", active);
-            response.put("inactive", inactive);
-            response.put("chatCreated", chatCreated);
-            response.put("total", allRequests.getTotalElements());
-            response.put("page", page);
-            response.put("size", size);
-
-            return ResponseEntity.ok(response);
+            // Convertimos a DTO sin agregar 'chatCreated'
+            Page<RequestDTO> dtoPage = activePage.map(RequestDTO::new);
+            return ResponseEntity.ok(dtoPage);
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Error al obtener solicitudes: " + e.getMessage());
+                    .body("Error al obtener solicitudes activas: " + e.getMessage());
         }
     }
 
-    @GetMapping("/my-received")
-    public ResponseEntity<?> viewMyReceivedRequests(
+    @GetMapping("/my-sent/inactive")
+    public ResponseEntity<?> viewMySentInactiveRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "2") int size,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User loggedInUser = userService.findById(userId);
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
+            Page<Request> inactivePage = requestService.getPaginatedInactiveRequestsByRequester(loggedInUser, pageable);
+
+            Page<RequestDTO> dtoPage = inactivePage.map(RequestDTO::new);
+            return ResponseEntity.ok(dtoPage);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Error al obtener solicitudes inactivas: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/my-received/active")
+    public ResponseEntity<?> viewMyReceivedActiveRequests(
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "4") int size,
             @RequestHeader("Authorization") String authHeader) {
@@ -144,37 +139,35 @@ public class RequestController {
             User loggedInUser = userService.findById(userId);
 
             Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
+            Page<Request> activePage = requestService.getPaginatedActiveRequestsByProvider(loggedInUser, pageable);
 
-            Page<Request> allRequests = requestService.getPaginatedRequestsByServiceProvider(loggedInUser, pageable);
-
-            List<RequestDTO> active = allRequests.getContent().stream()
-                    .filter(r -> r.getStatus().equals("Enviada") || r.getStatus().equals("Aceptada"))
-                    .map(RequestDTO::new)
-                    .toList();
-
-            List<RequestDTO> inactive = allRequests.getContent().stream()
-                    .filter(r -> r.getStatus().equals("Rechazada") || r.getStatus().equals("Completada"))
-                    .map(RequestDTO::new)
-                    .toList();
-
-            Map<Long, Boolean> chatCreated = new HashMap<>();
-            for (RequestDTO dto : active) {
-                chatCreated.put(dto.getId(), chatRepository.findByRequestId(dto.getId()) != null);
-            }
-
-            Map<String, Object> response = new HashMap<>();
-            response.put("active", active);
-            response.put("inactive", inactive);
-            response.put("chatCreated", chatCreated);
-            response.put("total", allRequests.getTotalElements());
-            response.put("page", page);
-            response.put("size", size);
-
-            return ResponseEntity.ok(response);
-
+            // Convertimos a DTO
+            Page<RequestDTO> dtoPage = activePage.map(RequestDTO::new);
+            return ResponseEntity.ok(dtoPage);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Error al obtener solicitudes recibidas: " + e.getMessage());
+                    .body("Error al obtener solicitudes recibidas activas: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/my-received/inactive")
+    public ResponseEntity<?> viewMyReceivedInactiveRequests(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "4") int size,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User loggedInUser = userService.findById(userId);
+
+            Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
+            Page<Request> inactivePage = requestService.getPaginatedInactiveRequestsByProvider(loggedInUser, pageable);
+
+            Page<RequestDTO> dtoPage = inactivePage.map(RequestDTO::new);
+            return ResponseEntity.ok(dtoPage);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Error al obtener solicitudes recibidas inactivas: " + e.getMessage());
         }
     }
 

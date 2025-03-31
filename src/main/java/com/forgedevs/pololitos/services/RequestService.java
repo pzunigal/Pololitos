@@ -1,19 +1,15 @@
 package com.forgedevs.pololitos.services;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-
-import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.Request;
 import com.forgedevs.pololitos.models.User;
 import com.forgedevs.pololitos.repositories.RequestRepository;
-
-import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class RequestService {
@@ -21,55 +17,39 @@ public class RequestService {
     @Autowired
     private RequestRepository requestRepository;
 
+    // Para solicitudes enviadas: activas ("Enviada" o "Aceptada")
+    public Page<Request> getPaginatedActiveRequestsByRequester(User requester, Pageable pageable) {
+        List<String> activeStatuses = Arrays.asList("Enviada", "Aceptada");
+        return requestRepository.findByRequesterAndStatusIn(requester, activeStatuses, pageable);
+    }
+
+    // Para solicitudes enviadas: inactivas ("Cancelada", "Completada", "Rechazada")
+    public Page<Request> getPaginatedInactiveRequestsByRequester(User requester, Pageable pageable) {
+        List<String> inactiveStatuses = Arrays.asList("Cancelada", "Completada", "Rechazada");
+        return requestRepository.findByRequesterAndStatusIn(requester, inactiveStatuses, pageable);
+    }
+
+    // Para solicitudes recibidas: activas ("Enviada" o "Aceptada")
+    public Page<Request> getPaginatedActiveRequestsByProvider(User provider, Pageable pageable) {
+        List<String> activeStatuses = Arrays.asList("Enviada", "Aceptada");
+        return requestRepository.findByServiceUserAndStatusIn(provider, activeStatuses, pageable);
+    }
+
+    // Para solicitudes recibidas: inactivas ("Rechazada", "Completada",
+    // "Cancelada")
+    public Page<Request> getPaginatedInactiveRequestsByProvider(User provider, Pageable pageable) {
+        List<String> inactiveStatuses = Arrays.asList("Rechazada", "Completada", "Cancelada");
+        return requestRepository.findByServiceUserAndStatusIn(provider, inactiveStatuses, pageable);
+    }
+
+    // Guarda o actualiza una solicitud
     public void saveRequest(Request request) {
         requestRepository.save(request);
     }
 
-    public List<Request> getRequestsByRequester(User requester) {
-        return requestRepository.findByRequester(requester);
-    }
-
-    public List<Request> getAllRequests() {
-        return requestRepository.findAll();
-    }
-
-    public List<Request> getRequestsByProvider(User provider) {
-        return requestRepository.findByService_User(provider);
-    }
-
+    // Obtiene una solicitud por su id
     public Request getRequestById(Long id) {
         Optional<Request> optionalRequest = requestRepository.findById(id);
         return optionalRequest.orElse(null);
     }
-
-    public List<Request> getRequestsByService(OfferedService service) {
-        return requestRepository.findByService(service);
-    }
-
-    public void changeRequestStatus(Long requestId, String newStatus) {
-        Optional<Request> optionalRequest = requestRepository.findById(requestId);
-        if (optionalRequest.isPresent()) {
-            Request request = optionalRequest.get();
-            request.setStatus(newStatus);
-            requestRepository.save(request);
-        } else {
-            throw new EntityNotFoundException("Solicitud no encontrada con ID: " + requestId);
-        }
-    }
-
-    public List<Request> getRequestsByStatusAndRequester(User requester, String status) {
-        return requestRepository.findByRequesterAndStatus(requester, status);
-    }
-
-    public List<Request> getRequestsByStatusAndProvider(User provider, String status) {
-        return requestRepository.findByService_UserAndStatus(provider, status);
-    }
-    public Page<Request> getPaginatedRequestsByRequester(User user, Pageable pageable) {
-        return requestRepository.findAllByRequester(user, pageable);
-    }
-    public Page<Request> getPaginatedRequestsByServiceProvider(User provider, Pageable pageable) {
-        return requestRepository.findByServiceUser(provider, pageable);
-    }
-    
-    
 }

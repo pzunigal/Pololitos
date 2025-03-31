@@ -27,6 +27,7 @@ public class WebConfig {
                         .addResourceLocations("classpath:/static/");
             }
 
+            @SuppressWarnings("deprecation")
             @Override
             public void configurePathMatch(PathMatchConfigurer configurer) {
                 configurer.setUseTrailingSlashMatch(true);
