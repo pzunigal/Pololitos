@@ -11,8 +11,13 @@ import com.forgedevs.pololitos.models.Request;
 import com.forgedevs.pololitos.models.User;
 import com.forgedevs.pololitos.repositories.RequestRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class RequestService {
+
+    @Autowired
+    private NotificationService notificationService;
 
     @Autowired
     private RequestRepository requestRepository;
@@ -51,5 +56,37 @@ public class RequestService {
     public Request getRequestById(Long id) {
         Optional<Request> optionalRequest = requestRepository.findById(id);
         return optionalRequest.orElse(null);
+
     }
+
+    public String updateRequestStatus(Long requestId, String expectedStatus, String newStatus) {
+    Request request = getRequestById(requestId);
+    if (request == null) {
+        throw new EntityNotFoundException("Solicitud no encontrada.");
+    }
+    if (!request.getStatus().equals(expectedStatus)) {
+        throw new IllegalArgumentException("La solicitud ya fue actualizada.");
+    }
+    request.setStatus(newStatus);
+    saveRequest(request);
+    notificationService.notifyStatusChange(request, newStatus);
+    return "Estado actualizado correctamente.";
+}
+
+public String cancelRequest(Long requestId, User user) {
+    Request request = getRequestById(requestId);
+    if (request == null) {
+        throw new EntityNotFoundException("Solicitud no encontrada.");
+    }
+    if (!request.getRequester().getId().equals(user.getId())) {
+        throw new SecurityException("No tienes permiso para cancelar esta solicitud.");
+    }
+    if (!request.getStatus().equals("Enviada") && !request.getStatus().equals("Aceptada")) {
+        throw new IllegalArgumentException("La solicitud ya fue actualizada.");
+    }
+    request.setStatus("Cancelada");
+    saveRequest(request);
+    notificationService.notifyStatusChange(request, "Cancelada");
+    return "Solicitud cancelada correctamente.";
+}
 }

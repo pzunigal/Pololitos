@@ -171,69 +171,48 @@ public class RequestController {
         }
     }
 
-    private ResponseEntity<?> updateRequestStatus(Long requestId, String expectedStatus, String newStatus) {
-        Request request = requestService.getRequestById(requestId);
-        if (request == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada.");
-        }
-
-        if (!request.getStatus().equals(expectedStatus)) {
-            return ResponseEntity.badRequest().body("La solicitud ya fue actualizada.");
-        }
-
-        request.setStatus(newStatus);
-        requestService.saveRequest(request);
-        notificationService.notifyStatusChange(request, newStatus);
-
-        return ResponseEntity.ok("Estado actualizado correctamente.");
-    }
-
     @PatchMapping("/{requestId}/accept")
-    public ResponseEntity<?> acceptRequest(@PathVariable Long requestId) {
-        return updateRequestStatus(requestId, "Enviada", "Aceptada");
+public ResponseEntity<?> acceptRequest(@PathVariable Long requestId) {
+    try {
+        String message = requestService.updateRequestStatus(requestId, "Enviada", "Aceptada");
+        return ResponseEntity.ok(message);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+}
 
-    @PatchMapping("/{requestId}/reject")
-    public ResponseEntity<?> rejectRequest(@PathVariable Long requestId) {
-        return updateRequestStatus(requestId, "Enviada", "Rechazada");
+@PatchMapping("/{requestId}/reject")
+public ResponseEntity<?> rejectRequest(@PathVariable Long requestId) {
+    try {
+        String message = requestService.updateRequestStatus(requestId, "Enviada", "Rechazada");
+        return ResponseEntity.ok(message);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+}
 
-    @PatchMapping("/{requestId}/complete")
-    public ResponseEntity<?> completeRequest(@PathVariable Long requestId) {
-        return updateRequestStatus(requestId, "Aceptada", "Completada");
+@PatchMapping("/{requestId}/complete")
+public ResponseEntity<?> completeRequest(@PathVariable Long requestId) {
+    try {
+        String message = requestService.updateRequestStatus(requestId, "Aceptada", "Completada");
+        return ResponseEntity.ok(message);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+}
 
-    @PatchMapping("/{requestId}/cancel")
-    public ResponseEntity<?> cancelRequest(@PathVariable Long requestId,
-            @RequestHeader("Authorization") String authHeader) {
-        try {
-            String token = authHeader.replace("Bearer ", "");
-            Long userId = jwtService.extractUserId(token);
-            User user = userService.findById(userId);
-
-            Request request = requestService.getRequestById(requestId);
-            if (request == null) {
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Solicitud no encontrada.");
-            }
-
-            if (!request.getRequester().getId().equals(user.getId())) {
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                        .body("No tienes permiso para cancelar esta solicitud.");
-            }
-
-            if (!request.getStatus().equals("Enviada") && !request.getStatus().equals("Aceptada")) {
-                return ResponseEntity.badRequest().body("La solicitud ya fue actualizada.");
-            }
-
-            request.setStatus("Cancelada");
-            requestService.saveRequest(request);
-            notificationService.notifyStatusChange(request, "Cancelada");
-
-            return ResponseEntity.ok("Solicitud cancelada correctamente.");
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Error al cancelar solicitud: " + e.getMessage());
-        }
+@PatchMapping("/{requestId}/cancel")
+public ResponseEntity<?> cancelRequest(@PathVariable Long requestId,
+        @RequestHeader("Authorization") String authHeader) {
+    try {
+        String token = authHeader.replace("Bearer ", "");
+        Long userId = jwtService.extractUserId(token);
+        User user = userService.findById(userId);
+        String message = requestService.cancelRequest(requestId, user);
+        return ResponseEntity.ok(message);
+    } catch (Exception e) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
+}
 
 }
