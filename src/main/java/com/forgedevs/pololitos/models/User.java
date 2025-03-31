@@ -46,7 +46,7 @@ public class User {
     private MultipartFile profileImageFile;
 
     @NotBlank(message = "Por favor, ingresa un teléfono válido")
-    @Pattern(regexp = "\\d{9,15}", message = "El número de teléfono debe contener entre 9 y 15 dígitos")
+    @Pattern(regexp = "^\\+56\\s?9\\s?\\d{4}\\s?\\d{4}$|^\\+569\\d{8}$", message = "El número debe ser chileno y comenzar con +56 9 seguido de 8 dígitos")
     private String phone;
 
     @NotBlank(message = "Por favor, ingresa una ciudad")

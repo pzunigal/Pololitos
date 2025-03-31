@@ -1,9 +1,7 @@
 package com.forgedevs.pololitos.controllers;
-
 import java.io.IOException;
-import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
@@ -11,7 +9,6 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import com.forgedevs.pololitos.dtos.LoginUserResponse;
 import com.forgedevs.pololitos.models.LoginUser;
-import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.User;
 
 import com.forgedevs.pololitos.services.CloudinaryService;
@@ -86,58 +83,47 @@ public class UserController {
         return ResponseEntity.ok(savedUser);
     }
 
-    @PatchMapping("/{userId}/profile")
+    @PatchMapping("/profile/update")
     @Transactional
-    public ResponseEntity<?> updateProfile(@PathVariable Long userId,
-            @ModelAttribute User user,
-            BindingResult result,
-            @RequestParam(value = "profileImageFile", required = false) MultipartFile newImage) {
-        User existingUser = userService.findById(userId);
-        if (existingUser == null) {
-            return ResponseEntity.status(401).body("Usuario no encontrado.");
-        }
-
-        if (result.hasErrors()) {
-            return ResponseEntity.badRequest().body("Errores en los datos.");
-        }
-
-        if (newImage != null && !newImage.isEmpty()) {
-            try {
-                if (existingUser.getProfileImage() != null) {
-                    cloudinaryService.deleteFile(existingUser.getProfileImage());
-                }
-                String newUrl = cloudinaryService.uploadFile(newImage, "profile-images");
-                existingUser.setProfileImage(newUrl);
-            } catch (IOException e) {
-                return ResponseEntity.badRequest().body("Error al actualizar imagen de perfil.");
+    public ResponseEntity<?> updateProfile(
+            @RequestPart("firstName") String firstName,
+            @RequestPart("lastName") String lastName,
+            @RequestPart("city") String city,
+            @RequestPart("phone") String phone,
+            @RequestPart(value = "profileImageFile", required = false) MultipartFile newImage,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User existingUser = userService.findById(userId);
+    
+            if (existingUser == null) {
+                return ResponseEntity.status(401).body("Usuario no encontrado.");
             }
-        }
-
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setPhone(user.getPhone());
-        existingUser.setCity(user.getCity());
-
-        userService.updateUser(existingUser);
-        return ResponseEntity.ok(existingUser);
-    }
-
-    // Inner class for response
-    public static class UserProfileResponse {
-        private User user;
-        private List<OfferedService> services;
-
-        public UserProfileResponse(User user, List<OfferedService> services) {
-            this.user = user;
-            this.services = services;
-        }
-
-        public User getUser() {
-            return user;
-        }
-
-        public List<OfferedService> getServices() {
-            return services;
+    
+            if (newImage != null && !newImage.isEmpty()) {
+                try {
+                    if (existingUser.getProfileImage() != null) {
+                        cloudinaryService.deleteFile(existingUser.getProfileImage());
+                    }
+                    String newUrl = cloudinaryService.uploadFile(newImage, "profile-images");
+                    existingUser.setProfileImage(newUrl);
+                } catch (IOException e) {
+                    return ResponseEntity.badRequest().body("Error al actualizar imagen de perfil.");
+                }
+            }
+    
+            existingUser.setFirstName(firstName);
+            existingUser.setLastName(lastName);
+            existingUser.setPhone(phone);
+            existingUser.setCity(city);
+    
+            userService.updateUser(existingUser);
+            return ResponseEntity.ok(existingUser);
+    
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Error al actualizar el perfil: " + e.getMessage());
         }
     }
 }
