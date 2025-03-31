@@ -1,5 +1,6 @@
 package com.forgedevs.pololitos.controllers;
 
+import com.forgedevs.pololitos.dtos.ChatDTO;
 import com.forgedevs.pololitos.models.Chat;
 import com.forgedevs.pololitos.models.Request;
 import com.forgedevs.pololitos.services.ChatService;
@@ -36,7 +37,6 @@ public class ChatController {
 
             Chat createdChat = chatService.createChat(chat);
 
-            // Optional: Send notification (Firebase)
             Request request = requestService.getRequestById(requestId);
             notificationService.notifyConversationStarted(request, createdChat.getId());
 
@@ -63,31 +63,35 @@ public class ChatController {
 
             boolean isRequester = request.getRequester().getId().equals(userId);
             boolean isProvider = request.getService().getUser().getId().equals(userId);
-
             if (!isRequester && !isProvider) {
                 return ResponseEntity.status(403).body("Acceso denegado");
             }
 
-            return ResponseEntity.ok(chat);
+            ChatDTO dto = new ChatDTO(
+                chat,
+                request.getRequester().getId(),
+                request.getRequester().getFirstName(),
+                request.getRequester().getLastName(),
+                request.getRequester().getProfileImage(),
+                request.getService().getUser().getId(),
+                request.getService().getUser().getFirstName(),
+                request.getService().getUser().getLastName(),
+                request.getService().getUser().getProfileImage(),
+                request.getService().getId(),
+                request.getService().getName(),
+                request.getService().getDescription(),
+                request.getService().getImageUrl(),
+                request.getStatus(),
+                request.getAdditionalComment()
+            );
+
+            return ResponseEntity.ok(dto);
 
         } catch (Exception e) {
-            return ResponseEntity.internalServerError().body("Error al recuperar el chat");
+            return ResponseEntity.internalServerError().body("Error al recuperar el chat: " + e.getMessage());
         }
     }
 
-    @GetMapping("/by-request/{requestId}")
-    public ResponseEntity<?> getChatByRequest(@PathVariable Long requestId) {
-        Chat chat = chatService.getChatByRequestId(requestId);
-        if (chat != null) {
-            return ResponseEntity.ok(chat);
-        } else {
-            return ResponseEntity.status(404).body("Chat no encontrado para esta solicitud");
-        }
-    }
 
-    @GetMapping("/exists/{requestId}")
-    public ResponseEntity<Boolean> existsConversation(@PathVariable Long requestId) {
-        boolean exists = chatService.existsConversation(requestId);
-        return ResponseEntity.ok(exists);
-    }
+
 }

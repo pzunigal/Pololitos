@@ -16,9 +16,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.forgedevs.pololitos.dtos.RequestDTO;
+import com.forgedevs.pololitos.models.Chat;
 import com.forgedevs.pololitos.models.OfferedService;
 import com.forgedevs.pololitos.models.Request;
 import com.forgedevs.pololitos.models.User;
+import com.forgedevs.pololitos.repositories.ChatRepository;
 import com.forgedevs.pololitos.services.JwtService;
 import com.forgedevs.pololitos.services.NotificationService;
 import com.forgedevs.pololitos.services.RequestService;
@@ -44,6 +46,9 @@ public class RequestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ChatRepository chatRepository;
 
     @PostMapping("/create")
     public ResponseEntity<?> createRequest(@RequestBody Map<String, Object> payload,
@@ -92,19 +97,31 @@ public class RequestController {
             String token = authHeader.replace("Bearer ", "");
             Long userId = jwtService.extractUserId(token);
             User loggedInUser = userService.findById(userId);
-
+    
             Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
             Page<Request> activePage = requestService.getPaginatedActiveRequestsByRequester(loggedInUser, pageable);
-
-            // Convertimos a DTO sin agregar 'chatCreated'
-            Page<RequestDTO> dtoPage = activePage.map(RequestDTO::new);
+    
+            Page<RequestDTO> dtoPage = activePage.map(r -> {
+                RequestDTO dto = new RequestDTO(r);
+                Chat chat = chatRepository.findByRequestId(r.getId());
+                if (chat != null) {
+                    dto.setChatCreated(true);
+                    dto.setChatId(chat.getId());
+                } else {
+                    dto.setChatCreated(false);
+                    dto.setChatId(null);
+                }
+                return dto;
+            });
+    
             return ResponseEntity.ok(dtoPage);
-
+    
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Error al obtener solicitudes activas: " + e.getMessage());
         }
     }
+    
 
     @GetMapping("/my-sent/inactive")
     public ResponseEntity<?> viewMySentInactiveRequests(
@@ -141,9 +158,21 @@ public class RequestController {
             Pageable pageable = PageRequest.of(page, size, Sort.by("requestDate").descending());
             Page<Request> activePage = requestService.getPaginatedActiveRequestsByProvider(loggedInUser, pageable);
 
-            // Convertimos a DTO
-            Page<RequestDTO> dtoPage = activePage.map(RequestDTO::new);
+            Page<RequestDTO> dtoPage = activePage.map(r -> {
+                RequestDTO dto = new RequestDTO(r);
+                Chat chat = chatRepository.findByRequestId(r.getId());
+                if (chat != null) {
+                    dto.setChatCreated(true);
+                    dto.setChatId(chat.getId());
+                } else {
+                    dto.setChatCreated(false);
+                    dto.setChatId(null);
+                }
+                return dto;
+            });
+
             return ResponseEntity.ok(dtoPage);
+
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
                     .body("Error al obtener solicitudes recibidas activas: " + e.getMessage());
@@ -172,47 +201,47 @@ public class RequestController {
     }
 
     @PatchMapping("/{requestId}/accept")
-public ResponseEntity<?> acceptRequest(@PathVariable Long requestId) {
-    try {
-        String message = requestService.updateRequestStatus(requestId, "Enviada", "Aceptada");
-        return ResponseEntity.ok(message);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    public ResponseEntity<?> acceptRequest(@PathVariable Long requestId) {
+        try {
+            String message = requestService.updateRequestStatus(requestId, "Enviada", "Aceptada");
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
-}
 
-@PatchMapping("/{requestId}/reject")
-public ResponseEntity<?> rejectRequest(@PathVariable Long requestId) {
-    try {
-        String message = requestService.updateRequestStatus(requestId, "Enviada", "Rechazada");
-        return ResponseEntity.ok(message);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    @PatchMapping("/{requestId}/reject")
+    public ResponseEntity<?> rejectRequest(@PathVariable Long requestId) {
+        try {
+            String message = requestService.updateRequestStatus(requestId, "Enviada", "Rechazada");
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
-}
 
-@PatchMapping("/{requestId}/complete")
-public ResponseEntity<?> completeRequest(@PathVariable Long requestId) {
-    try {
-        String message = requestService.updateRequestStatus(requestId, "Aceptada", "Completada");
-        return ResponseEntity.ok(message);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    @PatchMapping("/{requestId}/complete")
+    public ResponseEntity<?> completeRequest(@PathVariable Long requestId) {
+        try {
+            String message = requestService.updateRequestStatus(requestId, "Aceptada", "Completada");
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
-}
 
-@PatchMapping("/{requestId}/cancel")
-public ResponseEntity<?> cancelRequest(@PathVariable Long requestId,
-        @RequestHeader("Authorization") String authHeader) {
-    try {
-        String token = authHeader.replace("Bearer ", "");
-        Long userId = jwtService.extractUserId(token);
-        User user = userService.findById(userId);
-        String message = requestService.cancelRequest(requestId, user);
-        return ResponseEntity.ok(message);
-    } catch (Exception e) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+    @PatchMapping("/{requestId}/cancel")
+    public ResponseEntity<?> cancelRequest(@PathVariable Long requestId,
+            @RequestHeader("Authorization") String authHeader) {
+        try {
+            String token = authHeader.replace("Bearer ", "");
+            Long userId = jwtService.extractUserId(token);
+            User user = userService.findById(userId);
+            String message = requestService.cancelRequest(requestId, user);
+            return ResponseEntity.ok(message);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
-}
 
 }
