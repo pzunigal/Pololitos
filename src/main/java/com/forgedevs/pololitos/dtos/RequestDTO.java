@@ -9,6 +9,7 @@ import java.util.Date;
 @Getter
 @Setter
 public class RequestDTO {
+
     private Long id;
     private String status;
     private String additionalComment;
@@ -26,6 +27,9 @@ public class RequestDTO {
 
     private boolean chatCreated;
     private String chatId;
+
+    public RequestDTO() {
+    }
 
     public RequestDTO(Request r) {
         this.id = r.getId();
