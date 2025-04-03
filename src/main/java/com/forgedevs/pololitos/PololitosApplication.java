@@ -16,6 +16,4 @@ public class PololitosApplication {
 
 		SpringApplication.run(PololitosApplication.class, args);
 	}
-
-
 }
