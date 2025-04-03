@@ -32,7 +32,7 @@
                   <td>${solicitud.estado}</td>
                   <td>${solicitud.comentarioAdicional}</td>
                   <td>
-                    <c:if test="${solicitud.estado == 'Enviado'}">
+                    <c:if test="${solicitud.estado == 'Enviada'}">
                       <button
                         class="btn btn-success btn-sm mb-1 btn-aceptar"
                         data-id="${solicitud.id}"
