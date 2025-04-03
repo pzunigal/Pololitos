@@ -82,7 +82,8 @@ public class ChatController {
                 request.getService().getDescription(),
                 request.getService().getImageUrl(),
                 request.getStatus(),
-                request.getAdditionalComment()
+                request.getAdditionalComment(),
+                request.getService().getPrice()
             );
 
             return ResponseEntity.ok(dto);

@@ -29,6 +29,7 @@ public class ChatDTO {
     private String serviceDescription;
     private String serviceImageUrl;
     private Long serviceId;
+    private Double servicePrice;
 
     private String requestStatus;
     private String additionalComment;
@@ -36,44 +37,45 @@ public class ChatDTO {
     private List<Message> messages;
 
     public ChatDTO(Chat chat,
-               Long requesterId,
-               String requesterFirstName,
-               String requesterLastName,
-               String requesterPhoto,
-               Long providerId,
-               String providerFirstName,
-               String providerLastName,
-               String providerPhoto,
-               Long serviceId,
-               String serviceName,
-               String serviceDescription,
-               String serviceImageUrl,
-               String requestStatus,
-               String additionalComment) {
+                   Long requesterId,
+                   String requesterFirstName,
+                   String requesterLastName,
+                   String requesterPhoto,
+                   Long providerId,
+                   String providerFirstName,
+                   String providerLastName,
+                   String providerPhoto,
+                   Long serviceId,
+                   String serviceName,
+                   String serviceDescription,
+                   String serviceImageUrl,
+                   String requestStatus,
+                   String additionalComment,
+                   Double servicePrice) {
 
-    this.id = chat.getId();
-    this.name = chat.getName();
-    this.creationTimestamp = chat.getCreationTimestamp();
+        this.id = chat.getId();
+        this.name = chat.getName();
+        this.creationTimestamp = chat.getCreationTimestamp();
 
-    this.requestId = chat.getRequestId();
+        this.requestId = chat.getRequestId();
 
-    this.requesterId = requesterId;
-    this.requesterName = requesterFirstName + " " + requesterLastName;
-    this.requesterPhoto = requesterPhoto;
+        this.requesterId = requesterId;
+        this.requesterName = requesterFirstName + " " + requesterLastName;
+        this.requesterPhoto = requesterPhoto;
 
-    this.providerId = providerId;
-    this.providerName = providerFirstName + " " + providerLastName;
-    this.providerPhoto = providerPhoto;
+        this.providerId = providerId;
+        this.providerName = providerFirstName + " " + providerLastName;
+        this.providerPhoto = providerPhoto;
 
-    this.serviceId = serviceId;
-    this.serviceName = serviceName;
-    this.serviceDescription = serviceDescription;
-    this.serviceImageUrl = serviceImageUrl;
+        this.serviceId = serviceId;
+        this.serviceName = serviceName;
+        this.serviceDescription = serviceDescription;
+        this.serviceImageUrl = serviceImageUrl;
+        this.servicePrice = servicePrice;
 
-    this.requestStatus = requestStatus;
-    this.additionalComment = additionalComment;
+        this.requestStatus = requestStatus;
+        this.additionalComment = additionalComment;
 
-    this.messages = chat.getMessages();
-}
-
+        this.messages = chat.getMessages();
+    }
 }
