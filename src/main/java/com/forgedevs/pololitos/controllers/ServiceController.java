@@ -261,4 +261,17 @@ public class ServiceController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al eliminar servicio.");
         }
     }
+
+    @PostMapping("/search")
+    public ResponseEntity<Page<ServiceDTO>> searchServicesByName(
+            @RequestParam("keyword") String keyword,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "8") int size) {
+
+        Page<OfferedService> result = serviceService.searchByName(keyword, page, size);
+        Page<ServiceDTO> dtoPage = result.map(ServiceDTO::new);
+
+        return ResponseEntity.ok(dtoPage);
+    }
+
 }

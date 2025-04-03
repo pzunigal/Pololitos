@@ -115,4 +115,10 @@ public class ServiceService {
     public List<OfferedService> getServicesByUserId(Long userId) {
         return serviceRepository.findByUserId(userId);
     }
+
+    public Page<OfferedService> searchByName(String keyword, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size, Sort.by("createdAt").descending());
+        return serviceRepository.findByNameContainingIgnoreCase(keyword, pageable);
+    }
+
 }

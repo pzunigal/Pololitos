@@ -17,7 +17,7 @@ public interface ServiceRepository extends JpaRepository<OfferedService, Long> {
 
     Page<OfferedService> findByUserId(Long userId, Pageable pageable);
 
-    
+    Page<OfferedService> findByNameContainingIgnoreCase(String keyword, Pageable pageable);
 
 
 
