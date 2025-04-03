@@ -1,7 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
 
 <!DOCTYPE html>
 <html lang="es">
@@ -32,13 +31,6 @@
         <p class="lead mb-4">Conectamos a personas que buscan ayuda con servicios locales dispuestos a brindar soluciones</p>
         <a href="/servicios" class="btn btn-primary btn-lg w-auto">Buscar Servicios</a>
 
-        <div class="video-tutorial my-5">
-            <h2 class="mb-3">¿No sabes cómo usar Pololitos?</h2>
-            <p class="mb-4">Mira este video corto donde te explicamos paso a paso cómo buscar, publicar y contactar por un pololito.</p>
-            <div class="ratio ratio-16x9 rounded overflow-hidden shadow">
-                <iframe src="https://www.youtube.com/embed/KDliA6la4eA" title="Cómo usar Pololitos" allowfullscreen></iframe>
-            </div>
-        </div>
 
         <!-- Sección Publicidad -->
         <div class="row justify-content-center my-5">
@@ -95,8 +87,7 @@
                                 <img src="${servicio.imgUrl}" alt="${servicio.nombre}" class="card-img-top">
                                 <div class="card-body d-flex flex-column">
                                     <h5 class="card-title">${servicio.nombre}</h5>
-                                    <p class="card-text mb-1"><strong>Precio:</strong> $<fmt:formatNumber value="${servicio.precio}" type="number" groupingUsed="true" /></p>
-
+                                    <p class="card-text mb-1"><strong>$${servicio.precio}</strong></p>
                                     <p class="card-text">${servicio.ciudad}</p>
                                     <div class="mt-auto">
                                         <c:choose>

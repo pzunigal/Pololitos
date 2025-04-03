@@ -29,14 +29,14 @@ uri="http://www.springframework.org/tags/form" %>
     <!-- Navbar Bootstrap -->
     <%@ include file="/WEB-INF/componentes/layout/nav.jsp" %>
     <!-- Login Form -->
-    <div class="login-wrapper container mb-3">
+    <div class="login-wrapper container">
       <div class="row w-100">
         <div class="col-lg-6 d-flex align-items-center justify-content-center">
           <img
             src="/img/pololitos.png"
             alt="Logo pololitos"
             class="img-logo"
-            style="max-width: 400px"
+            style="max-width: 500px"
           />
         </div>
         <div class="col-lg-6">

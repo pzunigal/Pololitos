@@ -14,11 +14,7 @@
 
     <div class="mb-3">
        <label for="precio" class="form-label">Precio</label>
-       <input type="number" class="form-control" id="precio" name="precio"
-       value="${servicio.precio.intValue()}" step="1" required>
-
-      
-
+       <input type="number" class="form-control" id="precio" name="precio" value="${servicio.precio}" required>
     </div>
 
     <div class="mb-3">
@@ -58,7 +54,7 @@
     </div>
 
     <div class="text-center mt-4">
-       <button type="submit" class="btn btn-primary px-4 me-2 mb-3">Actualizar Servicio</button>
+       <button type="submit" class="btn btn-primary px-4 me-2">Actualizar Servicio</button>
        <a href="/mis-servicios" class="btn btn-secondary">Volver</a>
     </div>
  </form>

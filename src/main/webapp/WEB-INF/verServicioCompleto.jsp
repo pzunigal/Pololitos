@@ -36,8 +36,7 @@
                   <div class="card-body">
                      <h3 class="card-title">${servicio.nombre}</h3>
                      <p class="card-text">${servicio.descripcion}</p>
-                     <p class="card-text mb-1"><strong>Precio:</strong> $<fmt:formatNumber value="${servicio.precio}" type="number" groupingUsed="true" /></p>
-
+                     <p><strong>Precio:</strong> $${servicio.precio}</p>
                      <p><strong>Ciudad:</strong> ${servicio.ciudad}</p>
                      <p><strong>Fecha publicación:</strong> <fmt:formatDate value="${servicio.createdAt}" pattern="dd/MM/yyyy" /></p>
                   </div>
